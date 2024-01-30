@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TemporaTasks"
+        xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
         xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:aero="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
         mc:Ignorable="d"
-        Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" MinWidth="400" MinHeight="500" Loaded="window_Loaded">
+        Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" MinWidth="400" MinHeight="500" Loaded="Window_Loaded">
 
     <Grid Background="{StaticResource Background}">
 
@@ -42,7 +43,7 @@
 
             </Grid>
 
-            <Frame x:Name="FrameView" NavigationUIVisibility="Hidden" Grid.Column="2" Focusable="False" IsTabStop="False"/>
+            <Frame x:Name="FrameView" NavigationUIVisibility="Hidden" DockPanel.Dock="Right" Focusable="False" IsTabStop="False"/>
 
         </DockPanel>
 
@@ -75,10 +76,6 @@
                     <Path x:Name="X2" Data="M0,10 L10,0" Stroke="{StaticResource Text}" StrokeThickness="1" IsHitTestVisible="False" Opacity="0.25"/>
                 </Grid>
             </Border>
-
-            <!--<Ellipse Fill="{StaticResource Secondary}" Grid.Column="2" Width="15" Height="15" Opacity="0.6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <Ellipse x:Name="CloseButton" Fill="{StaticResource CloseButton}" Grid.Column="2" Width="15" Height="15" Opacity="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsMouseDirectlyOverChanged="CloseButton_IsMouseDirectlyOverChanged" MouseDown="CloseButton_MouseDown"/>-->
 
             <Image x:Name="AppIcon" Source="/Resources/Icons/icon.ico" Width="15" Height="15"/>
 
