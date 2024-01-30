@@ -33,10 +33,6 @@ namespace TemporaTasks.Pages
                 task.MouseDown += IndividualTask_MouseDown;
                 task.IsTrashIconClicked += TrashIcon_MouseDown;
                 task.IsEditIconClicked += EditIcon_MouseDown;
-                
-                task.MouseDown += Label_MouseDown;
-                task.MouseMove += Label_MouseMove;
-                task.MouseUp += Label_MouseUp;
             }
             GenerateTaskStack();
         }
@@ -72,8 +68,6 @@ namespace TemporaTasks.Pages
                     else mainWindow.WindowHide();
                     break;
             }
-
-            if (e.Key == Key.X && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) mainWindow.Close();
 
             if (focusMode)
             {

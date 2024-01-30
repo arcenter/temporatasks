@@ -21,7 +21,7 @@ namespace TemporaTasks
             SourceInitialized += Window1_SourceInitialized;
         }
 
-        private void window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             {
                 string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\TemporaTasks\\";
@@ -33,7 +33,10 @@ namespace TemporaTasks
             FrameView.Navigate(new HomeView());
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e) { }
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Q && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) Close();
+        }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {

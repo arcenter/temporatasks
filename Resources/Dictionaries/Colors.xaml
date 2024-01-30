@@ -20,4 +20,5 @@
     <SolidColorBrush x:Key="Icons" Color="#f2f2f2"/>
     <SolidColorBrush x:Key="Border" Color="#FF717171"/>
 
+
 </ResourceDictionary>
