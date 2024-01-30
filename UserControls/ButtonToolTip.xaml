@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="TemporaTasks.UserControls.ButtonToolTip"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TemporaTasks.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="100">
+
+    <Grid>
+
+        <Border Background="{StaticResource Secondary}" CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=UserControl}}" Opacity="0.75"/>
+
+        <Border Padding="{Binding BorderPadding, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+            <StackPanel x:Name="SP" Orientation="Horizontal">
+
+                <Label Content="{Binding ToolTipText, RelativeSource={RelativeSource AncestorType=UserControl}}" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,7,0"/>
+
+                <Border x:Name="ButtonBackground" Background="{StaticResource DarkerBlue}" BorderBrush="{StaticResource ButtonThickness}" CornerRadius="2" BorderThickness="0,0,0,3">
+
+                    <Label Content="{Binding Button1Text, RelativeSource={RelativeSource AncestorType=UserControl}}" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,0" Margin="2" IsHitTestVisible="False"/>
+
+                </Border>
+
+            </StackPanel>
+
+        </Border>
+
+    </Grid>
+
+
+
+</UserControl>

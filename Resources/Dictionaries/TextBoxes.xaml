@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="#1e1e1e" />
+        <Setter Property="Foreground" Value="#f2f2f2" />
+        <Setter Property="SelectionBrush" Value="#FFA7A7A7" />
+        <Setter Property="SelectionTextBrush" Value="#FF4A4A4A" />
+        <Setter Property="Padding" Value="5,5,0,5" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="TextBoxBorder" Background="{StaticResource Secondary}" BorderBrush="#363636" BorderThickness="0">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
