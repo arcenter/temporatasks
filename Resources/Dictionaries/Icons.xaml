@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <DrawingImage x:Key="pencilIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V512 H512 V0 H0 Z">
+                <DrawingGroup.Transform>
+                    <TranslateTransform X="0" Y="0.02799958735704422" />
+                </DrawingGroup.Transform>
+                <GeometryDrawing Brush="{StaticResource Icons}" Geometry="F1 M512,512z M0,0z M70.2,337.4L174.6,441.8 441.5,175 337,70.5 70.2,337.4z M0.6,499.8C-1.7,509.1,2.9,513.7,12.2,511.4L151.4,465 47,360.6 0.6,499.8z M487.9,24.1C441.6,-22.3 395.1,12.5 395.1,12.5 387.5,18.3 360.3,47.3 360.3,47.3L464.7,151.7C464.7,151.7 493.6,124.5 499.5,116.9 499.5,116.9 534.3,70.6 487.9,24.1z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="trashIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="{StaticResource Icons}" Geometry="F1 M24,24z M0,0z M8,1.5L8,2.5 3,2.5C2.44772,2.5,2,2.94772,2,3.5L2,4.5C2,5.05228,2.44772,5.5,3,5.5L21,5.5C21.5523,5.5,22,5.05228,22,4.5L22,3.5C22,2.94772,21.5523,2.5,21,2.5L16,2.5 16,1.5C16,0.947715,15.5523,0.5,15,0.5L9,0.5C8.44772,0.5,8,0.947715,8,1.5z">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="{StaticResource Icons}" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="{StaticResource Icons}" Geometry="F1 M24,24z M0,0z M3.9231,7.5L20.0767,7.5 19.1344,20.2216C19.0183,21.7882,17.7135,23,16.1426,23L7.85724,23C6.28636,23,4.98148,21.7882,4.86544,20.2216L3.9231,7.5z">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="{StaticResource Icons}" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="backIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                <GeometryDrawing Brush="{StaticResource Icons}" Geometry="F1 M1024,1024z M0,0z M224,480L864,480A32,32,0,1,1,864,544L224,544A32,32,0,0,1,224,480z" />
+                <GeometryDrawing Brush="{StaticResource Icons}" Geometry="F1 M1024,1024z M0,0z M237.248,512L502.656,777.344A32,32,0,0,1,457.344,822.656L169.344,534.656A32,32,0,0,1,169.344,489.344L457.344,201.344A32,32,0,1,1,502.656,246.656L237.248,512z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+</ResourceDictionary>
