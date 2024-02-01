@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
 
@@ -25,13 +16,15 @@ namespace TemporaTasks.Pages
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         IndividualTask task;
 
+        public DateTimePicker dtpic = new DateTimePicker();
+
         public EditTaskPage(IndividualTask task)
         {
             InitializeComponent();
 
             this.task = task;
             TaskNameTextbox.Text = task.TaskName;
-            DTPicker.Value = task.DueDT;
+            // DTPicker.Value = task.DueDT;
             TaskNameTextbox.Focus();
         }
 
@@ -54,13 +47,13 @@ namespace TemporaTasks.Pages
             }
             else if (e.Key == Key.Escape)
             {
-                mainWindow.FrameView.Navigate(new HomeView());
+                mainWindow.FrameView.Navigate(new HomePage());
             }
         }
 
         private void BackIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mainWindow.FrameView.Navigate(new HomeView());
+            mainWindow.FrameView.Navigate(new HomePage());
         }
 
         private void ConfirmButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -70,10 +63,12 @@ namespace TemporaTasks.Pages
 
         private void ConfirmButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(TaskNameTextbox.Text, task.CreatedDT, DTPicker.Value, null);
+            task.TaskTimer.Stop();
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(TaskNameTextbox.Text, task.CreatedDT, null, null); // DTPicker.Value
             TaskFile.SaveData();
+            Trace.WriteLine($"{dtpic.selectedDateTime[0]}-{dtpic.selectedDateTime[1].ToString().PadLeft(2, '0')}-{dtpic.selectedDateTime[2].ToString().PadLeft(2, '0')}");
             mainWindow.FrameView.RemoveBackEntry();
-            mainWindow.FrameView.Navigate(new HomeView());
+            mainWindow.FrameView.Navigate(new HomePage());
         }
 
         private void ConfirmButton_MouseMove(object sender, MouseEventArgs e)
@@ -83,6 +78,25 @@ namespace TemporaTasks.Pages
             tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
+        }
+
+        private void datePicked(object sender, MouseEventArgs e)
+        {
+            Trace.WriteLine(((ArrayList)((Border)sender).Tag)[0]);
+        }
+
+        private void Border_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((Border)sender).BeginAnimation(Border.OpacityProperty, new DoubleAnimation((bool)e.NewValue? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            dtpic = new DateTimePicker();
+            dtpic.textBox = dateTextBox;
+            dtpic.popUp = myPopUp;
+            myPopUp.Child = dtpic;
+            myPopUp.IsOpen = true;
         }
     }
 }

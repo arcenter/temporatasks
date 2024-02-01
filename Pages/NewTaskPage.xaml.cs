@@ -47,13 +47,13 @@ namespace TemporaTasks.Pages
             }
             else if (e.Key == Key.Escape)
             {
-                mainWindow.FrameView.Navigate(new HomeView());
+                mainWindow.FrameView.Navigate(new HomePage());
             }
         }
 
         private void BackIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mainWindow.FrameView.Navigate(new HomeView());
+            mainWindow.FrameView.Navigate(new HomePage());
         }
 
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -66,7 +66,7 @@ namespace TemporaTasks.Pages
             TaskFile.TaskList.Add(new IndividualTask(TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, DTPicker.Value, null));
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
-            mainWindow.FrameView.Navigate(new HomeView());
+            mainWindow.FrameView.Navigate(new HomePage());
         }
 
         private void AddButton_MouseMove(object sender, MouseEventArgs e)

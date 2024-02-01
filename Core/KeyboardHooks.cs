@@ -49,7 +49,7 @@ namespace TemporaTasks.Core
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
                             if (vkey == VK_KEY)
                             {
-                                mainWindow.WindowHide(false);
+                                mainWindow.WindowHide(mainWindow.IsActive);
                             }
                             handled = true;
                             break;

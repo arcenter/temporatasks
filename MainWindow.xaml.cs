@@ -30,7 +30,7 @@ namespace TemporaTasks
                 TaskFile.path = $"{path}data.json";
                 TaskFile.LoadData();
             }
-            FrameView.Navigate(new HomeView());
+            FrameView.Navigate(new HomePage());
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
