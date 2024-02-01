@@ -25,7 +25,7 @@ namespace TemporaTasks.UserControls
             set
             {
                 completed = value;
-                CompletedDT = IsCompleted ? DateTime.Now : null;
+                CompletedDT = value ? DateTime.Now : null;
             }
         }
 
@@ -101,6 +101,8 @@ namespace TemporaTasks.UserControls
         public void ToggleCompletionStatus()
         {
             IsCompleted = !IsCompleted;
+            if (IsCompleted) TaskTimer.Stop();
+            else NewDueDT();
             UpdateTaskCheckBoxAndBackground();
         }
 
@@ -206,21 +208,18 @@ namespace TemporaTasks.UserControls
         private void NewDueDT()
         {
             double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
-            if (taskTimeRemaining > 0)
+            if (TimeSpan.FromSeconds(taskTimeRemaining) < TimeSpan.FromDays(1))
             {
-                if (TimeSpan.FromSeconds(taskTimeRemaining) < TimeSpan.FromDays(1))
+                TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(0, taskTimeRemaining));
+                TaskTimer.Tick += (s, e) =>
                 {
-                    TaskTimer.Interval = TimeSpan.FromSeconds(taskTimeRemaining);
-                    TaskTimer.Tick += (s, e) =>
-                    {
-                        mainWindow.WindowHide();
-                        DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
-                        DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
-                        mainWindow.TrayIcon.ShowBalloonTip("Task Due!", TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                        TaskTimer.Interval = TimeSpan.FromMinutes(5);
-                    };
-                    TaskTimer.Start();
-                }
+                    mainWindow.WindowHide(false);
+                    DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
+                    DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                    mainWindow.TrayIcon.ShowBalloonTip("Task Due!", TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                    TaskTimer.Interval = TimeSpan.FromMinutes(5);
+                };
+                TaskTimer.Start();
             }
             DueDateTimeLabelUpdate();
         }
