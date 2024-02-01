@@ -1,11 +1,15 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,6 +27,12 @@ namespace TemporaTasks.UserControls
 
         private int currentYear = DateTime.Now.Year;
         private int currentMonth = DateTime.Now.Month;
+        private int currentDay = DateTime.Now.Day;
+
+        public ArrayList selectedDateTime = [0, 0, 0, 0, 0];
+
+        public TextBox textBox;
+        public Popup popUp;
 
         public DateTimePicker()
         {
@@ -34,14 +44,16 @@ namespace TemporaTasks.UserControls
             }
 
             yearComboBox.SelectedIndex = 0;
-            monthComboBox.SelectedIndex = currentMonth-1;
-            GenerateCalendar();
+            monthComboBox.SelectedIndex = currentMonth - 1;
+
+            try { GenerateCalendar(); }
+            catch { }
         }
 
         private void GenerateCalendar(int year = -1, int month = -1)
         {
-            if (year == -1) year = int.Parse(yearComboBox.Text);
-            if (month == -1) month = monthComboBox.SelectedIndex + 1;
+            if (year == -1) year = (int)selectedDateTime[0];
+            if (month == -1) month = (int)selectedDateTime[1];
 
             calendarGrid.Children.RemoveRange(7, calendarGrid.Children.Count-7);
 
@@ -57,10 +69,12 @@ namespace TemporaTasks.UserControls
                 Border border = new()
                 {
                     Background = (SolidColorBrush)((MainWindow)Application.Current.MainWindow).FindResource("DarkBlue"),
-                    Opacity = 0
+                    Tag = new ArrayList() { day, (day == currentDay) ? 0.25 : 0 }
                 };
 
+                border.Opacity = (double)(((ArrayList)border.Tag)[1]);
                 border.IsMouseDirectlyOverChanged += Border_MouseOver;
+                border.MouseDown += Border_MouseDown;
 
                 Label label = new()
                 {
@@ -82,13 +96,13 @@ namespace TemporaTasks.UserControls
 
                 if (++day > maxDays) break;
 
-                if (++colNumber > 6)
+                if (++colNumber == 7)
                 {
                     rowNumber++;
                     colNumber = 0;
                 }
 
-                if (rowNumber == 6)
+                if (colNumber == 0 && rowNumber == 6)
                 {
                     calendarGrid.RowDefinitions.Add(new RowDefinition());
                 }
@@ -97,13 +111,23 @@ namespace TemporaTasks.UserControls
 
         private void Border_MouseOver(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : (double)(((ArrayList)((Border)sender).Tag)[1]), TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void Border_MouseDown(object sender, MouseEventArgs e)
+        {
+            selectedDateTime[2] = ((ArrayList)((Border)sender).Tag)[0];
+            textBox.Text = $"{selectedDateTime[0]}-{selectedDateTime[1].ToString().PadLeft(2, '0')}-{selectedDateTime[2].ToString().PadLeft(2, '0')}";
+            popUp.IsOpen = false;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
+                selectedDateTime[0] = int.Parse(yearComboBox.SelectedItem.ToString());
+                selectedDateTime[1] = monthComboBox.SelectedIndex + 1;
+
                 GenerateCalendar();
             }
             catch { }
@@ -115,13 +139,9 @@ namespace TemporaTasks.UserControls
             {
                 monthComboBox.SelectedIndex = 11;
                 yearComboBox.Text = (int.Parse(yearComboBox.Text) - 1).ToString();
-                GenerateCalendar();
             }
-            else
-            {
-                monthComboBox.SelectedIndex -= 1;
-                GenerateCalendar();
-            }
+            else monthComboBox.SelectedIndex -= 1;
+            GenerateCalendar();
         }
 
         private void NextIconButton_MouseDown(object sender, MouseButtonEventArgs e)
@@ -130,13 +150,9 @@ namespace TemporaTasks.UserControls
             {
                 monthComboBox.SelectedIndex = 0;
                 yearComboBox.Text = (int.Parse(yearComboBox.Text) + 1).ToString();
-                GenerateCalendar();
             }
-            else
-            {
-                monthComboBox.SelectedIndex += 1;
-                GenerateCalendar();
-            }
+            else monthComboBox.SelectedIndex += 1;
+            GenerateCalendar();
         }
     }
 }

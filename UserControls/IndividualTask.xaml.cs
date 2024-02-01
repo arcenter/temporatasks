@@ -13,7 +13,6 @@ namespace TemporaTasks.UserControls
     {
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
-
         public string TaskName { get; set; }
 
         private bool completed = false;
@@ -34,8 +33,8 @@ namespace TemporaTasks.UserControls
         public Nullable<DateTime> DueDT;
         public Nullable<DateTime> CompletedDT;
         
-        public DispatcherTimer TaskTimer;
-        public DispatcherTimer TemporaryRemainingTimer = new();
+        public DispatcherTimer TaskTimer = new();
+        private DispatcherTimer TemporaryRemainingTimer = new();
 
         public bool IsDue
         {
@@ -209,16 +208,16 @@ namespace TemporaTasks.UserControls
             double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
             if (taskTimeRemaining > 0)
             {
-                TaskTimer = new DispatcherTimer();
                 if (TimeSpan.FromSeconds(taskTimeRemaining) < TimeSpan.FromDays(1))
                 {
                     TaskTimer.Interval = TimeSpan.FromSeconds(taskTimeRemaining);
                     TaskTimer.Tick += (s, e) =>
                     {
+                        mainWindow.WindowHide();
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
                         mainWindow.TrayIcon.ShowBalloonTip("Task Due!", TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                        TaskTimer.Stop();
+                        TaskTimer.Interval = TimeSpan.FromMinutes(5);
                     };
                     TaskTimer.Start();
                 }

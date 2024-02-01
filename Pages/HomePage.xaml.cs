@@ -11,7 +11,7 @@ using TemporaTasks.UserControls;
 
 namespace TemporaTasks.Pages
 {
-    public partial class HomeView : Page
+    public partial class HomePage : Page
     {
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -19,7 +19,7 @@ namespace TemporaTasks.Pages
         bool focusMode = false;
         int currentFocus = 0;
 
-        public HomeView()
+        public HomePage()
         {
             InitializeComponent();
         }
@@ -197,10 +197,7 @@ namespace TemporaTasks.Pages
 
         private void GenerateTaskStack()
         {
-            foreach (IndividualTask task in TaskFile.TaskList)
-            {
-                TaskStack.Children.Add(task);
-            }
+            foreach (IndividualTask task in TaskFile.TaskList) TaskStack.Children.Add(task);
         }
     }
 }
