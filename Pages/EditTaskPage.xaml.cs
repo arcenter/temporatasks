@@ -16,7 +16,7 @@ namespace TemporaTasks.Pages
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         IndividualTask task;
 
-        public DateTimePicker dtpic = new DateTimePicker();
+        public DateTimePicker dtpic;
 
         public EditTaskPage(IndividualTask task)
         {
@@ -25,6 +25,7 @@ namespace TemporaTasks.Pages
             this.task = task;
             TaskNameTextbox.Text = task.TaskName;
             // DTPicker.Value = task.DueDT;
+            dateTextBox.Text = $"{task.DueDT.Value.Year}-{task.DueDT.Value.Month.ToString().PadLeft(2, '0')}-{task.DueDT.Value.Day.ToString().PadLeft(2, '0')}";
             TaskNameTextbox.Focus();
         }
 
@@ -41,7 +42,7 @@ namespace TemporaTasks.Pages
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
             Trace.WriteLine(e.Key);
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && !myPopUp.IsOpen)
             {
                 ConfirmButton_MouseDown(null, null);
             }
@@ -63,10 +64,19 @@ namespace TemporaTasks.Pages
 
         private void ConfirmButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            Nullable<DateTime> newDueDate = null;
+            try
+            {
+                string[] splits = dateTextBox.Text.Split('-');
+                int year = int.Parse(splits[0]);
+                int month = int.Parse(splits[1]);
+                int day = int.Parse(splits[2]);
+                newDueDate = new(year, month, day);
+            } catch { }
+
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(TaskNameTextbox.Text, task.CreatedDT, null, null); // DTPicker.Value
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(TaskNameTextbox.Text, task.CreatedDT, newDueDate, null); // DTPicker.Value
             TaskFile.SaveData();
-            Trace.WriteLine($"{dtpic.selectedDateTime[0]}-{dtpic.selectedDateTime[1].ToString().PadLeft(2, '0')}-{dtpic.selectedDateTime[2].ToString().PadLeft(2, '0')}");
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
         }
@@ -90,9 +100,9 @@ namespace TemporaTasks.Pages
             ((Border)sender).BeginAnimation(Border.OpacityProperty, new DoubleAnimation((bool)e.NewValue? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
         }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            dtpic = new DateTimePicker();
+            dtpic = new DateTimePicker(task.DueDT);
             dtpic.textBox = dateTextBox;
             dtpic.popUp = myPopUp;
             myPopUp.Child = dtpic;

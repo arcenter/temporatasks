@@ -56,9 +56,9 @@
                     </Grid.ColumnDefinitions>
 
                     <DockPanel>
-                        <Popup x:Name="myPopUp" Placement="RelativePoint" StaysOpen="False" VerticalOffset="5" DockPanel.Dock="Left"/>
+                        <Popup x:Name="myPopUp" PlacementTarget="{Binding ElementName=calendarButtonBorder}" StaysOpen="False" VerticalOffset="10" DockPanel.Dock="Left"/>
                         <Label Content="Date" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
-                        <Border Width="40" DockPanel.Dock="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="Border_MouseDown" Focusable="False">
+                        <Border x:Name="calendarButtonBorder" Width="40" DockPanel.Dock="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseUp="Border_MouseUp" Focusable="False">
                             <Border.Background>
                                 <SolidColorBrush  Opacity="0.25" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
                             </Border.Background>
@@ -67,7 +67,6 @@
                         <!--<Button Width="40" Height="30" Click="Button_Click" DockPanel.Dock="Right"/>-->
                         <TextBox x:Name="dateTextBox" DockPanel.Dock="Right"/>
                     </DockPanel>
-
 
                     <DockPanel Grid.Column="1">
                         <Label Content="Time" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
