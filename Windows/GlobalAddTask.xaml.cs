@@ -11,37 +11,32 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TemporaTasks.Core;
+using TemporaTasks.Pages;
 using TemporaTasks.UserControls;
 
-namespace TemporaTasks.Pages
+namespace TemporaTasks.Windows
 {
-    public partial class NewTaskPage : Page
+    public partial class GlobalAddTask : Window
     {
-
-        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public DateTimePicker datePickerUserControl;
 
-        public NewTaskPage()
+        public GlobalAddTask()
         {
             InitializeComponent();
             TaskNameTextbox.Focus();
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            mainWindow.KeyDown += Page_KeyDown;
+            Window window = (Window)sender;
+            window.Left = (SystemParameters.PrimaryScreenWidth - window.Width) / 2;
+            window.Top = 50;
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            mainWindow.KeyDown -= Page_KeyDown;
-        }
-
-        private void Page_KeyDown(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
             {
@@ -50,13 +45,13 @@ namespace TemporaTasks.Pages
             else if (e.Key == Key.Escape)
             {
                 if (datePickerPopUp.IsOpen) datePickerPopUp.IsOpen = false;
-                else mainWindow.FrameView.GoBack();
+                else Close();
             }
         }
 
         private void Border_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
+            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -79,12 +74,19 @@ namespace TemporaTasks.Pages
 
         private void CancelButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mainWindow.FrameView.GoBack();
+            Close();
         }
 
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            DateBorder.BorderThickness = TimeBorder.BorderThickness = new Thickness(0);
+            NameBorder.BorderThickness = DateBorder.BorderThickness = TimeBorder.BorderThickness = new Thickness(0);
+
+            if (TaskNameTextbox.Text.Length == 0)
+            {
+                NameBorder.BorderThickness = new Thickness(2);
+                return;
+            }
+
             Nullable<DateTime> newDueDate;
             try
             {
@@ -103,8 +105,8 @@ namespace TemporaTasks.Pages
 
             TaskFile.TaskList.Add(new IndividualTask(TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
             TaskFile.SaveData();
-            mainWindow.FrameView.RemoveBackEntry();
-            mainWindow.FrameView.Navigate(new HomePage());
+            ((MainWindow)Application.Current.MainWindow).FrameView.Navigate(new HomePage());
+            Close();
         }
     }
 }

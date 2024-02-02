@@ -1,0 +1,110 @@
+﻿<Window x:Class="TemporaTasks.Windows.GlobalAddTask"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TemporaTasks.Windows" xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
+        mc:Ignorable="d"
+        Title="GlobalAddTask" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" Top="100" Width="650" Height="250" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+
+    <Grid>
+
+        <Border Background="{StaticResource Background}" CornerRadius="20"/>
+
+        <Image Source="{StaticResource homePageBackground}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="420" Margin="70 -60 40 0" Grid.Row="1"/>
+
+        <StackPanel Margin="50 0 50 0" VerticalAlignment="Center">
+
+            <Label x:Name="label" Content="Add a Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Top" Padding="0,0,0,0" Margin="0 0 0 20"/>
+
+            <DockPanel Margin="0 5 0 5" Height="30">
+
+                <Label Content="Task Name" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
+
+                <Border x:Name="NameBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" DockPanel.Dock="Right">
+                    <TextBox x:Name="TaskNameTextbox"/>
+                </Border>
+
+            </DockPanel>
+
+            <Grid Margin="0 5 0 5" Height="30">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.25*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <DockPanel>
+
+                    <Popup x:Name="datePickerPopUp" PlacementTarget="{Binding ElementName=calendarButtonBorder}" StaysOpen="False" VerticalOffset="10" DockPanel.Dock="Left"/>
+
+                    <Label Content="Date" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
+
+                    <Border x:Name="calendarButtonBorder" DockPanel.Dock="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseUp="calendar_MouseUp" Focusable="False" Padding="10 0 10 0">
+                        <Border.Background>
+                            <SolidColorBrush  Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                        </Border.Background>
+                        <Image x:Name="calendarIcon" Source="{StaticResource calendarIcon}" Width="12" IsHitTestVisible="False"/>
+                    </Border>
+
+                    <Border x:Name="DateBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0">
+                        <TextBox x:Name="dateTextBox" DockPanel.Dock="Right" BorderThickness="10,1,1,1"/>
+                    </Border>
+                </DockPanel>
+
+                <DockPanel Grid.Column="1">
+                    <Label Content="Time" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="20,0,10,0"/>
+                    <Border x:Name="TimeBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0">
+                        <TextBox x:Name="timeTextBox"/>
+                    </Border>
+                </DockPanel>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                <Border x:Name="CancelButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="CancelButton_MouseDown" MouseMove="Border_MouseMove" Margin="0 10 0 0" Height="40">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource Secondary}}"/>
+                    </Border.Background>
+
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <userControl:ButtonToolTip ToolTipText="Cancel" Button1Text="esc"/>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+
+                    <Label Content="Cancel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+
+                </Border>
+
+                <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="Border_MouseMove" Margin="10 10 0 0" Height="40">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                    </Border.Background>
+
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="enter"/>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+
+                    <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+
+                </Border>
+
+            </StackPanel>
+
+        </StackPanel>
+
+        <Border CornerRadius="20" BorderBrush="{StaticResource Border}" BorderThickness="1"/>
+
+    </Grid>
+
+</Window>
