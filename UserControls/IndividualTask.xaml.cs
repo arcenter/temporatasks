@@ -145,6 +145,7 @@ namespace TemporaTasks.UserControls
 
         private void UpdateDateTimeLabelWithRemaining(object sender, EventArgs e)
         {
+            if (!DueDT.HasValue) return;
             TimeSpan remainingTime = DueDT.Value - DateTime.Now;
             if (remainingTime <= TimeSpan.FromTicks(0))
             {

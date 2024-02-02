@@ -9,7 +9,7 @@
 
     <Grid>
 
-        <Border Background="{StaticResource Secondary}" CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=UserControl}}" Opacity="0.75"/>
+        <Border Background="{StaticResource Secondary}" CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
 
         <Border Padding="{Binding BorderPadding, RelativeSource={RelativeSource AncestorType=UserControl}}">
 

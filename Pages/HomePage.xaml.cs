@@ -170,7 +170,7 @@ namespace TemporaTasks.Pages
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TaskStack.Children.RemoveRange(0, TaskStack.Children.Count-1);
-            mainWindow.FrameView.Navigate(new NewTaskPage());
+            mainWindow.FrameView.Navigate(new AddTaskPage());
         }
 
         private void Page_MouseDown(object sender, MouseButtonEventArgs e)
