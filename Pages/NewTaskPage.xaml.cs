@@ -23,6 +23,8 @@ namespace TemporaTasks.Pages
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
+        public DateTimePicker datePickerUserControl;
+
         public NewTaskPage()
         {
             InitializeComponent();
@@ -41,41 +43,68 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
             {
                 AddButton_MouseDown(null, null);
             }
             else if (e.Key == Key.Escape)
             {
-                mainWindow.FrameView.Navigate(new HomePage());
+                if (datePickerPopUp.IsOpen) datePickerPopUp.IsOpen = false;
+                else mainWindow.FrameView.GoBack();
             }
         }
 
-        private void BackIcon_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            mainWindow.FrameView.Navigate(new HomePage());
-        }
-
-        private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void Border_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
         }
 
-        private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            TaskFile.TaskList.Add(new IndividualTask(TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, DTPicker.Value, null));
-            TaskFile.SaveData();
-            mainWindow.FrameView.RemoveBackEntry();
-            mainWindow.FrameView.Navigate(new HomePage());
-        }
-
-        private void AddButton_MouseMove(object sender, MouseEventArgs e)
+        private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             Point mousePosition = e.GetPosition(sender as UIElement);
-            ToolTip tooltip = (ToolTip)AddButton.ToolTip;
+            ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
             tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
+        }
+
+        private void calendar_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            datePickerUserControl = new DateTimePicker(dateTextBox.Text);
+            datePickerUserControl.textBox = dateTextBox;
+            datePickerUserControl.popUp = datePickerPopUp;
+            datePickerPopUp.Child = datePickerUserControl;
+            datePickerPopUp.IsOpen = true;
+        }
+
+        private void CancelButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            mainWindow.FrameView.GoBack();
+        }
+
+        private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DateBorder.BorderThickness = TimeBorder.BorderThickness = new Thickness(0);
+            Nullable<DateTime> newDueDate;
+            try
+            {
+                newDueDate = DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);
+            }
+            catch (IncorrectDateException)
+            {
+                DateBorder.BorderThickness = new Thickness(2);
+                return;
+            }
+            catch (IncorrectTimeException)
+            {
+                TimeBorder.BorderThickness = new Thickness(2);
+                return;
+            }
+
+            TaskFile.TaskList.Add(new IndividualTask(TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
+            TaskFile.SaveData();
+            mainWindow.FrameView.RemoveBackEntry();
+            mainWindow.FrameView.Navigate(new HomePage());
         }
     }
 }
