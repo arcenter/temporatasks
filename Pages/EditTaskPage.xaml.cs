@@ -62,7 +62,7 @@ namespace TemporaTasks.Pages
         {
             ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
         }
-
+        
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             Point mousePosition = e.GetPosition(sender as UIElement);
@@ -74,7 +74,7 @@ namespace TemporaTasks.Pages
 
         private void calendar_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            datePickerUserControl = new DateTimePicker(task.DueDT);
+            datePickerUserControl = new DateTimePicker(dateTextBox.Text);
             datePickerUserControl.textBox = dateTextBox;
             datePickerUserControl.popUp = datePickerPopUp;
             datePickerPopUp.Child = datePickerUserControl;

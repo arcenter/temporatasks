@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization.Metadata;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,30 +34,54 @@ namespace TemporaTasks.UserControls
         public TextBox textBox;
         public Popup popUp;
 
-        public DateTimePicker(Nullable<DateTime> dueDate = null)
+        public DateTimePicker(string dateText)
         {
             InitializeComponent();
 
-            for (int i = 0; i < 11; i++)
-            {
-                yearComboBox.Items.Add((currentYear + i).ToString());
-            }
-            
-            yearComboBox.SelectedIndex = 0;
-            monthComboBox.SelectedIndex = currentMonth - 1;
+            for (int i = 0; i < 11; i++) yearComboBox.Items.Add((currentYear + i).ToString());
+
             selectedDateTime[2] = currentDay;
 
-            try
+            if (new Regex("^\\d{1,4}-\\d{1,2}-\\d{1,2}$").Match(dateText).Success)
             {
-                if (dueDate.HasValue)
-                {
-                    yearComboBox.Text = dueDate.Value.Year.ToString();
-                    monthComboBox.SelectedIndex = dueDate.Value.Month-1;
-                    GenerateCalendar(-1, -1, dueDate.Value.Day);
-                } else { GenerateCalendar(); }
+                string[] splits = dateText.Split("-");
+                yearComboBox.Text = splits[0];
+                monthComboBox.SelectedIndex = int.Parse(splits[1]);
+                GenerateCalendar(-1, -1, int.Parse(splits[2]));
             }
-            catch { }
+            else
+            {
+                yearComboBox.SelectedIndex = 0;
+                monthComboBox.SelectedIndex = currentMonth - 1; 
+                GenerateCalendar();
+            }
         }
+
+        //public DateTimePicker(Nullable<DateTime> dueDate = null)
+        //{
+        //    InitializeComponent();
+
+        //    for (int i = 0; i < 11; i++)
+        //    {
+        //        yearComboBox.Items.Add((currentYear + i).ToString());
+        //    }
+
+        //    yearComboBox.SelectedIndex = 0;
+        //    monthComboBox.SelectedIndex = currentMonth - 1;
+        //    selectedDateTime[2] = currentDay;
+
+        //    try
+        //    {
+        //        if (dueDate.HasValue)
+        //        {
+        //            yearComboBox.Text = dueDate.Value.Year.ToString();
+        //            monthComboBox.SelectedIndex = dueDate.Value.Month - 1;
+        //            GenerateCalendar(-1, -1, dueDate.Value.Day);
+        //        }
+        //        else { GenerateCalendar(); }
+        //    }
+        //    catch { }
+        //}
 
         private void GenerateCalendar(int year = -1, int month = -1, int day = -1)
         {

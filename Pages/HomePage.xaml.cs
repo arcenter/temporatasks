@@ -148,8 +148,10 @@ namespace TemporaTasks.Pages
 
         private void TrashIcon_MouseDown(object sender)
         {
-            TaskFile.TaskList.Remove(sender);
-            TaskStack.Children.Remove((IndividualTask)sender);
+            IndividualTask task = (IndividualTask)sender;
+            task.TaskTimer.Stop();
+            TaskFile.TaskList.Remove(task);
+            TaskStack.Children.Remove(task);
             TaskFile.SaveData();
         }
 
