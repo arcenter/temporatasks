@@ -14,7 +14,7 @@ namespace TemporaTasks
             mutex = new Mutex(true, "TemporaTasks", out bool createdNew);
             if (!createdNew)
             {
-                mutex.ReleaseMutex();
+                // mutex.ReleaseMutex();
                 Application.Current.Shutdown();
             }
             base.OnStartup(e);

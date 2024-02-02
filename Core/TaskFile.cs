@@ -39,10 +39,7 @@ namespace TemporaTasks.Core
                         IndividualTask taskObj = new(taskName, createdTime, dueTime, completedTime);
                         _TasksList.Add(taskObj);
                     }
-                    catch (Exception ex)
-                    {
-                        Trace.WriteLine($"\n\nError loading task: {taskName}\n{ex}\n");
-                    }
+                    catch { }
                 }
             }
             TaskList = _TasksList;
