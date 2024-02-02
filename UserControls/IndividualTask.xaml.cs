@@ -45,14 +45,10 @@ namespace TemporaTasks.UserControls
             }
         }
 
-
-        public IndividualTask()
+        public IndividualTask(String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT)
         {
             InitializeComponent();
-        }
 
-        public IndividualTask(String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT) : this()
-        {
             TaskName = _TaskName;
             taskNameTextBlock.Text = _TaskName;
             
@@ -207,7 +203,7 @@ namespace TemporaTasks.UserControls
 
         private void NewDueDT()
         {
-            if (DueDT.HasValue)
+            if (IsDue)
             {
                 double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
                 if (TimeSpan.FromSeconds(taskTimeRemaining) > TimeSpan.FromDays(1)) return;

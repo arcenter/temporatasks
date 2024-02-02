@@ -28,13 +28,20 @@ namespace TemporaTasks.Pages
         {
             mainWindow.KeyDown += Page_KeyDown;
             mainWindow.MouseDown += Page_MouseDown;
-            foreach (IndividualTask task in TaskFile.TaskList)
+            if (TaskFile.TaskList.Count == 0)
             {
-                task.MouseDown += IndividualTask_MouseDown;
-                task.IsTrashIconClicked += TrashIcon_MouseDown;
-                task.IsEditIconClicked += EditIcon_MouseDown;
+                NewTaskArrow.Visibility = Visibility.Visible;
             }
-            GenerateTaskStack();
+            else
+            {
+                foreach (IndividualTask task in TaskFile.TaskList)
+                {
+                    task.MouseDown += IndividualTask_MouseDown;
+                    task.IsTrashIconClicked += TrashIcon_MouseDown;
+                    task.IsEditIconClicked += EditIcon_MouseDown;
+                }
+                GenerateTaskStack();
+            }
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)

@@ -74,6 +74,18 @@ namespace TemporaTasks.Core
                     hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex("[Aa][Mm]?$").Match(time).Success ? 0 : 12);
                 }
 
+                else if (new Regex("^\\d{1,2}:\\d{1,2}$").Match(time).Success)
+                {
+                    MatchCollection matches = new Regex("\\d{1,2}").Matches(time);
+                    hour = int.Parse(matches[0].Value);
+                    minute = int.Parse(matches[1].Value);
+                }
+
+                else if (new Regex("^\\d{1,2}$").Match(time).Success)
+                {
+                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value);
+                }
+
                 else
                 {
                     throw new IncorrectTimeException();

@@ -11,6 +11,9 @@
 
     <Grid Margin="50 0 50 0">
 
+        <Image Source="{StaticResource homePageBackground}" HorizontalAlignment="Left" VerticalAlignment="Bottom" MaxWidth="465" Margin="40 0 40 0"/>
+        <Image x:Name="NewTaskArrow" Source="{StaticResource NewTaskArrow}" HorizontalAlignment="Right" Margin="0,120,50,160" Visibility="Collapsed"/>
+
         <DockPanel Margin="13 50 13 0" VerticalAlignment="Top">
 
             <Label x:Name="label" Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Bold" Foreground="{StaticResource Text}" FontSize="28" DockPanel.Dock="Left" Padding="0,0,0,0" VerticalContentAlignment="Stretch"/>
