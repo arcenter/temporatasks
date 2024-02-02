@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TemporaTasks.Windows" xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
         mc:Ignorable="d"
-        Title="GlobalAddTask" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" Top="100" Width="650" Height="250" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+        Title="GlobalAddTask" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" Top="100" Width="650" Height="250" Loaded="Window_Loaded" KeyDown="Window_KeyDown"
+        Opacity="0" Deactivated="Window_Deactivated">
 
     <Grid>
 
