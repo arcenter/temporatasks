@@ -32,11 +32,11 @@ namespace TemporaTasks.Pages
             string apm;
             if (hour < 12)
             {
-                apm = "am";
+                apm = "AM";
             }
             else
             {
-                apm = "pm";
+                apm = "PM";
                 hour = hour - 12;
             }
 
@@ -67,9 +67,23 @@ namespace TemporaTasks.Pages
             }
         }
 
-        private void BackIcon_MouseDown(object sender, MouseButtonEventArgs e)
+        private void CancelButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void CancelButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainWindow.FrameView.Navigate(new HomePage());
+        }
+
+        private void CancelButton_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = e.GetPosition(sender as UIElement);
+            ToolTip tooltip = (ToolTip)CancelButton.ToolTip;
+            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+            tooltip.HorizontalOffset = mousePosition.X;
+            tooltip.VerticalOffset = mousePosition.Y;
         }
 
         private void ConfirmButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
