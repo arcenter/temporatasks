@@ -20,7 +20,7 @@ namespace TemporaTasks.Windows
 {
     public partial class GlobalAddTask : Window
     {
-
+        private Window window;
         public DateTimePicker datePickerUserControl;
 
         public GlobalAddTask()
@@ -31,9 +31,10 @@ namespace TemporaTasks.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Window window = (Window)sender;
+            window = (Window)sender;
             window.Left = (SystemParameters.PrimaryScreenWidth - window.Width) / 2;
             window.Top = 50;
+            window.BeginAnimation(Window.OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -45,7 +46,7 @@ namespace TemporaTasks.Windows
             else if (e.Key == Key.Escape)
             {
                 if (datePickerPopUp.IsOpen) datePickerPopUp.IsOpen = false;
-                else Close();
+                else CloseWindow();
             }
         }
 
@@ -74,7 +75,7 @@ namespace TemporaTasks.Windows
 
         private void CancelButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Close();
+            CloseWindow();
         }
 
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
@@ -106,7 +107,20 @@ namespace TemporaTasks.Windows
             TaskFile.TaskList.Add(new IndividualTask(TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
             TaskFile.SaveData();
             ((MainWindow)Application.Current.MainWindow).FrameView.Navigate(new HomePage());
+            CloseWindow();
+        }
+
+        private async void CloseWindow()
+        {
+            window.BeginAnimation(Window.OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
+            await Task.Delay(250);
             Close();
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            try { Close(); }
+            catch { }
         }
     }
 }
