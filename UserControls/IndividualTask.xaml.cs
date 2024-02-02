@@ -207,9 +207,10 @@ namespace TemporaTasks.UserControls
 
         private void NewDueDT()
         {
-            double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
-            if (TimeSpan.FromSeconds(taskTimeRemaining) < TimeSpan.FromDays(1))
+            if (DueDT.HasValue)
             {
+                double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
+                if (TimeSpan.FromSeconds(taskTimeRemaining) > TimeSpan.FromDays(1)) return;
                 TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(0, taskTimeRemaining));
                 TaskTimer.Tick += (s, e) =>
                 {
@@ -221,6 +222,7 @@ namespace TemporaTasks.UserControls
                 };
                 TaskTimer.Start();
             }
+            else TaskTimer.Stop();
             DueDateTimeLabelUpdate();
         }
     }
