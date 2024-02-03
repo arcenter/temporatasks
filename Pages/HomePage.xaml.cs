@@ -13,7 +13,6 @@ namespace TemporaTasks.Pages
 {
     public partial class HomePage : Page
     {
-
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         bool focusMode = false;
@@ -41,6 +40,7 @@ namespace TemporaTasks.Pages
                     task.IsEditIconClicked += EditIcon_MouseDown;
                 }
                 GenerateTaskStack();
+                if (focusMode) FocusTask();
             }
         }
 
@@ -50,7 +50,7 @@ namespace TemporaTasks.Pages
             mainWindow.KeyDown -= Page_KeyDown;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
-                task.StrokeBorder.BorderThickness = new Thickness(0);
+                task.StrokeOff(); // StrokeBorder.BorderThickness = new Thickness(0);
                 task.MouseDown -= IndividualTask_MouseDown;
                 task.IsTrashIconClicked -= TrashIcon_MouseDown;
                 task.IsEditIconClicked -= EditIcon_MouseDown;
