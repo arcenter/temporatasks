@@ -22,10 +22,12 @@
             <Border.ToolTip>
                 <ToolTip>
                     <ToolTip.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <local:ButtonToolTip ToolTipText="Enter Keyboard Mode" Button1Text="↓" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
-                            <local:ButtonToolTip ToolTipText="/" Button1Text="↑" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
-                            <local:ButtonToolTip ToolTipText="Toggle Task Completion" Button1Text="spacebar" Margin="10 0 0 0"/>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <local:ButtonToolTip ToolTipText="Enter Keyboard Mode" Button1Text="↓" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
+                                <local:ButtonToolTip ToolTipText="/" Button1Text="↑" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
+                            </StackPanel>
+                            <local:ButtonToolTip ToolTipText="Toggle Task Completion" Button1Text="spacebar" Margin="0 10 0 0"/>
                         </StackPanel>
                     </ToolTip.Content>
                 </ToolTip>

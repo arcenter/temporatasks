@@ -1,8 +1,10 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows;
+using TemporaTasks.Core;
 
 namespace TemporaTasks
 {
@@ -18,6 +20,13 @@ namespace TemporaTasks
                 Application.Current.Shutdown();
             }
             base.OnStartup(e);
+
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                Exception ex = (Exception)e.ExceptionObject;
+                File.AppendAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\TemporaTasks\\crashLogs.txt", $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}\n{ex.Message}\n{ex.StackTrace}\n\n");
+                Shutdown();
+            };
         }
     }
 

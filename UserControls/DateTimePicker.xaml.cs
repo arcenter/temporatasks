@@ -46,7 +46,7 @@ namespace TemporaTasks.UserControls
             {
                 string[] splits = dateText.Split("-");
                 yearComboBox.Text = splits[0];
-                monthComboBox.SelectedIndex = int.Parse(splits[1]);
+                monthComboBox.SelectedIndex = int.Parse(splits[1]) - 1;
                 GenerateCalendar(-1, -1, int.Parse(splits[2]));
             }
             else
@@ -56,32 +56,6 @@ namespace TemporaTasks.UserControls
                 GenerateCalendar();
             }
         }
-
-        //public DateTimePicker(Nullable<DateTime> dueDate = null)
-        //{
-        //    InitializeComponent();
-
-        //    for (int i = 0; i < 11; i++)
-        //    {
-        //        yearComboBox.Items.Add((currentYear + i).ToString());
-        //    }
-
-        //    yearComboBox.SelectedIndex = 0;
-        //    monthComboBox.SelectedIndex = currentMonth - 1;
-        //    selectedDateTime[2] = currentDay;
-
-        //    try
-        //    {
-        //        if (dueDate.HasValue)
-        //        {
-        //            yearComboBox.Text = dueDate.Value.Year.ToString();
-        //            monthComboBox.SelectedIndex = dueDate.Value.Month - 1;
-        //            GenerateCalendar(-1, -1, dueDate.Value.Day);
-        //        }
-        //        else { GenerateCalendar(); }
-        //    }
-        //    catch { }
-        //}
 
         private void GenerateCalendar(int year = -1, int month = -1, int day = -1)
         {
@@ -93,17 +67,27 @@ namespace TemporaTasks.UserControls
 
             if (calendarGrid.RowDefinitions.Count >= 7) calendarGrid.RowDefinitions.RemoveRange(6, calendarGrid.RowDefinitions.Count-6);
 
-            int rowNumber = 1;
-            int colNumber = (int)(new DateTime(year, month, 01).DayOfWeek);
-
             int maxDays = DateTime.DaysInMonth(year, month);
 
+            int colNumber = (int)new DateTime(year, month, 01).DayOfWeek;
+            int rowNumber = 1;
+            
+            bool onCurrentDay;
             for (int _day = 1; ;)
             {
+                onCurrentDay = false;
+
+                if (monthComboBox.SelectedIndex == currentMonth - 1 && yearComboBox.Text == currentYear.ToString())
+                {
+                    if (_day < currentDay) goto skipCreation;
+                    else if (_day == currentDay) onCurrentDay = true;
+                }
+
                 Border border = new()
                 {
                     Background = (SolidColorBrush)((MainWindow)Application.Current.MainWindow).FindResource("DarkBlue"),
-                    Tag = new ArrayList() { _day, (_day == day) ? 0.25 : 0 }
+                    Tag = new ArrayList() { _day, onCurrentDay ? 0.25 : 0 },
+                    CornerRadius = new CornerRadius(5)
                 };
 
                 border.Opacity = (double)(((ArrayList)border.Tag)[1]);
@@ -127,6 +111,8 @@ namespace TemporaTasks.UserControls
                 Grid.SetRow(label, rowNumber);
                 Grid.SetColumn(label, colNumber);
                 calendarGrid.Children.Add(label);
+
+                skipCreation:
 
                 if (++_day > maxDays) break;
 
@@ -168,6 +154,7 @@ namespace TemporaTasks.UserControls
 
         private void BackIconButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (yearComboBox.Text == currentYear.ToString() && monthComboBox.SelectedIndex + 1 == currentMonth) return;
             if (monthComboBox.SelectedIndex == 0)
             {
                 monthComboBox.SelectedIndex = 11;
