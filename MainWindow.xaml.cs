@@ -67,11 +67,13 @@ namespace TemporaTasks
             WindowHide();
         }
 
-        public void WindowHide(bool check = true)
+        public async void WindowHide(bool check = true)
         {
             if (check)
             {
                 // TrayIcon.Visibility = Visibility.Visible;
+                BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(100)));
+                await Task.Delay(125);
                 Hide();
             }
             else
@@ -79,6 +81,7 @@ namespace TemporaTasks
                 // TrayIcon.Visibility = Visibility.Hidden;
                 Show();
                 Activate();
+                BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(100)));
             }
         }
 
