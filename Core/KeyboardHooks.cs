@@ -58,7 +58,7 @@ namespace TemporaTasks.Core
                             if (vkey == VK_KEY_2)
                             {
                                 foreach (Window _window in Application.Current.Windows) if (_window.IsActive) goto end;
-                                GlobalAddTask window = new GlobalAddTask();
+                                GlobalAddTask window = new();
                                 window.Show();
                                 window.Activate();
                             }

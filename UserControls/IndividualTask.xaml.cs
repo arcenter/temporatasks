@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using TemporaTasks.Core;
 
 namespace TemporaTasks.UserControls
 {
@@ -86,7 +87,8 @@ namespace TemporaTasks.UserControls
                 DueDateTimeLabelUpdate();
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(Background.IsMouseOver? 0.2 : 0, TimeSpan.FromMilliseconds(250)));
-            if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation(Background.IsMouseOver? 75 : 0, TimeSpan.FromMilliseconds(250)));
+            if (!Icons.IsMouseOver && !TimeExtend.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation((Background.IsMouseOver) ? 75 : 0, TimeSpan.FromMilliseconds(250)));
+            if (!TimeExtend.IsMouseOver) TimeExtend.BeginAnimation(WidthProperty, new DoubleAnimation(Background.IsMouseOver? ((IsDue && !IsCompleted)? 105 : 0) : 0, TimeSpan.FromMilliseconds(250)));
         }
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
@@ -94,11 +96,15 @@ namespace TemporaTasks.UserControls
             ToggleCompletionStatus();
         }
 
+        private void Button_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((Border)sender).BeginAnimation(Border.OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+        }
+
         public void ToggleCompletionStatus()
         {
             IsCompleted = !IsCompleted;
-            if (IsCompleted) TaskTimer.Stop();
-            else NewDueDT();
+            NewDueDT();
             UpdateTaskCheckBoxAndBackground();
         }
 
@@ -138,7 +144,7 @@ namespace TemporaTasks.UserControls
         private void DueDateTimeLabelUpdate()
         {
             if (DueDT.HasValue) DueDateTimeLabel.Content = (IsCompleted? "Done " : "Due ") + DueDT.Value.ToString("hh:mm tt dd\\/MM");
-            if (IsDue) DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
+            DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
 
             DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : (IsDue ? 1 : 0.5), TimeSpan.FromMilliseconds(250)));
         }
@@ -204,7 +210,8 @@ namespace TemporaTasks.UserControls
 
         private void NewDueDT()
         {
-            if (IsDue)
+            TaskTimer.Stop();
+            if (!IsCompleted)
             {
                 double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
                 if (TimeSpan.FromSeconds(taskTimeRemaining) > TimeSpan.FromDays(1)) return;
@@ -219,8 +226,27 @@ namespace TemporaTasks.UserControls
                 };
                 TaskTimer.Start();
             }
-            else TaskTimer.Stop();
             DueDateTimeLabelUpdate();
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var clickedBorder = sender as Border;
+            switch (clickedBorder.Name)
+            {
+                case "plus5m":
+                    DueDT += TimeSpan.FromMinutes(5);
+                    break;
+                case "plus10m":
+                    DueDT += TimeSpan.FromMinutes(10);
+                    break;
+                case "plus30m":
+                    DueDT += TimeSpan.FromMinutes(30);
+                    break;
+            }
+            TaskFile.SaveData();
+            DueDateTimeLabelUpdate();
+            NewDueDT();
         }
     }
 }

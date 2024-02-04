@@ -70,9 +70,11 @@ namespace TemporaTasks.Pages
 
         private void calendar_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            datePickerUserControl = new DateTimePicker(dateTextBox.Text);
-            datePickerUserControl.textBox = dateTextBox;
-            datePickerUserControl.popUp = datePickerPopUp;
+            datePickerUserControl = new DateTimePicker(dateTextBox.Text)
+            {
+                textBox = dateTextBox,
+                popUp = datePickerPopUp
+            };
             datePickerPopUp.Child = datePickerUserControl;
             datePickerPopUp.IsOpen = true;
         }

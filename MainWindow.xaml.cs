@@ -25,9 +25,12 @@ namespace TemporaTasks
         {
             {
                 string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\TemporaTasks\\";
-                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                TaskFile.backupPath = $"{path}backups\\";
 
-                TaskFile.path = $"{path}data.json";
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                if (!Directory.Exists(TaskFile.backupPath)) Directory.CreateDirectory(TaskFile.backupPath);
+
+                TaskFile.saveFilePath = $"{path}data.json";
                 TaskFile.LoadData();
             }
             FrameView.Navigate(new HomePage());

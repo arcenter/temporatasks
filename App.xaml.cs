@@ -10,10 +10,9 @@ namespace TemporaTasks
 {
     public partial class App : Application
     {
-        private static Mutex mutex = null;
         protected override void OnStartup(StartupEventArgs e)
         {
-            mutex = new Mutex(true, "TemporaTasks", out bool createdNew);
+            _ = new Mutex(true, "TemporaTasks", out bool createdNew);
             if (!createdNew)
             {
                 // mutex.ReleaseMutex();
