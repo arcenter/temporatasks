@@ -30,7 +30,7 @@
 
                         <Label Content="Task Name" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
 
-                        <TextBox x:Name="TaskNameTextbox" DockPanel.Dock="Right"/>
+                        <TextBox x:Name="TaskNameTextbox" DockPanel.Dock="Right" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
 
                     </DockPanel>
 
@@ -55,14 +55,14 @@
                             </Border>
 
                             <Border x:Name="DateBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0">
-                                <TextBox x:Name="dateTextBox" DockPanel.Dock="Right" BorderThickness="10,1,1,1"/>
+                                <TextBox x:Name="dateTextBox" DockPanel.Dock="Right" BorderThickness="10,1,1,1" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
                             </Border>
                         </DockPanel>
 
                         <DockPanel Grid.Column="1">
                             <Label Content="Time" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="20,0,10,0"/>
                             <Border x:Name="TimeBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0">
-                                <TextBox x:Name="timeTextBox"/>
+                                <TextBox x:Name="timeTextBox" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
                             </Border>
                         </DockPanel>
 

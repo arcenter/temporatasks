@@ -111,5 +111,10 @@ namespace TemporaTasks.Pages
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
         }
+
+        private void Textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
     }
 }
