@@ -15,15 +15,16 @@ namespace TemporaTasks.Core
 {
     public static class TaskFile
     {
-        public static string path;
+        public static string saveFilePath;
+        public static string backupPath;
         public static ArrayList TaskList;
 
         public static void LoadData()
         {
             ArrayList _TasksList = [];
-            if (File.Exists(path))
+            if (File.Exists(saveFilePath))
             {
-                Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(path));
+                Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
                 foreach (string taskName in data.Keys)
                 {
                     try
@@ -62,7 +63,12 @@ namespace TemporaTasks.Core
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
                 temp[task.TaskName] = temp2;
             }
-            File.WriteAllText(path, JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp));
+            string temp3 = JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp);
+            File.WriteAllText(saveFilePath, temp3);
+
+            string saveTime = DateTime.Now.ToString("yyMMddHHmm");
+            File.WriteAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\TemporaTasks\\backups\\data{saveTime}.json", temp3);
+            temp3 = "";
         }
 
         private static string DateTimeToString(Nullable<DateTime> dateTime)
