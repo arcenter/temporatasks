@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.VisualBasic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -143,7 +144,26 @@ namespace TemporaTasks.UserControls
 
         private void DueDateTimeLabelUpdate()
         {
-            if (DueDT.HasValue) DueDateTimeLabel.Content = (IsCompleted? "Done " : "Due ") + DueDT.Value.ToString("hh:mm tt dd\\/MM");
+            if (DueDT.HasValue)
+            {
+                string dateString;
+                switch (DueDT.Value.Day - DateTime.Now.Day)
+                {
+                    case 0:
+                        dateString = "Today";
+                        break;
+                    case -1:
+                        dateString = "Yesterday";
+                        break;
+                    case 1:
+                        dateString = "Tomorrow";
+                        break;
+                    default:
+                        dateString = DueDT.Value.ToString("dd\\/MM");
+                        break;
+                }
+                DueDateTimeLabel.Content = (IsCompleted ? "Done " : "Due ") + $"{dateString} {DueDT.Value.ToString("hh:mm tt")}";
+            }
             DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
 
             DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : (IsDue ? 1 : 0.5), TimeSpan.FromMilliseconds(250)));
