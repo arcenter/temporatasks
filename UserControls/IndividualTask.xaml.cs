@@ -211,7 +211,7 @@ namespace TemporaTasks.UserControls
         private void NewDueDT()
         {
             TaskTimer.Stop();
-            if (!IsCompleted)
+            if (DueDT.HasValue && !IsCompleted)
             {
                 double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
                 if (TimeSpan.FromSeconds(taskTimeRemaining) > TimeSpan.FromDays(1)) return;
