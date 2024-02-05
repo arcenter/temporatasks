@@ -26,7 +26,6 @@ namespace TemporaTasks.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             mainWindow.KeyDown += Page_KeyDown;
-            mainWindow.MouseDown += Page_MouseDown;
             if (TaskFile.TaskList.Count == 0)
             {
                 NewTaskArrow.Visibility = Visibility.Visible;
@@ -46,7 +45,6 @@ namespace TemporaTasks.Pages
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            mainWindow.MouseDown -= Page_MouseDown;
             mainWindow.KeyDown -= Page_KeyDown;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
@@ -171,11 +169,6 @@ namespace TemporaTasks.Pages
         {
             TaskStack.Children.RemoveRange(0, TaskStack.Children.Count-1);
             mainWindow.FrameView.Navigate(new AddTaskPage());
-        }
-
-        private void Page_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            
         }
 
         private void AddButton_MouseMove(object sender, MouseEventArgs e)

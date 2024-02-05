@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="/Resources/Dictionaries/ToolTips.xaml"/>
                 <ResourceDictionary Source="/Resources/Dictionaries/TextBoxes.xaml"/>
                 <ResourceDictionary Source="/Resources/Dictionaries/ComboBoxes.xaml"/>
+                <ResourceDictionary Source="/Resources/Dictionaries/ScrollViewers.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
