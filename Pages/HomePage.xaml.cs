@@ -88,8 +88,7 @@ namespace TemporaTasks.Pages
                         break;
 
                     case Key.Space:
-                        ((IndividualTask)TaskStack.Children[currentFocus]).ToggleCompletionStatus();
-                        TaskFile.SaveData();
+                        ToggleTaskCompletion((IndividualTask)TaskStack.Children[currentFocus]);
                         break;
 
                     case Key.E:
@@ -138,8 +137,14 @@ namespace TemporaTasks.Pages
         private void IndividualTask_MouseDown(object sender, MouseButtonEventArgs e)
         {
             UnfocusTasks();
-
             focusMode = false;
+
+            ToggleTaskCompletion((IndividualTask)sender);
+        }
+
+        private void ToggleTaskCompletion(IndividualTask sender)
+        {
+            GenerateTaskStack();
 
             int temp = TaskStack.Children.IndexOf((IndividualTask)sender);
             if (temp > -1) currentFocus = temp;
@@ -200,11 +205,14 @@ namespace TemporaTasks.Pages
         
         private void GenerateTaskStack()
         {
+            TaskStack.Children.Clear();
+
             Dictionary<IndividualTask, object> matchesSort = new();
             ArrayList doesntMatchSort = new();
             Dictionary<IndividualTask, object> completed = new();
+            Dictionary<IndividualTask, object> sortedDict = new();
 
-            if (true)
+            if (false)
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                     if (task.IsCompleted)
@@ -212,6 +220,9 @@ namespace TemporaTasks.Pages
                     else
                         if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
                     else doesntMatchSort.Add(task);
+
+                sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
             else
             {
@@ -220,10 +231,10 @@ namespace TemporaTasks.Pages
                         completed[task] = task.CreatedDT.Value;
                     else
                         matchesSort[task] = task.TaskName;
+                
+                sortedDict = matchesSort.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                completed = completed.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
-            
-            var sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-            completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
             foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
             foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
