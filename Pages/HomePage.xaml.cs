@@ -200,34 +200,34 @@ namespace TemporaTasks.Pages
         
         private void GenerateTaskStack()
         {
-            Dictionary<object, IndividualTask> matchesSort = new();
+            Dictionary<IndividualTask, object> matchesSort = new();
             ArrayList doesntMatchSort = new();
-            Dictionary<object, IndividualTask> completed = new();
+            Dictionary<IndividualTask, object> completed = new();
 
             if (true)
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                     if (task.IsCompleted)
-                        completed[task.CreatedDT.Value] = task;
+                        completed[task] = task.CreatedDT.Value;
                     else
-                        if (task.DueDT.HasValue) matchesSort[task.DueDT.Value] = task;
+                        if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
                     else doesntMatchSort.Add(task);
             }
             else
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                     if (task.IsCompleted)
-                        completed[task.CreatedDT.Value] = task;
+                        completed[task] = task.CreatedDT.Value;
                     else
-                        matchesSort[task.TaskName] = task;
+                        matchesSort[task] = task.TaskName;
             }
             
-            var sortedDict = matchesSort.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            var sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
             completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            foreach (IndividualTask task in sortedDict.Values) TaskStack.Children.Add(task);
+            foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
             foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
-            foreach (IndividualTask task in completed.Values) TaskStack.Children.Add(task);
+            foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
         }
     }
 }
