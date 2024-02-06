@@ -35,7 +35,7 @@ namespace TemporaTasks.Core
         {
             if (date.Length == 0 && time.Length == 0) return null;
 
-            int year, month, day, hour = 0, minute = 0;
+            int year = DateTime.Now.Year, month = DateTime.Now.Month, day, hour = 0, minute = 0;
             string[] splits;
 
             if (date.Length == 0)
@@ -46,13 +46,28 @@ namespace TemporaTasks.Core
             }
             else
             {
-                if (!new Regex("^\\d{1,4}-\\d{1,2}-\\d{1,2}$").Match(date).Success) throw new IncorrectDateException();
                 try
                 {
                     splits = date.Split('-');
-                    year = int.Parse(splits[0]);
-                    month = int.Parse(splits[1]);
-                    day = int.Parse(splits[2]);
+                    if (new Regex("^\\d{1,4}-\\d{1,2}-\\d{1,2}$").Match(date).Success)
+                    {
+                        year = int.Parse(splits[0]);
+                        month = int.Parse(splits[1]);
+                        day = int.Parse(splits[2]);
+                    }
+                    else if (new Regex("^\\d{1,2}-\\d{1,2}$").Match(date).Success)
+                    {
+                        month = int.Parse(splits[0]);
+                        day = int.Parse(splits[1]);
+                    }
+                    else if (new Regex("^\\d{1,2}$").Match(date).Success)
+                    {
+                        day = int.Parse(splits[0]);
+                    }
+                    else
+                    {
+                        throw new IncorrectDateException();
+                    }
                 }
                 catch
                 {
@@ -62,34 +77,25 @@ namespace TemporaTasks.Core
 
             if (time.Length != 0)
             {
-                if (new Regex("^\\d{1,2}:\\d{1,2} ?[AaPp][Mm]?$").Match(time).Success)
+                if (new Regex("^\\d{1,2}:\\d{1,2} ?[AaPp]?[Mm]?$").Match(time).Success)
                 {
                     MatchCollection matches = new Regex("\\d{1,2}").Matches(time);
-                    hour = int.Parse(matches[0].Value) + (new Regex(" ?[Aa][Mm]?$").Match(time).Success ? 0 : 12);
+                    hour = int.Parse(matches[0].Value) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
                     minute = int.Parse(matches[1].Value);
                 }
 
-                else if (new Regex("^\\d{1,2} ?[AaPp][Mm]?$").Match(time).Success)
-                {
-                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex("[Aa][Mm]?$").Match(time).Success ? 0 : 12);
-                }
+                else if (new Regex("^\\d{1,2} ?[AaPp]?[Mm]?$").Match(time).Success)
+                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
 
-                else if (new Regex("^\\d{1,2}:\\d{1,2}$").Match(time).Success)
+                else if (new Regex("^\\d{3,4} ?[AaPp]?[Mm]?$").Match(time).Success)
                 {
-                    MatchCollection matches = new Regex("\\d{1,2}").Matches(time);
-                    hour = int.Parse(matches[0].Value);
-                    minute = int.Parse(matches[1].Value);
-                }
-
-                else if (new Regex("^\\d{1,2}$").Match(time).Success)
-                {
-                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value);
+                    string timeString = new Regex("\\d{3,4}").Match(time).Value.PadLeft(4, '0');
+                    minute = int.Parse(timeString[2..]);
+                    hour = int.Parse(timeString[..2]) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12: 0);
                 }
 
                 else
-                {
                     throw new IncorrectTimeException();
-                }
 
                 if (hour < 0 || hour > 23) throw new IncorrectTimeException();
                 if (minute < 0 || minute > 59) throw new IncorrectTimeException();
