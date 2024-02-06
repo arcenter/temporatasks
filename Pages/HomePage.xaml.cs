@@ -207,38 +207,42 @@ namespace TemporaTasks.Pages
         {
             TaskStack.Children.Clear();
 
-            Dictionary<IndividualTask, object> matchesSort = new();
+            Dictionary<IndividualTask, object> matchesSort = new(), completed = new(), sortedDict = new();
             ArrayList doesntMatchSort = new();
-            Dictionary<IndividualTask, object> completed = new();
-            Dictionary<IndividualTask, object> sortedDict = new();
 
-            if (false)
+            switch (SortComboBox.SelectedIndex)
             {
-                foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.IsCompleted)
-                        completed[task] = task.CreatedDT.Value;
-                    else
-                        if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
-                    else doesntMatchSort.Add(task);
+                case 1:
+                    foreach (IndividualTask task in TaskFile.TaskList)
+                        if (task.IsCompleted)
+                            completed[task] = task.CreatedDT.Value;
+                        else
+                            if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
+                        else doesntMatchSort.Add(task);
 
-                sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-            }
-            else
-            {
-                foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.IsCompleted)
-                        completed[task] = task.CreatedDT.Value;
-                    else
-                        matchesSort[task] = task.TaskName;
-                
-                sortedDict = matchesSort.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
-                completed = completed.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    break;
+                default:
+                    foreach (IndividualTask task in TaskFile.TaskList)
+                        if (task.IsCompleted)
+                            completed[task] = task.CreatedDT.Value;
+                        else
+                            matchesSort[task] = task.TaskName;
+
+                    sortedDict = matchesSort.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    completed = completed.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    break;
             }
 
             foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
             foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
             foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
+        }
+
+        private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GenerateTaskStack();
         }
     }
 }

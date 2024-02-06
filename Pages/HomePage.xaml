@@ -15,25 +15,36 @@
 
         <DockPanel Margin="13 50 13 0" VerticalAlignment="Top">
 
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+
+                <Label Content="Sort by" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+
+                <ComboBox x:Name="SortComboBox" Margin="10 0 0 0" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False">
+                    <ComboBoxItem Content="Name"/>
+                    <ComboBoxItem Content="Due Date"/>
+                </ComboBox>
+
+                <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="AddButton_MouseMove" Margin="20 0 0 0">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                    </Border.Background>
+
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="n"/>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+
+                    <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+
+                </Border>
+
+            </StackPanel>
+
             <Label x:Name="label" Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Bold" Foreground="{StaticResource Text}" FontSize="28" DockPanel.Dock="Left" Padding="0,0,0,0" VerticalContentAlignment="Stretch"/>
-
-            <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="AddButton_MouseMove">
-
-                <Border.Background>
-                    <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
-                </Border.Background>
-
-                <Border.ToolTip>
-                    <ToolTip>
-                        <ToolTip.Content>
-                            <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="n"/>
-                        </ToolTip.Content>
-                    </ToolTip>
-                </Border.ToolTip>
-
-                <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
-
-            </Border>
 
         </DockPanel>
 
