@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace TemporaTasks.Core
             if (File.Exists(saveFilePath))
             {
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
-                foreach (string taskName in data.Keys)
+                Random random = new();
+                foreach (string taskUID in data.Keys)
                 {
                     try
                     {
@@ -33,11 +35,11 @@ namespace TemporaTasks.Core
                         Nullable<DateTime> dueTime = null;
                         Nullable<DateTime> completedTime = null;
 
-                        createdTime = StringToDateTime(data, taskName, "createdTime");
-                        dueTime = StringToDateTime(data, taskName, "dueTime");
-                        completedTime = StringToDateTime(data, taskName, "completedTime");
-
-                        IndividualTask taskObj = new(taskName, createdTime, dueTime, completedTime);
+                        createdTime = StringToDateTime(data, taskUID, "createdTime");
+                        dueTime = StringToDateTime(data, taskUID, "dueTime");
+                        completedTime = StringToDateTime(data, taskUID, "completedTime");
+                        
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime);
                         _TasksList.Add(taskObj);
                     }
                     catch { }
@@ -58,10 +60,11 @@ namespace TemporaTasks.Core
             foreach (IndividualTask task in TaskList)
             {
                 Dictionary<string, string> temp2 = [];
+                temp2["taskName"] = task.TaskName;
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
-                temp[task.TaskName] = temp2;
+                temp[task.TaskUID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp);
             File.WriteAllText(saveFilePath, temp3);
