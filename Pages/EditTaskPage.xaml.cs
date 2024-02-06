@@ -108,7 +108,7 @@ namespace TemporaTasks.Pages
             }
 
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(TaskNameTextbox.Text, task.CreatedDT, newDueDate, null);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null);
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());

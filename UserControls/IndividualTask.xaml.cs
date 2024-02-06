@@ -15,6 +15,7 @@ namespace TemporaTasks.UserControls
     {
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
+        public long TaskUID { get; set; }
         public string TaskName { get; set; }
 
         private bool completed = false;
@@ -47,10 +48,11 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT)
+        public IndividualTask(long _TaskUID, String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT)
         {
             InitializeComponent();
 
+            TaskUID = _TaskUID;
             TaskName = _TaskName;
             taskNameTextBlock.Text = _TaskName;
             
@@ -150,13 +152,13 @@ namespace TemporaTasks.UserControls
                 switch (DueDT.Value.Day - DateTime.Now.Day)
                 {
                     case 0:
-                        dateString = "Today";
+                        dateString = "today";
                         break;
                     case -1:
-                        dateString = "Yesterday";
+                        dateString = "yesterday";
                         break;
                     case 1:
-                        dateString = "Tomorrow";
+                        dateString = "tomorrow";
                         break;
                     default:
                         dateString = DueDT.Value.ToString("dd\\/MM");

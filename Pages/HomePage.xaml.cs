@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -196,10 +197,37 @@ namespace TemporaTasks.Pages
         {
             foreach (IndividualTask task in TaskStack.Children) task.StrokeOff();
         }
-
+        
         private void GenerateTaskStack()
         {
-            foreach (IndividualTask task in TaskFile.TaskList) TaskStack.Children.Add(task);
+            Dictionary<object, IndividualTask> matchesSort = new();
+            ArrayList doesntMatchSort = new();
+            Dictionary<object, IndividualTask> completed = new();
+
+            if (true)
+            {
+                foreach (IndividualTask task in TaskFile.TaskList)
+                    if (task.IsCompleted)
+                        completed[task.CreatedDT.Value] = task;
+                    else
+                        if (task.DueDT.HasValue) matchesSort[task.DueDT.Value] = task;
+                    else doesntMatchSort.Add(task);
+            }
+            else
+            {
+                foreach (IndividualTask task in TaskFile.TaskList)
+                    if (task.IsCompleted)
+                        completed[task.CreatedDT.Value] = task;
+                    else
+                        matchesSort[task.TaskName] = task;
+            }
+            
+            var sortedDict = matchesSort.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            foreach (IndividualTask task in sortedDict.Values) TaskStack.Children.Add(task);
+            foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
+            foreach (IndividualTask task in completed.Values) TaskStack.Children.Add(task);
         }
     }
 }
