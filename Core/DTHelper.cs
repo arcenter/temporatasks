@@ -97,8 +97,7 @@ namespace TemporaTasks.Core
                 else
                     throw new IncorrectTimeException();
 
-                if (hour < 0 || hour > 23) throw new IncorrectTimeException();
-                if (minute < 0 || minute > 59) throw new IncorrectTimeException();
+                if (hour < 0 || hour > 23 || minute < 0 || minute > 59) throw new IncorrectTimeException();
             }
 
             return new DateTime(year, month, day, hour, minute, 0);
