@@ -237,7 +237,7 @@ namespace TemporaTasks.UserControls
             {
                 double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
                 if (TimeSpan.FromSeconds(taskTimeRemaining) > TimeSpan.FromDays(1)) return;
-                TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(0, taskTimeRemaining));
+                TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(2, taskTimeRemaining));
                 TaskTimer.Tick += (s, e) =>
                 {
                     mainWindow.WindowHide(false);

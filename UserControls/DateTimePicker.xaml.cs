@@ -38,7 +38,7 @@ namespace TemporaTasks.UserControls
         {
             InitializeComponent();
 
-            for (int i = 0; i < 11; i++) yearComboBox.Items.Add((currentYear + i).ToString());
+            for (int i = 0; i < 6; i++) yearComboBox.Items.Add((currentYear + i).ToString());
 
             selectedDateTime[2] = currentDay;
 
