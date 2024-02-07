@@ -19,7 +19,7 @@
 
                 <Label Content="Sort by" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
 
-                <ComboBox x:Name="SortComboBox" Margin="10 0 0 0" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False">
+                <ComboBox x:Name="SortComboBox" Margin="10 0 0 0" Width="100" SelectedIndex="0" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" FontFamily="TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" Padding="12 0 0 0">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="Due Date"/>
                 </ComboBox>

@@ -205,6 +205,8 @@ namespace TemporaTasks.Pages
         
         private void GenerateTaskStack()
         {
+            if (TaskStack == null) return;
+
             TaskStack.Children.Clear();
 
             Dictionary<IndividualTask, object> matchesSort = new(), completed = new(), sortedDict = new();
