@@ -21,7 +21,7 @@ namespace TemporaTasks.Core
         
         public static ArrayList TaskList;
 
-        public static int sortType = 0;
+        public static int sortType = 1;
 
         public static void LoadData()
         {
@@ -29,6 +29,15 @@ namespace TemporaTasks.Core
             if (File.Exists(saveFilePath))
             {
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
+
+                if (data.Keys.Contains("settings"))
+                {
+                    Dictionary<string, string>  settings = data["settings"];
+                    data.Remove("settings");
+
+                    sortType = int.Parse(settings["sortType"]);
+                }
+
                 Random random = new();
                 foreach (string taskUID in data.Keys)
                 {
@@ -60,9 +69,14 @@ namespace TemporaTasks.Core
         public static void SaveData()
         {
             Dictionary<string, Dictionary<string, string>> temp = [];
+
+            Dictionary<string, string> temp2 = [];
+            temp2["sortType"] = sortType.ToString();
+            temp["settings"] = temp2;            
+
             foreach (IndividualTask task in TaskList)
             {
-                Dictionary<string, string> temp2 = [];
+                temp2 = [];
                 temp2["taskName"] = task.TaskName;
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
