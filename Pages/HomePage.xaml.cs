@@ -43,6 +43,7 @@ namespace TemporaTasks.Pages
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
                     task.IsEditIconClicked += EditIcon_MouseDown;
                 }
+
                 GenerateTaskStack();
                 if (focusMode) FocusTask();
             }
@@ -143,7 +144,12 @@ namespace TemporaTasks.Pages
 
         private void NextTaskFocus()
         {
-            currentFocus++;
+            do
+            {
+                currentFocus++;
+                if (currentFocus > TaskStack.Children.Count - 1) currentFocus = 0;
+            } while (!(TaskStack.Children[currentFocus] is IndividualTask));
+
             FocusTask();
         }
 
@@ -176,8 +182,8 @@ namespace TemporaTasks.Pages
             task.TaskTimer.Stop();
             lastTask = task;
             TaskFile.TaskList.Remove(task);
-            TaskStack.Children.Remove(task);
             TaskFile.SaveData();
+            GenerateTaskStack();
         }
 
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -332,6 +338,7 @@ namespace TemporaTasks.Pages
         private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TaskFile.sortType = SortComboBox.SelectedIndex;
+            TaskFile.SaveData();
             GenerateTaskStack();
         }
     }
