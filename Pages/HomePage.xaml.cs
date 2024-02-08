@@ -9,6 +9,7 @@ using System.Windows.Media.Animation;
 
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TemporaTasks.Pages
 {
@@ -19,6 +20,8 @@ namespace TemporaTasks.Pages
         bool focusMode = false;
         int currentFocus = 0;
 
+        IndividualTask lastTask;
+
         public HomePage()
         {
             InitializeComponent();
@@ -26,6 +29,7 @@ namespace TemporaTasks.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            SortComboBox.SelectedIndex = TaskFile.sortType;
             mainWindow.KeyDown += Page_KeyDown;
             if (TaskFile.TaskList.Count == 0)
             {
@@ -102,6 +106,12 @@ namespace TemporaTasks.Pages
                         if (currentFocus > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
                         break;
+                    
+                    case Key.Z:
+                        TaskFile.TaskList.Add(lastTask);
+                        TaskFile.SaveData();
+                        GenerateTaskStack();
+                        break;
                 }
             }
             else
@@ -123,8 +133,11 @@ namespace TemporaTasks.Pages
 
         private void PreviousTaskFocus()
         {
-            currentFocus--;
-            if (currentFocus < 0) currentFocus = TaskStack.Children.Count - 1;
+            do
+            {
+                currentFocus--;
+                if (currentFocus < 0) currentFocus = TaskStack.Children.Count - 1;
+            } while (!(TaskStack.Children[currentFocus] is IndividualTask));
             FocusTask();
         }
 
@@ -138,18 +151,18 @@ namespace TemporaTasks.Pages
         {
             UnfocusTasks();
             focusMode = false;
-
-            ToggleTaskCompletion((IndividualTask)sender);
+            GenerateTaskStack();
         }
 
         private void ToggleTaskCompletion(IndividualTask sender)
         {
+            sender.ToggleCompletionStatus();
             GenerateTaskStack();
+            TaskFile.SaveData();
 
             int temp = TaskStack.Children.IndexOf((IndividualTask)sender);
             if (temp > -1) currentFocus = temp;
-
-            TaskFile.SaveData();
+            FocusTask();
         }
 
         private void EditIcon_MouseDown(object sender)
@@ -161,6 +174,7 @@ namespace TemporaTasks.Pages
         {
             IndividualTask task = (IndividualTask)sender;
             task.TaskTimer.Stop();
+            lastTask = task;
             TaskFile.TaskList.Remove(task);
             TaskStack.Children.Remove(task);
             TaskFile.SaveData();
@@ -193,6 +207,9 @@ namespace TemporaTasks.Pages
             if (count > 0)
             {
                 if (!(currentFocus > 0 && currentFocus < count)) currentFocus = 0;
+
+                while (!(TaskStack.Children[currentFocus] is IndividualTask)) currentFocus++;
+
                 ((IndividualTask)TaskStack.Children[currentFocus]).StrokeOn();
                 ((IndividualTask)TaskStack.Children[currentFocus]).BringIntoView();
             }
@@ -200,7 +217,7 @@ namespace TemporaTasks.Pages
 
         private void UnfocusTasks()
         {
-            foreach (IndividualTask task in TaskStack.Children) task.StrokeOff();
+            foreach (object obj in TaskStack.Children) if (obj is IndividualTask) ((IndividualTask)obj).StrokeOff();
         }
         
         private void GenerateTaskStack()
@@ -215,16 +232,86 @@ namespace TemporaTasks.Pages
             switch (SortComboBox.SelectedIndex)
             {
                 case 1:
+                    ArrayList days = new();
                     foreach (IndividualTask task in TaskFile.TaskList)
                         if (task.IsCompleted)
-                            completed[task] = task.CreatedDT.Value;
+                            completed[task] = task.CompletedDT.Value;
                         else
                             if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
-                        else doesntMatchSort.Add(task);
+                            else doesntMatchSort.Add(task);
 
                     sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    completed = completed.OrderBy(pair => pair.Key).ThenBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+                    string GetDaySuffix(int day)
+                    {
+                        switch (day)
+                        {
+                            case 1:
+                            case 21:
+                            case 31:
+                                return "st";
+                            case 2:
+                            case 22:
+                                return "nd";
+                            case 3:
+                            case 23:
+                                return "rd";
+                            default:
+                                return "th";
+                        }
+                    }
+
+                    foreach (IndividualTask task in sortedDict.Keys)
+                    {
+                        DateTime date = task.DueDT.Value;
+                        if (!days.Contains(date))
+                        {
+                            days.Add(date);
+
+                            TaskStack.Children.Add(new Label()
+                            {
+                                Content = date.ToString("dddd, d") + GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy"),
+                                Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
+                                FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
+                                FontSize = 14,
+                                Margin = new Thickness(9, (TaskStack.Children.Count > 0)? 28 : 0, 0, 0)
+                            });
+                        }
+                        TaskStack.Children.Add(task);
+                    }
+
+                    if (doesntMatchSort.Count > 0)
+                    {
+                        TaskStack.Children.Add(new Label()
+                        {
+                            Content = "No due date",
+                            Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
+                            FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
+                            FontSize = 14,
+                            Margin = new Thickness(9, (TaskStack.Children.Count > 0) ? 28 : 0, 0, 0)
+                        });
+
+                        foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
+                    }
+
+                    if (completed.Count > 0)
+                    {
+                        TaskStack.Children.Add(new Label()
+                        {
+                            Content = "Completed",
+                            Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
+                            FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
+                            FontSize = 14,
+                            Margin = new Thickness(9, (TaskStack.Children.Count > 0) ? 28 : 0, 0, 0)
+                        });
+
+                        foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
+
+                    }
+                    
                     break;
+
                 default:
                     foreach (IndividualTask task in TaskFile.TaskList)
                         if (task.IsCompleted)
@@ -234,16 +321,17 @@ namespace TemporaTasks.Pages
 
                     sortedDict = matchesSort.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
                     completed = completed.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+                    foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
+                    foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
+                    foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
                     break;
             }
-
-            foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
-            foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
-            foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
         }
 
         private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            TaskFile.sortType = SortComboBox.SelectedIndex;
             GenerateTaskStack();
         }
     }
