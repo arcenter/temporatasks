@@ -18,7 +18,10 @@ namespace TemporaTasks.Core
     {
         public static string saveFilePath;
         public static string backupPath;
+        
         public static ArrayList TaskList;
+
+        public static int sortType = 0;
 
         public static void LoadData()
         {

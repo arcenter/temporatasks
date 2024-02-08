@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace TemporaTasks
 {
