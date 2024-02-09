@@ -389,7 +389,7 @@ namespace TemporaTasks.Pages
             SearchTextBox.Focus();
         }
 
-        private void SearchTextBoxAnimate(bool open = false)
+        private async void SearchTextBoxAnimate(bool open = false)
         {
             {
                 DoubleAnimation ani = new(open ? 190 : 0, TimeSpan.FromMilliseconds(500))
@@ -405,9 +405,17 @@ namespace TemporaTasks.Pages
 
             if (open)
             {
-                DoubleAnimation ani = new(360, TimeSpan.FromMilliseconds(250));
-                SearchIcon.RenderTransform = new RotateTransform() { Angle = 0 };
-                SearchIcon.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, ani);
+                SearchIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+                DoubleAnimation ani = new(1.25, TimeSpan.FromMilliseconds(250));
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+
+                await Task.Delay(251);
+
+                DoubleAnimation ani2 = new(1, TimeSpan.FromMilliseconds(250));
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani2);
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani2);
             }
         }
     }

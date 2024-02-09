@@ -32,17 +32,29 @@ namespace TemporaTasks.UserControls
             InitializeComponent();
         }
 
-        private void IconButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void IconButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            double newValueButton = 0;
-            double newValueIcon = 0.25;
+            Button.BeginAnimation(OpacityProperty, new DoubleAnimation(Button.IsMouseOver? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            Icon.BeginAnimation(OpacityProperty, new DoubleAnimation(Button.IsMouseOver? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
+
             if (Button.IsMouseOver)
             {
-                newValueButton = 0.5;
-                newValueIcon = 0.75;
+                Icon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+                {
+                    DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                    Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+
+                await Task.Delay(251);
+
+                {
+                    DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                    Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
             }
-            Button.BeginAnimation(OpacityProperty, new DoubleAnimation(newValueButton, TimeSpan.FromMilliseconds(250)));
-            Icon.BeginAnimation(OpacityProperty, new DoubleAnimation(newValueIcon, TimeSpan.FromMilliseconds(250)));
         }
     }
 }
