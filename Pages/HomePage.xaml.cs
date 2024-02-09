@@ -44,6 +44,7 @@ namespace TemporaTasks.Pages
                     task.MouseDown += IndividualTask_MouseDown;
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
                     task.IsEditIconClicked += EditIcon_MouseDown;
+                    task.Cursor = Cursors.Hand;
                 }
 
                 GenerateTaskStack();
@@ -61,6 +62,7 @@ namespace TemporaTasks.Pages
                 task.MouseDown -= IndividualTask_MouseDown;
                 task.IsTrashIconClicked -= TrashIcon_MouseDown;
                 task.IsEditIconClicked -= EditIcon_MouseDown;
+                task.Cursor = Cursors.None;
             }
             TaskStack.Children.Clear();
         }
