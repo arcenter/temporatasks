@@ -146,11 +146,13 @@ namespace TemporaTasks
             if (Mouse.LeftButton != MouseButtonState.Pressed)
             {
                 this.Cursor = Cursors.Arrow;
+                FrameView.IsHitTestVisible = true;
             }
         }
 
         protected void Resize(object sender, MouseButtonEventArgs e)
         {
+            FrameView.IsHitTestVisible = false;
             var clickedShape = sender as Shape;
 
             switch (clickedShape.Name)
@@ -216,6 +218,15 @@ namespace TemporaTasks
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!FrameView.IsHitTestVisible)
+            {
+                FrameView.IsHitTestVisible = true;
+                ResetCursor(null, null);
             }
         }
 
