@@ -32,6 +32,7 @@ namespace TemporaTasks.Pages
         {
             SortComboBox.SelectedIndex = TaskFile.sortType;
             mainWindow.KeyDown += Page_KeyDown;
+            mainWindow.KeyUp += Page_KeyUp;
             mainWindow.MouseDown += Window_MouseDown;
             if (TaskFile.TaskList.Count == 0)
             {
@@ -55,6 +56,7 @@ namespace TemporaTasks.Pages
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             mainWindow.KeyDown -= Page_KeyDown;
+            mainWindow.KeyUp -= Page_KeyUp;
             mainWindow.MouseDown -= Window_MouseDown;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
@@ -74,7 +76,7 @@ namespace TemporaTasks.Pages
                 if (e.Key == Key.Escape || e.Key == Key.Tab)
                 {
                     label.Focus();
-                    SearchTextBoxAnimate();
+                    if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
                 }
                 return;
             }
@@ -83,6 +85,10 @@ namespace TemporaTasks.Pages
             {
                 case Key.N:
                     AddButton_MouseDown(null, null);
+                    break;
+
+                case Key.S:
+                    SearchTextBoxAnimate(true);
                     break;
 
                 case Key.Escape:
@@ -145,6 +151,18 @@ namespace TemporaTasks.Pages
                         FocusTask();
                         break;
                 }
+        }
+
+        private void Page_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (SearchTextBox.IsFocused) return;
+
+            switch (e.Key)
+            {
+                case Key.S:
+                    SearchTextBox.Focus();
+                    break;
+            }
         }
 
         private void PreviousTaskFocus()
@@ -210,10 +228,10 @@ namespace TemporaTasks.Pages
             mainWindow.FrameView.Navigate(new AddTaskPage());
         }
 
-        private void AddButton_MouseMove(object sender, MouseEventArgs e)
+        private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             Point mousePosition = e.GetPosition(sender as UIElement);
-            ToolTip tooltip = (ToolTip)AddButton.ToolTip;
+            ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
             tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
@@ -364,7 +382,7 @@ namespace TemporaTasks.Pages
             if (!SearchTextBox.IsMouseDirectlyOver && !SearchBorder.IsMouseDirectlyOver)
             {
                 label.Focus();
-                SearchTextBoxAnimate();
+                if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
             }
             UnfocusTasks();
             focusMode = false;
@@ -378,7 +396,7 @@ namespace TemporaTasks.Pages
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused)
+            if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused && SearchTextBox.Text.Length == 0)
             {
                 SearchTextBoxAnimate((bool)e.NewValue);
             }
