@@ -168,8 +168,6 @@ namespace TemporaTasks.Pages
 
         private void IndividualTask_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            UnfocusTasks();
-            focusMode = false;
             GenerateTaskStack();
         }
 
@@ -248,51 +246,49 @@ namespace TemporaTasks.Pages
             Dictionary<IndividualTask, object> matchesSort = new(), completed = new(), sortedDict = new();
             ArrayList doesntMatchSort = new();
 
+            string GetDaySuffix(int day)
+            {
+                switch (day)
+                {
+                    case 1:
+                    case 21:
+                    case 31:
+                        return "st";
+                    case 2:
+                    case 22:
+                        return "nd";
+                    case 3:
+                    case 23:
+                        return "rd";
+                    default:
+                        return "th";
+                }
+            }
+
+            ArrayList days = new();
+            Regex regex = new(SearchTextBox.Text.ToLower());
             switch (SortComboBox.SelectedIndex)
             {
                 case 1:
-
-                    ArrayList days = new();
-
-                    Regex regex = new(SearchTextBox.Text.ToLower());
-
+                case 2:
                     foreach (IndividualTask task in TaskFile.TaskList)
                         if (regex.Match(task.TaskName.ToLower()).Success)
                             if (task.IsCompleted)
                                 completed[task] = task.CompletedDT.Value;
                             else
-                            if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
+                            if (task.DueDT.HasValue)
+                                matchesSort[task] = (SortComboBox.SelectedIndex == 1) ? task.CreatedDT.Value : task.DueDT.Value;
                             else doesntMatchSort.Add(task);
 
                     sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                     completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-                    string GetDaySuffix(int day)
-                    {
-                        switch (day)
-                        {
-                            case 1:
-                            case 21:
-                            case 31:
-                                return "st";
-                            case 2:
-                            case 22:
-                                return "nd";
-                            case 3:
-                            case 23:
-                                return "rd";
-                            default:
-                                return "th";
-                        }
-                    }
-
                     foreach (IndividualTask task in sortedDict.Keys)
                     {
-                        DateTime date = task.DueDT.Value;
-                        if (!days.Contains(date.ToShortDateString))
+                        DateTime date = (SortComboBox.SelectedIndex == 1) ? task.CreatedDT.Value : task.DueDT.Value;
+                        if (!days.Contains(date.ToShortDateString()))
                         {
-                            days.Add(date.ToShortDateString);
-
+                            days.Add(date.ToShortDateString());
                             TaskStack.Children.Add(new Label()
                             {
                                 Content = date.ToString("dddd, d") + GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy"),
@@ -309,7 +305,7 @@ namespace TemporaTasks.Pages
                     {
                         TaskStack.Children.Add(new Label()
                         {
-                            Content = "No due date",
+                            Content = "No date",
                             Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
                             FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
                             FontSize = 14,
@@ -338,7 +334,7 @@ namespace TemporaTasks.Pages
 
                 default:
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (new Regex(SearchTextBox.Text.ToLower()).Match(task.TaskName.ToLower()).Success)
+                        if (regex.Match(task.TaskName.ToLower()).Success)
                             if (task.IsCompleted)
                                 completed[task] = task.CreatedDT.Value;
                             else
@@ -368,6 +364,9 @@ namespace TemporaTasks.Pages
                 label.Focus();
                 SearchTextBoxAnimate();
             }
+            UnfocusTasks();
+            focusMode = false;
+            currentFocus = 0;
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
