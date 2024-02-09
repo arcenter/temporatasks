@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,7 @@ namespace TemporaTasks.Pages
         {
             SortComboBox.SelectedIndex = TaskFile.sortType;
             mainWindow.KeyDown += Page_KeyDown;
+            mainWindow.MouseDown += Window_MouseDown;
             if (TaskFile.TaskList.Count == 0)
             {
                 NewTaskArrow.Visibility = Visibility.Visible;
@@ -52,6 +54,7 @@ namespace TemporaTasks.Pages
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             mainWindow.KeyDown -= Page_KeyDown;
+            mainWindow.MouseDown -= Window_MouseDown;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
                 task.StrokeOff(); // StrokeBorder.BorderThickness = new Thickness(0);
@@ -64,7 +67,17 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            switch(e.Key)
+            if (SearchTextBox.IsFocused)
+            {
+                if (e.Key == Key.Escape || e.Key == Key.Tab)
+                {
+                    label.Focus();
+                    SearchTextBoxAnimate();
+                }
+                return;
+            }
+
+            switch (e.Key)
             {
                 case Key.N:
                     AddButton_MouseDown(null, null);
@@ -138,7 +151,7 @@ namespace TemporaTasks.Pages
             {
                 currentFocus--;
                 if (currentFocus < 0) currentFocus = TaskStack.Children.Count - 1;
-            } while (!(TaskStack.Children[currentFocus] is IndividualTask));
+            } while (TaskStack.Children[currentFocus] is not IndividualTask);
             FocusTask();
         }
 
@@ -238,11 +251,16 @@ namespace TemporaTasks.Pages
             switch (SortComboBox.SelectedIndex)
             {
                 case 1:
+
                     ArrayList days = new();
+
+                    Regex regex = new(SearchTextBox.Text.ToLower());
+
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (task.IsCompleted)
-                            completed[task] = task.CompletedDT.Value;
-                        else
+                        if (regex.Match(task.TaskName.ToLower()).Success)
+                            if (task.IsCompleted)
+                                completed[task] = task.CompletedDT.Value;
+                            else
                             if (task.DueDT.HasValue) matchesSort[task] = task.DueDT.Value;
                             else doesntMatchSort.Add(task);
 
@@ -271,9 +289,9 @@ namespace TemporaTasks.Pages
                     foreach (IndividualTask task in sortedDict.Keys)
                     {
                         DateTime date = task.DueDT.Value;
-                        if (!days.Contains(date))
+                        if (!days.Contains(date.ToShortDateString))
                         {
-                            days.Add(date);
+                            days.Add(date.ToShortDateString);
 
                             TaskStack.Children.Add(new Label()
                             {
@@ -320,13 +338,14 @@ namespace TemporaTasks.Pages
 
                 default:
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (task.IsCompleted)
-                            completed[task] = task.CreatedDT.Value;
-                        else
-                            matchesSort[task] = task.TaskName;
+                        if (new Regex(SearchTextBox.Text.ToLower()).Match(task.TaskName.ToLower()).Success)
+                            if (task.IsCompleted)
+                                completed[task] = task.CreatedDT.Value;
+                            else
+                                matchesSort[task] = task.TaskName;
 
-                    sortedDict = matchesSort.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    completed = completed.OrderBy(pair => ((IndividualTask)pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    sortedDict = matchesSort.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
 
                     foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
                     foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
@@ -340,6 +359,55 @@ namespace TemporaTasks.Pages
             TaskFile.sortType = SortComboBox.SelectedIndex;
             TaskFile.SaveData();
             GenerateTaskStack();
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!SearchTextBox.IsMouseDirectlyOver && !SearchBorder.IsMouseDirectlyOver)
+            {
+                label.Focus();
+                SearchTextBoxAnimate();
+            }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            GenerateTaskStack();
+        }
+
+        private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused)
+            {
+                SearchTextBoxAnimate((bool)e.NewValue);
+            }
+        }
+
+        private void SearchBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SearchTextBox.Focus();
+        }
+
+        private void SearchTextBoxAnimate(bool open = false)
+        {
+            {
+                DoubleAnimation ani = new(open ? 190 : 0, TimeSpan.FromMilliseconds(500))
+                {
+                    EasingFunction = new QuarticEase()
+                    {
+                        EasingMode = EasingMode.EaseInOut
+                    }
+                };
+
+                SearchTextBox.BeginAnimation(WidthProperty, ani);
+            }
+
+            if (open)
+            {
+                DoubleAnimation ani = new(360, TimeSpan.FromMilliseconds(250));
+                SearchIcon.RenderTransform = new RotateTransform() { Angle = 0 };
+                SearchIcon.RenderTransform.BeginAnimation(RotateTransform.AngleProperty, ani);
+            }
         }
     }
 }
