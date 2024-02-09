@@ -109,7 +109,7 @@
 
                     <TextBlock x:Name="taskNameTextBlock" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"/>
 
-                    <Line x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 14" StrokeThickness="2"  IsHitTestVisible="False" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock, Mode=OneWay}" HorizontalAlignment="Left"/>
+                    <Line x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 14" StrokeThickness="2"  IsHitTestVisible="False" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left"/>
 
                 </Grid>
 
