@@ -31,20 +31,20 @@
 
                 <!--<Label Content="Sort by" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Border}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>-->
 
-                <Border x:Name="SearchBorder" Background="{StaticResource Secondary}" CornerRadius="5" Padding="5 0 5 0" IsMouseDirectlyOverChanged="SearchBorder_IsMouseDirectlyOverChanged" MouseDown="SearchBorder_MouseDown">
+                <Border x:Name="SearchBorder" Background="{StaticResource Secondary}" CornerRadius="5" Padding="5 0 5 0" IsMouseDirectlyOverChanged="SearchBorder_IsMouseDirectlyOverChanged" MouseDown="SearchBorder_MouseDown" Cursor="IBeam">
                     <DockPanel>
                         <Image Source="{StaticResource searchIcon}" Height="10" DockPanel.Dock="Right" Margin="10 0 10 0" IsHitTestVisible="False" x:Name="SearchIcon" RenderTransformOrigin="0.5,0.5"/>
                         <TextBox x:Name="SearchTextBox" Width="0" Margin="0 5 0 5" TextChanged="SearchTextBox_TextChanged" IsTabStop="False"/>
                     </DockPanel>
                 </Border>
 
-                <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" FontFamily="TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" Padding="12 0 0 0" Margin="20 0 0 0">
+                <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" FontFamily="TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" Padding="12 0 0 0" Margin="20 0 0 0" Cursor="Hand">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="Created Date"/>
                     <ComboBoxItem Content="Due Date"/>
                 </ComboBox>
 
-                <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="AddButton_MouseMove" Margin="20 0 0 0">
+                <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="AddButton_MouseMove" Margin="20 0 0 0" Cursor="Hand">
 
                     <Border.Background>
                         <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>

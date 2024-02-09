@@ -9,7 +9,7 @@
 
     <Grid>
 
-        <Border x:Name="Button" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="IconButton_IsMouseDirectlyOverChanged"/>
+        <Border x:Name="Button" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="IconButton_IsMouseDirectlyOverChanged" Cursor="Hand"/>
 
         <Image x:Name="Icon" Source="{Binding SVGSource, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxWidth="15" MaxHeight="15" Opacity="0.25" IsHitTestVisible="False"/>
 

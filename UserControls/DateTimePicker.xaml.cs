@@ -87,7 +87,8 @@ namespace TemporaTasks.UserControls
                 {
                     Background = (SolidColorBrush)((MainWindow)Application.Current.MainWindow).FindResource("DarkBlue"),
                     Tag = new ArrayList() { _day, onCurrentDay ? 0.25 : 0 },
-                    CornerRadius = new CornerRadius(5)
+                    CornerRadius = new CornerRadius(5),
+                    Cursor = Cursors.Hand
                 };
 
                 border.Opacity = (double)(((ArrayList)border.Tag)[1]);
