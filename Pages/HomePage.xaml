@@ -40,6 +40,7 @@
 
                 <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" FontFamily="TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" Padding="12 0 0 0" Margin="20 0 0 0">
                     <ComboBoxItem Content="Name"/>
+                    <ComboBoxItem Content="Created Date"/>
                     <ComboBoxItem Content="Due Date"/>
                 </ComboBox>
 
