@@ -34,7 +34,6 @@
                         <ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <userControl:ButtonToolTip ToolTipText="Search Task" Button1Text="s" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
-                                <userControl:ButtonToolTip ToolTipText="/" Button1Text="/" CornerRadius="0" BorderPadding="0 5"/>
                                 <userControl:ButtonToolTip ToolTipText="/" Button1Text="ctrl" CornerRadius="0" BorderPadding="0 5"/>
                                 <userControl:ButtonToolTip ToolTipText="+" Button1Text="f" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
                             </StackPanel>
