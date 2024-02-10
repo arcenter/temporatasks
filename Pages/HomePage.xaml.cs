@@ -18,8 +18,7 @@ namespace TemporaTasks.Pages
     {
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
-        bool focusMode = false;
-        int currentFocus = 0;
+        Nullable<int> currentFocus = null;
 
         IndividualTask lastTask;
 
@@ -42,14 +41,13 @@ namespace TemporaTasks.Pages
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                 {
-                    task.MouseDown += IndividualTask_MouseDown;
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
                     task.IsEditIconClicked += EditIcon_MouseDown;
                     task.Cursor = Cursors.Hand;
                 }
 
                 GenerateTaskStack();
-                if (focusMode) FocusTask();
+                if (currentFocus.HasValue) FocusTask();
             }
         }
 
@@ -61,7 +59,6 @@ namespace TemporaTasks.Pages
             foreach (IndividualTask task in TaskFile.TaskList)
             {
                 task.StrokeOff(); // StrokeBorder.BorderThickness = new Thickness(0);
-                task.MouseDown -= IndividualTask_MouseDown;
                 task.IsTrashIconClicked -= TrashIcon_MouseDown;
                 task.IsEditIconClicked -= EditIcon_MouseDown;
                 task.Cursor = Cursors.None;
@@ -81,6 +78,13 @@ namespace TemporaTasks.Pages
                 return;
             }
 
+            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.F))
+            {
+                SearchTextBox.Focus();
+                SearchTextBoxAnimate(true);
+                return;
+            }
+
             switch (e.Key)
             {
                 case Key.N:
@@ -88,20 +92,21 @@ namespace TemporaTasks.Pages
                     break;
 
                 case Key.S:
+                case Key.OemQuestion:
                     SearchTextBoxAnimate(true);
                     break;
 
                 case Key.Escape:
-                    if (focusMode)
+                    if (currentFocus.HasValue)
                     {
-                        focusMode = false;
+                        currentFocus = null;
                         UnfocusTasks();
                     }
                     else mainWindow.WindowHide();
                     break;
             }
 
-            if (focusMode)
+            if (currentFocus.HasValue)
             {
                 switch (e.Key)
                 {
@@ -114,18 +119,18 @@ namespace TemporaTasks.Pages
                         break;
 
                     case Key.Space:
-                        ToggleTaskCompletion((IndividualTask)TaskStack.Children[currentFocus]);
+                        ToggleTaskCompletion((IndividualTask)TaskStack.Children[currentFocus.Value]);
                         break;
 
                     case Key.E:
                     case Key.Enter:
-                        mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)TaskStack.Children[currentFocus]));
+                        mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)TaskStack.Children[currentFocus.Value]));
                         break;
 
                     case Key.D:
                     case Key.Delete:
-                        TrashIcon_MouseDown((IndividualTask)TaskStack.Children[currentFocus]);
-                        if (currentFocus > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
+                        TrashIcon_MouseDown((IndividualTask)TaskStack.Children[currentFocus.Value]);
+                        if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
                         break;
                     
@@ -140,13 +145,11 @@ namespace TemporaTasks.Pages
                 switch (e.Key)
                 {
                     case Key.Up:
-                        focusMode = true;
                         currentFocus = 0;
                         PreviousTaskFocus();
                         break;
 
                     case Key.Down:
-                        focusMode = true;
                         currentFocus = 0;
                         FocusTask();
                         break;
@@ -160,6 +163,7 @@ namespace TemporaTasks.Pages
             switch (e.Key)
             {
                 case Key.S:
+                case Key.OemQuestion:
                     SearchTextBox.Focus();
                     break;
             }
@@ -170,8 +174,8 @@ namespace TemporaTasks.Pages
             do
             {
                 currentFocus--;
-                if (currentFocus < 0) currentFocus = TaskStack.Children.Count - 1;
-            } while (TaskStack.Children[currentFocus] is not IndividualTask);
+                if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask);
             FocusTask();
         }
 
@@ -180,21 +184,15 @@ namespace TemporaTasks.Pages
             do
             {
                 currentFocus++;
-                if (currentFocus > TaskStack.Children.Count - 1) currentFocus = 0;
-            } while (!(TaskStack.Children[currentFocus] is IndividualTask));
+                if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+            } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask));
 
             FocusTask();
-        }
-
-        private void IndividualTask_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            GenerateTaskStack();
         }
 
         private void ToggleTaskCompletion(IndividualTask sender)
         {
             sender.ToggleCompletionStatus();
-            GenerateTaskStack();
             TaskFile.SaveData();
 
             int temp = TaskStack.Children.IndexOf((IndividualTask)sender);
@@ -243,12 +241,12 @@ namespace TemporaTasks.Pages
             int count = TaskStack.Children.Count;
             if (count > 0)
             {
-                if (!(currentFocus > 0 && currentFocus < count)) currentFocus = 0;
+                if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
 
-                while (!(TaskStack.Children[currentFocus] is IndividualTask)) currentFocus++;
+                while (!(TaskStack.Children[currentFocus.Value] is IndividualTask)) currentFocus++;
 
-                ((IndividualTask)TaskStack.Children[currentFocus]).StrokeOn();
-                ((IndividualTask)TaskStack.Children[currentFocus]).BringIntoView();
+                ((IndividualTask)TaskStack.Children[currentFocus.Value]).StrokeOn();
+                ((IndividualTask)TaskStack.Children[currentFocus.Value]).BringIntoView();
             }
         }
 
@@ -385,7 +383,6 @@ namespace TemporaTasks.Pages
                 if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
             }
             UnfocusTasks();
-            focusMode = false;
             currentFocus = 0;
         }
 
