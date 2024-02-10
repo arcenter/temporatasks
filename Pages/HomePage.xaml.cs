@@ -92,7 +92,6 @@ namespace TemporaTasks.Pages
                     break;
 
                 case Key.S:
-                case Key.OemQuestion:
                     SearchTextBoxAnimate(true);
                     break;
 
@@ -135,6 +134,7 @@ namespace TemporaTasks.Pages
                         break;
                     
                     case Key.Z:
+                        lastTask.StrokeOff();
                         TaskFile.TaskList.Add(lastTask);
                         TaskFile.SaveData();
                         GenerateTaskStack();
@@ -163,7 +163,6 @@ namespace TemporaTasks.Pages
             switch (e.Key)
             {
                 case Key.S:
-                case Key.OemQuestion:
                     SearchTextBox.Focus();
                     break;
             }
