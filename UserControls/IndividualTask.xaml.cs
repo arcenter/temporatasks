@@ -111,15 +111,6 @@ namespace TemporaTasks.UserControls
             UpdateTaskCheckBoxAndBackground();
         }
 
-        private void Background_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point mousePosition = e.GetPosition((UIElement)sender);
-            ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
-            tooltip.HorizontalOffset = mousePosition.X;
-            tooltip.VerticalOffset = mousePosition.Y;
-        }
-
         private void UpdateTaskCheckBoxAndBackground()
         {
             checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? 1 : 0, TimeSpan.FromMilliseconds(250)));
