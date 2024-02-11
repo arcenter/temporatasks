@@ -164,7 +164,10 @@ namespace TemporaTasks.UserControls
                         dateString = DueDT.Value.ToString("dd\\/MM");
                         break;
                 }
-                DueDateTimeLabel.Content = (IsCompleted ? "Done " : "Due ") + $"{dateString} {DueDT.Value.ToString("hh:mm tt")}";
+                if (IsCompleted && CompletedDT.HasValue)
+                    DueDateTimeLabel.Content = $"Done {dateString} {CompletedDT.Value.ToString("hh:mm tt")}";
+                else
+                    DueDateTimeLabel.Content = $"Due {dateString} {DueDT.Value.ToString("hh:mm tt")}";
             }
             DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
 
