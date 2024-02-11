@@ -192,7 +192,6 @@ namespace TemporaTasks.Pages
         private void ToggleTaskCompletion(IndividualTask sender)
         {
             sender.ToggleCompletionStatus();
-            TaskFile.SaveData();
 
             int temp = TaskStack.Children.IndexOf((IndividualTask)sender);
             if (temp > -1) currentFocus = temp;

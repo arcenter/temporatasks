@@ -107,6 +107,7 @@ namespace TemporaTasks.UserControls
         public void ToggleCompletionStatus()
         {
             IsCompleted = !IsCompleted;
+            TaskFile.SaveData();
             NewDueDT();
             UpdateTaskCheckBoxAndBackground();
         }
