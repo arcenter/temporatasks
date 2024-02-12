@@ -90,8 +90,7 @@ namespace TemporaTasks.UserControls
                 DueDateTimeLabelUpdate();
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(Background.IsMouseOver? 0.2 : 0, TimeSpan.FromMilliseconds(250)));
-            if (!Icons.IsMouseOver && !TimeExtend.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation((Background.IsMouseOver) ? 75 : 0, TimeSpan.FromMilliseconds(250)));
-            if (!TimeExtend.IsMouseOver) TimeExtend.BeginAnimation(WidthProperty, new DoubleAnimation(Background.IsMouseOver? ((IsDue && !IsCompleted)? 105 : 0) : 0, TimeSpan.FromMilliseconds(250)));
+            if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation((Background.IsMouseOver) ? 193 : 0, TimeSpan.FromMilliseconds(250)));
         }
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)

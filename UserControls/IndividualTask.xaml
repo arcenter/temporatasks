@@ -27,7 +27,7 @@
 
                 <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  IsHitTestVisible="False" Padding="13 0 13 0"/>
 
-                <StackPanel x:Name="TimeExtend" Orientation="Horizontal"   Width="0" HorizontalAlignment="Right" Background="#00000000" Margin="0 0 5 0">
+                <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="#00000000">
 
                     <Grid>
                         <Border x:Name="plus5m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
@@ -39,14 +39,10 @@
                         <Label Content="+10m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
 
-                    <Grid Margin="5 0 0 0">
+                    <Grid Margin="5 0 13 0">
                         <Border x:Name="plus30m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
                         <Label Content="+30m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
-
-                </StackPanel>
-                
-                <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="#00000000">
 
                     <local:IconButton x:Name="EditIcon" SVGSource="{StaticResource pencilIcon}" Width="30" Height="30" MouseDown="EditIcon_MouseDown">
                         <local:IconButton.ToolTip>
