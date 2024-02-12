@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace TemporaTasks.Core
 {
-    public class DTHelper
+    public partial class DTHelper
     {
         public static string DateToString(DateTime date)
         {
@@ -102,6 +96,54 @@ namespace TemporaTasks.Core
 
             return new DateTime(year, month, day, hour, minute, 0);
         }
+
+        [GeneratedRegex(@"\d{1,2}", RegexOptions.None, "en-US")]
+        private static partial Regex RegexDigits();
+
+        public static string? RegexTimeMatch(string str)
+        {
+            Match match;
+
+            match = RegexMinutes().Match(str);
+            if (match.Success)
+                return TimeToString(DateTime.Now.AddMinutes(int.Parse(RegexDigits().Match(match.Value).Value)));
+
+            match = RegexHours().Match(str);
+            if (match.Success)
+                return TimeToString(DateTime.Now.AddHours(int.Parse(RegexDigits().Match(match.Value).Value)));
+
+            return null;
+        }
+
+        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?min", RegexOptions.None, "en-US")]
+        private static partial Regex RegexMinutes();
+
+        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?hour", RegexOptions.None, "en-US")]
+        private static partial Regex RegexHours();
+
+        public static string? RegexDateMatch(string str)
+        {
+            Match match;
+
+            match = RegexDays().Match(str);
+            if (match.Success)
+                return DateToString(DateTime.Now.AddDays(int.Parse(RegexDigits().Match(match.Value).Value)));
+
+            match = RegexMonths().Match(str);
+            if (match.Success)
+            {
+                return DateToString(DateTime.Now.AddMonths(int.Parse(RegexDigits().Match(match.Value).Value)));
+            }
+
+            return null;
+        }
+
+        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?day", RegexOptions.None, "en-US")]
+        private static partial Regex RegexDays();
+
+        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?month", RegexOptions.None, "en-US")]
+        private static partial Regex RegexMonths();
+
     }
 
     [Serializable]
