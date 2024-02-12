@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -104,6 +105,12 @@ namespace TemporaTasks.Pages
                 return;
             }
 
+            DTHelper.lastMatches.Reverse();
+            foreach (Match match in DTHelper.lastMatches)
+                TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(match.Value, "");
+            DTHelper.lastMatches.Clear();
+            TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
+
             task.TaskTimer.Stop();
             TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null);
             TaskFile.SaveData();
@@ -114,6 +121,17 @@ namespace TemporaTasks.Pages
         private void Textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             ((TextBox)sender).SelectAll();
+        }
+
+        private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string? temp;
+
+            temp = DTHelper.RegexTimeMatch(TaskNameTextbox.Text);
+            if (temp != null) timeTextBox.Text = temp;
+
+            temp = DTHelper.RegexDateMatch(TaskNameTextbox.Text);
+            if (temp != null) dateTextBox.Text = temp;
         }
     }
 }

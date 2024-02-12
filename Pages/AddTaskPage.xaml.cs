@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -77,7 +79,7 @@ namespace TemporaTasks.Pages
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             NameBorder.BorderThickness = DateBorder.BorderThickness = TimeBorder.BorderThickness = new Thickness(0);
-
+            
             if (TaskNameTextbox.Text.Length == 0)
             {
                 NameBorder.BorderThickness = new Thickness(2);
@@ -99,6 +101,12 @@ namespace TemporaTasks.Pages
                 TimeBorder.BorderThickness = new Thickness(2);
                 return;
             }
+
+            DTHelper.lastMatches.Reverse();
+            foreach (Match match in DTHelper.lastMatches)
+                TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(match.Value, "");
+            DTHelper.lastMatches.Clear();
+            TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
             long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
             TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));

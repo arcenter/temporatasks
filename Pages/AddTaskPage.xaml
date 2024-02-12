@@ -30,7 +30,7 @@
 
                         <Label Content="Task Name" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
 
-                        <Border x:Name="NameBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" DockPanel.Dock="Right">
+                        <Border x:Name="NameBorder" Background="#333333" BorderBrush="{StaticResource PastDue}" BorderThickness="0" DockPanel.Dock="Right">
                             <TextBox x:Name="TaskNameTextbox" TextChanged="TaskNameTextbox_TextChanged"/>
                         </Border>
 
