@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -104,11 +105,28 @@ namespace TemporaTasks.Windows
                 return;
             }
 
+            DTHelper.lastMatches.Reverse();
+            foreach (Match match in DTHelper.lastMatches)
+                TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(match.Value, "");
+            DTHelper.lastMatches.Clear();
+            TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
+
             long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
             TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
             TaskFile.SaveData();
             ((MainWindow)Application.Current.MainWindow).FrameView.Navigate(new HomePage());
             CloseWindow();
+        }
+
+        private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string? temp;
+
+            temp = DTHelper.RegexTimeMatch(TaskNameTextbox.Text);
+            if (temp != null) timeTextBox.Text = temp;
+
+            temp = DTHelper.RegexDateMatch(TaskNameTextbox.Text);
+            if (temp != null) dateTextBox.Text = temp;
         }
 
         private async void CloseWindow()

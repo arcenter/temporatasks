@@ -13,7 +13,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition MaxWidth="50"/>
-            <ColumnDefinition/>
+            <ColumnDefinition MinWidth="300"/>
             <ColumnDefinition MaxWidth="50"/>
         </Grid.ColumnDefinitions>
         
@@ -30,7 +30,7 @@
 
                         <Label Content="Task Name" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
 
-                        <TextBox x:Name="TaskNameTextbox" DockPanel.Dock="Right" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
+                        <TextBox x:Name="TaskNameTextbox" DockPanel.Dock="Right" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TaskNameTextbox_TextChanged"/>
 
                     </DockPanel>
 
