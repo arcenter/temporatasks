@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
 
@@ -115,6 +105,17 @@ namespace TemporaTasks.Pages
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
+        }
+
+        private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string? temp;
+            
+            temp = DTHelper.RegexTimeMatch(TaskNameTextbox.Text);
+            if (temp != null) timeTextBox.Text = temp;
+
+            temp = DTHelper.RegexDateMatch(TaskNameTextbox.Text);
+            if (temp != null) dateTextBox.Text = temp;
         }
     }
 }
