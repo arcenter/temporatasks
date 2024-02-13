@@ -5,8 +5,6 @@ namespace TemporaTasks.Core
 {
     public partial class DTHelper
     {
-        public static ArrayList lastMatches = new();
-
         public static string DateToString(DateTime date)
         {
             return $"{date.Year}-{date.Month.ToString().PadLeft(2, '0')}-{date.Day.ToString().PadLeft(2, '0')}";
@@ -100,7 +98,10 @@ namespace TemporaTasks.Core
             return new DateTime(year, month, day, hour, minute, 0);
         }
 
-        public static string? RegexTimeMatch(string str)
+        public static string? matchedTime = null;
+        public static string? matchedDate = null;
+
+        public static string? RegexRelativeTimeMatch(string str)
         {
             Match match;
 
@@ -114,10 +115,10 @@ namespace TemporaTasks.Core
             match = RegexMinutes().Match(str);
             if (match.Success)
             {
-                lastMatches.Add(match);
+                matchedTime = match.Value;
                 return TimeToString(DateTime.Now.AddMinutes(int.Parse(RegexDigits().Match(match.Value).Value)));
             }
-                
+
             match = RegexAnHour().Match(str);
             if (match.Success)
             {
@@ -128,14 +129,15 @@ namespace TemporaTasks.Core
             match = RegexHours().Match(str);
             if (match.Success)
             {
-                lastMatches.Add(match);
+                matchedTime = match.Value;
                 return TimeToString(DateTime.Now.AddHours(int.Parse(RegexDigits().Match(match.Value).Value)));
             }
 
+            matchedTime = null;
             return null;
         }
 
-        public static string? RegexDateMatch(string str)
+        public static string? RegexRelativeDateMatch(string str)
         {
             Match match;
 
@@ -163,17 +165,18 @@ namespace TemporaTasks.Core
             match = RegexDays().Match(str);
             if (match.Success)
             {
-                lastMatches.Add(match);
+                matchedDate = match.Value;
                 return DateToString(DateTime.Now.AddDays(int.Parse(RegexDigits().Match(match.Value).Value)));
             }
 
             match = RegexMonths().Match(str);
             if (match.Success)
             {
-                lastMatches.Add(match);
+                matchedDate = match.Value;
                 return DateToString(DateTime.Now.AddMonths(int.Parse(RegexDigits().Match(match.Value).Value)));
             }
 
+            matchedDate = null;
             return null;
         }
 
@@ -226,6 +229,7 @@ namespace TemporaTasks.Core
         [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?hours?")]
         public static partial Regex RegexHours();
 
+        // ---------------------------------------------------------------------------------
     }
 
     [Serializable]

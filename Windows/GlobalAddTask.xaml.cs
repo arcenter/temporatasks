@@ -105,10 +105,8 @@ namespace TemporaTasks.Windows
                 return;
             }
 
-            DTHelper.lastMatches.Reverse();
-            foreach (Match match in DTHelper.lastMatches)
-                TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(match.Value, "");
-            DTHelper.lastMatches.Clear();
+            if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
+            if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
             long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
@@ -122,10 +120,10 @@ namespace TemporaTasks.Windows
         {
             string? temp;
 
-            temp = DTHelper.RegexTimeMatch(TaskNameTextbox.Text);
+            temp = DTHelper.RegexRelativeTimeMatch(TaskNameTextbox.Text);
             if (temp != null) timeTextBox.Text = temp;
 
-            temp = DTHelper.RegexDateMatch(TaskNameTextbox.Text);
+            temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
             if (temp != null) dateTextBox.Text = temp;
         }
 
