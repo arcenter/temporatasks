@@ -104,6 +104,13 @@ namespace TemporaTasks.Core
         {
             Match match;
 
+            match = RegexAMinute().Match(str);
+            if (match.Success)
+            {
+                matchedTime = match.Value;
+                return TimeToString(DateTime.Now.AddMinutes(1));
+            }
+
             match = RegexMinutes().Match(str);
             if (match.Success)
             {
@@ -111,6 +118,12 @@ namespace TemporaTasks.Core
                 return TimeToString(DateTime.Now.AddMinutes(int.Parse(RegexDigits().Match(match.Value).Value)));
             }
                 
+            match = RegexAnHour().Match(str);
+            if (match.Success)
+            {
+                matchedTime = match.Value; 
+                return TimeToString(DateTime.Now.AddHours(1));
+            }
 
             match = RegexHours().Match(str);
             if (match.Success)
@@ -201,8 +214,14 @@ namespace TemporaTasks.Core
 
         // >>> Calendar
 
+        [GeneratedRegex(@"(?i)in a min(ute)?")]
+        public static partial Regex RegexAMinute();
+
         [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?mins?")]
         public static partial Regex RegexMinutes();
+
+        [GeneratedRegex(@"(?i)in an hour")]
+        public static partial Regex RegexAnHour();
 
         [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?hours?")]
         public static partial Regex RegexHours();
