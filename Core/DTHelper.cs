@@ -126,6 +126,27 @@ namespace TemporaTasks.Core
         {
             Match match;
 
+            match = new Regex("(?i)today").Match(str);
+            if (match.Success)
+            {
+                matchedDate = match.Value;
+                return DateToString(DateTime.Now);
+            }
+
+            match = new Regex("(?i)day after tomorrow").Match(str);
+            if (match.Success)
+            {
+                matchedDate = match.Value;
+                return DateToString(DateTime.Now.AddDays(2));
+            }
+
+            match = new Regex("(?i)tomorrow").Match(str);
+            if (match.Success)
+            {
+                matchedDate = match.Value;
+                return DateToString(DateTime.Now.AddDays(1));
+            }
+
             match = RegexDays().Match(str);
             if (match.Success)
             {
