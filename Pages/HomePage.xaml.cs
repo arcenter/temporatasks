@@ -291,9 +291,16 @@ namespace TemporaTasks.Pages
                             if (task.IsCompleted)
                                 completed[task] = task.CompletedDT.Value;
                             else
-                            if (task.DueDT.HasValue)
-                                matchesSort[task] = (SortComboBox.SelectedIndex == 1) ? task.CreatedDT.Value : task.DueDT.Value;
-                            else doesntMatchSort.Add(task);
+                            {
+                                if (SortComboBox.SelectedIndex == 1)
+                                    matchesSort[task] = task.CreatedDT.Value;
+                                else
+                                {
+                                    if (task.DueDT.HasValue)
+                                        matchesSort[task] = task.DueDT.Value;
+                                    else doesntMatchSort.Add(task);
+                                }
+                            }
 
                     sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                     completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
