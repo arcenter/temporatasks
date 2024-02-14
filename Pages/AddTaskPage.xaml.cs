@@ -106,7 +106,11 @@ namespace TemporaTasks.Pages
             if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
-            long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
+            long randomLong;
+            randomGen:
+            randomLong = (long)(new Random().NextDouble() * long.MaxValue);
+            foreach (IndividualTask task in TaskFile.TaskList) if (task.TaskUID == randomLong) { goto randomGen; }
+
             TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
