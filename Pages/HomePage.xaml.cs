@@ -70,13 +70,14 @@ namespace TemporaTasks.Pages
             {
                 if (e.Key == Key.Escape || e.Key == Key.Tab)
                 {
-                    label.Focus();
+                    HomePagePage.Focus();
                     if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
                 }
+                    
                 return;
             }
 
-            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.F))
+            else if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.F))
             {
                 SearchTextBox.Focus();
                 SearchTextBoxAnimate(true);
@@ -87,11 +88,11 @@ namespace TemporaTasks.Pages
             {
                 case Key.N:
                     AddButton_MouseDown(null, null);
-                    break;
+                    return;
 
                 case Key.S:
                     SearchTextBoxAnimate(true);
-                    break;
+                    return;
 
                 case Key.Escape:
                     if (currentFocus.HasValue)
@@ -100,7 +101,7 @@ namespace TemporaTasks.Pages
                         UnfocusTasks();
                     }
                     else mainWindow.WindowHide();
-                    break;
+                    return;
             }
 
             if (currentFocus.HasValue)
@@ -375,7 +376,7 @@ namespace TemporaTasks.Pages
         {
             if (!SearchTextBox.IsMouseDirectlyOver && !SearchBorder.IsMouseDirectlyOver)
             {
-                label.Focus();
+                HomePagePage.Focus();
                 if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
             }
             UnfocusTasks();
