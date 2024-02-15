@@ -41,7 +41,7 @@
 
                     <Label Content="Date" Width="100" HorizontalContentAlignment="Right" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" DockPanel.Dock="Left" VerticalContentAlignment="Center" Padding="0,0,10,0"/>
 
-                    <Border x:Name="calendarButtonBorder" DockPanel.Dock="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseUp="calendar_MouseUp" Focusable="False" Padding="10 0 10 0">
+                    <Border x:Name="calendarButtonBorder" DockPanel.Dock="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseUp="Calendar_MouseUp" Focusable="False" Padding="10 0 10 0">
                         <Border.Background>
                             <SolidColorBrush  Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
                         </Border.Background>

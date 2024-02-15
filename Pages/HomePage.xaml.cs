@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +13,7 @@ namespace TemporaTasks.Pages
 {
     public partial class HomePage : Page
     {
-        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+        readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         Nullable<int> currentFocus = null;
 
@@ -183,7 +182,7 @@ namespace TemporaTasks.Pages
             {
                 currentFocus++;
                 if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
-            } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask));
+            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask);
 
             FocusTask();
         }
@@ -240,7 +239,7 @@ namespace TemporaTasks.Pages
             {
                 if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
 
-                while (!(TaskStack.Children[currentFocus.Value] is IndividualTask)) currentFocus++;
+                while (TaskStack.Children[currentFocus.Value] is not IndividualTask) currentFocus++;
 
                 ((IndividualTask)TaskStack.Children[currentFocus.Value]).StrokeOn();
                 ((IndividualTask)TaskStack.Children[currentFocus.Value]).BringIntoView();
@@ -249,7 +248,7 @@ namespace TemporaTasks.Pages
 
         private void UnfocusTasks()
         {
-            foreach (object obj in TaskStack.Children) if (obj is IndividualTask) ((IndividualTask)obj).StrokeOff();
+            foreach (object obj in TaskStack.Children) if (obj is IndividualTask task) task.StrokeOff();
         }
         
         private void GenerateTaskStack()
@@ -258,29 +257,10 @@ namespace TemporaTasks.Pages
 
             TaskStack.Children.Clear();
 
-            Dictionary<IndividualTask, object> matchesSort = new(), completed = new(), sortedDict = new();
-            ArrayList doesntMatchSort = new();
+            Dictionary<IndividualTask, object> matchesSort = [], completed = [], sortedDict = [];
+            ArrayList doesntMatchSort = [];
 
-            string GetDaySuffix(int day)
-            {
-                switch (day)
-                {
-                    case 1:
-                    case 21:
-                    case 31:
-                        return "st";
-                    case 2:
-                    case 22:
-                        return "nd";
-                    case 3:
-                    case 23:
-                        return "rd";
-                    default:
-                        return "th";
-                }
-            }
-
-            ArrayList days = new();
+            ArrayList days = [];
             Regex regex = new(SearchTextBox.Text.ToLower());
             switch (SortComboBox.SelectedIndex)
             {
@@ -313,7 +293,7 @@ namespace TemporaTasks.Pages
                             days.Add(date.ToShortDateString());
                             TaskStack.Children.Add(new Label()
                             {
-                                Content = date.ToString("dddd, d") + GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy"),
+                                Content = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy"),
                                 Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
                                 FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
                                 FontSize = 14,
@@ -351,7 +331,7 @@ namespace TemporaTasks.Pages
                         foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
 
                     }
-                    
+
                     break;
 
                 default:

@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -13,7 +12,7 @@ namespace TemporaTasks.Pages
     {
 
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-        IndividualTask task;
+        readonly IndividualTask task;
 
         public DateTimePicker datePickerUserControl;
 
@@ -70,7 +69,7 @@ namespace TemporaTasks.Pages
             tooltip.VerticalOffset = mousePosition.Y;
         }
 
-        private void calendar_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Calendar_MouseUp(object sender, MouseButtonEventArgs e)
         {
             datePickerUserControl = new DateTimePicker(dateTextBox.Text)
             {

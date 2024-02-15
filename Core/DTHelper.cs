@@ -21,7 +21,7 @@ namespace TemporaTasks.Core
             else
             {
                 apm = "PM";
-                hour = hour - 12;
+                hour -= 12;
             }
             return $"{hour.ToString().PadLeft(2, '0')}:{time.Minute.ToString().PadLeft(2, '0')} {apm}";
         }
@@ -98,8 +98,8 @@ namespace TemporaTasks.Core
             return new DateTime(year, month, day, hour, minute, 0);
         }
 
-        public static string? matchedTime = null;
-        public static string? matchedDate = null;
+        public static string? matchedTime;
+        public static string? matchedDate;
 
         public static string? RegexRelativeTimeMatch(string str)
         {
@@ -180,8 +180,19 @@ namespace TemporaTasks.Core
             return null;
         }
 
+        public static string GetDaySuffix(int day)
+        {
+            return day switch
+            {
+                1 or 21 or 31 => "st",
+                2 or 22 => "nd",
+                3 or 23 => "rd",
+                _ => "th",
+            };
+        }
+
         // Digits Regex --------------------------------------------------------------------
-        
+
         [GeneratedRegex(@"\d{1,2}")]
         public static partial Regex RegexDigits();
 
