@@ -136,6 +136,7 @@ namespace TemporaTasks.Windows
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
+            if (TaskNameTextbox.Text.Length != 0) return;
             try { Close(); }
             catch { }
         }
