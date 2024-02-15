@@ -196,29 +196,14 @@ namespace TemporaTasks
 
         protected void DisplayResizeCursor(object sender, MouseEventArgs e)
         {
-            var clickedShape = sender as Shape;
-
-            switch (clickedShape.Name)
+            Cursor = (sender as Shape).Name switch
             {
-                case "ResizeN":
-                case "ResizeS":
-                    this.Cursor = Cursors.SizeNS;
-                    break;
-                case "ResizeE":
-                case "ResizeW":
-                    this.Cursor = Cursors.SizeWE;
-                    break;
-                case "ResizeNW":
-                case "ResizeSE":
-                    this.Cursor = Cursors.SizeNWSE;
-                    break;
-                case "ResizeNE":
-                case "ResizeSW":
-                    this.Cursor = Cursors.SizeNESW;
-                    break;
-                default:
-                    break;
-            }
+                "ResizeN" or "ResizeS" => Cursors.SizeNS,
+                "ResizeE" or "ResizeW" => Cursors.SizeWE,
+                "ResizeNW" or "ResizeSE" => Cursors.SizeNWSE,
+                "ResizeNE" or "ResizeSW" => Cursors.SizeNESW,
+                _ => Cursors.Arrow
+            };
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

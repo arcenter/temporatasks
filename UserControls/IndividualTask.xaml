@@ -17,17 +17,17 @@
 
         <Border x:Name="StrokeBorder" Grid.Row="1" CornerRadius="5" BorderBrush="{StaticResource Blue}" BorderThickness="0" Width="{Binding ActualWidth, ElementName=Background, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=Background, Mode=OneWay}"/>
 
-        <Border x:Name="Background" Background="{StaticResource DarkBlue}" Opacity="0" Grid.Row="1" CornerRadius="5" MinHeight="40" IsMouseDirectlyOverChanged="Background_IsMouseDirectlyOverChanged" MouseDown="Background_MouseDown"/>
+        <Border x:Name="Background" Background="{StaticResource DarkBlue}" Opacity="0" Grid.Row="1" CornerRadius="5" MinHeight="40" MouseEnter="Background_MouseEnter" MouseLeave="Background_MouseLeave" MouseDown="Background_MouseDown"/>
 
         <Line VerticalAlignment="Bottom" Stroke="{StaticResource Accent}" StrokeThickness="2" X2="{Binding ActualWidth, ElementName=Background}" Grid.Row="2" Opacity="0.25"/>
 
         <DockPanel VerticalAlignment="Center" Grid.Row="1">
 
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0 0 13 0">
 
-                <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  IsHitTestVisible="False" Padding="13 0 13 0"/>
+                <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  IsHitTestVisible="False" Padding="13 0 0 0"/>
 
-                <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="#00000000">
+                <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="#00000000" Margin="13 0 0 0">
 
                     <Grid>
                         <Border x:Name="plus5m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
@@ -57,7 +57,7 @@
                         </local:IconButton.ToolTip>
                     </local:IconButton>
 
-                    <local:IconButton x:Name="TrashIcon" SVGSource="{StaticResource trashIcon}" Width="30" Height="30" Margin="5 0 10 0" MouseDown="TrashIcon_MouseDown">
+                    <local:IconButton x:Name="TrashIcon" SVGSource="{StaticResource trashIcon}" Width="30" Height="30" Margin="5 0 0 0" MouseDown="TrashIcon_MouseDown">
                         <local:IconButton.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>

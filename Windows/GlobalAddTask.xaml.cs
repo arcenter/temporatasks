@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -65,11 +66,13 @@ namespace TemporaTasks.Windows
             tooltip.VerticalOffset = mousePosition.Y;
         }
 
-        private void calendar_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Calendar_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            datePickerUserControl = new DateTimePicker(dateTextBox.Text);
-            datePickerUserControl.textBox = dateTextBox;
-            datePickerUserControl.popUp = datePickerPopUp;
+            datePickerUserControl = new(dateTextBox.Text)
+            {
+                textBox = dateTextBox,
+                popUp = datePickerPopUp
+            };
             datePickerPopUp.Child = datePickerUserControl;
             datePickerPopUp.IsOpen = true;
         }

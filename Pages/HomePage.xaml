@@ -80,14 +80,10 @@
         </DockPanel>
 
         <ScrollViewer Style="{StaticResource CustomScrollViewerStyle}" HorizontalScrollBarVisibility="Disabled" Margin="0 110 -17 0" Focusable="False">
-
             <StackPanel x:Name="InnerStack">
-
                 <StackPanel x:Name="TaskStack"/>
                 <Rectangle Height="50"/>
-
             </StackPanel>
-
         </ScrollViewer>
 
     </Grid>

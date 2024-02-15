@@ -13,7 +13,7 @@ namespace TemporaTasks.UserControls
 {
     public partial class IndividualTask : UserControl
     {
-        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+        readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public long TaskUID { get; set; }
         public string TaskName { get; set; }
@@ -37,7 +37,7 @@ namespace TemporaTasks.UserControls
         public Nullable<DateTime> CompletedDT;
         
         public DispatcherTimer TaskTimer = new();
-        private DispatcherTimer TemporaryRemainingTimer = new();
+        readonly private DispatcherTimer TemporaryRemainingTimer = new();
 
         public bool IsDue
         {
@@ -74,23 +74,27 @@ namespace TemporaTasks.UserControls
             UpdateTaskCheckBoxAndBackground();
         }
 
-        private void Background_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void Background_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Background.IsMouseOver)
+            if (!Icons.IsMouseOver)
             {
-                if (!Icons.IsMouseOver)
-                {
-                    TemporaryRemainingTimer.Start();
-                    UpdateDateTimeLabelWithRemaining(null, null);
-                }
+                TemporaryRemainingTimer.Start();
+                UpdateDateTimeLabelWithRemaining(null, null);
+                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(193, TimeSpan.FromMilliseconds(250)));
             }
-            else
+            Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, TimeSpan.FromMilliseconds(250)));
+        }
+
+        public void Background_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (Icons.IsMouseOver)
             {
                 TemporaryRemainingTimer.Stop();
                 DueDateTimeLabelUpdate();
             }
-            Background.BeginAnimation(OpacityProperty, new DoubleAnimation(Background.IsMouseOver? 0.2 : 0, TimeSpan.FromMilliseconds(250)));
-            if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation((Background.IsMouseOver) ? 193 : 0, TimeSpan.FromMilliseconds(250)));
+            else
+                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+            Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
         }
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
@@ -139,44 +143,26 @@ namespace TemporaTasks.UserControls
         {
             if (IsCompleted && CompletedDT.HasValue)
             {
-                string dateString;
-                switch (CompletedDT.Value.Day - DateTime.Now.Day)
+                string dateString = (CompletedDT.Value.Day - DateTime.Now.Day) switch
                 {
-                    case 0:
-                        dateString = "today";
-                        break;
-                    case -1:
-                        dateString = "yesterday";
-                        break;
-                    case 1:
-                        dateString = "tomorrow";
-                        break;
-                    default:
-                        dateString = CompletedDT.Value.ToString("dd\\/MM");
-                        break;
-                }
-                DueDateTimeLabel.Content = $"Done {dateString} {CompletedDT.Value.ToString("hh:mm tt")}";
+                    0 => "today",
+                    -1 => "yesterday",
+                    1 => "tomorrow",
+                    _ => CompletedDT.Value.ToString("dd\\/MM"),
+                };
+                DueDateTimeLabel.Content = $"Done {dateString} {CompletedDT.Value:hh:mm tt}";
             }
 
             else if (DueDT.HasValue)
             {
-                string dateString;
-                switch (DueDT.Value.Day - DateTime.Now.Day)
+                string dateString = (DueDT.Value.Day - DateTime.Now.Day) switch
                 {
-                    case 0:
-                        dateString = "today";
-                        break;
-                    case -1:
-                        dateString = "yesterday";
-                        break;
-                    case 1:
-                        dateString = "tomorrow";
-                        break;
-                    default:
-                        dateString = DueDT.Value.ToString("dd\\/MM");
-                        break;
-                }
-                DueDateTimeLabel.Content = $"Due {dateString} {DueDT.Value.ToString("hh:mm tt")}";
+                    0 => "today",
+                    -1 => "yesterday",
+                    1 => "tomorrow",
+                    _ => DueDT.Value.ToString("dd\\/MM")
+                };
+                DueDateTimeLabel.Content = $"Due {dateString} {DueDT.Value:hh:mm tt)}";
             }
 
             DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
@@ -226,7 +212,7 @@ namespace TemporaTasks.UserControls
 
                 inTime = Math.Round(inTime, 0);
                 if (inTime > 1) DueDateTimeLabel.Content = $"In ~{inTime} {DueDateTimeLabel.Content}s";
-                else DueDateTimeLabel.Content = "In a" + (DueDateTimeLabel.Content == "hour" ? "n " : " ") + DueDateTimeLabel.Content;
+                else DueDateTimeLabel.Content = "In a" + ((string)DueDateTimeLabel.Content == "hour" ? "n " : " ") + DueDateTimeLabel.Content;
                 TemporaryRemainingTimer.Stop();
             }
             else DueDateTimeLabel.Content = $"In {(int)remainingTime.TotalSeconds} seconds";
@@ -265,19 +251,16 @@ namespace TemporaTasks.UserControls
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var clickedBorder = sender as Border;
-            switch (clickedBorder.Name)
+            if (!DueDT.HasValue) return;
+
+            DueDT = DueDT.Value + ((sender as Border).Name) switch
             {
-                case "plus5m":
-                    DueDT += TimeSpan.FromMinutes(5);
-                    break;
-                case "plus10m":
-                    DueDT += TimeSpan.FromMinutes(10);
-                    break;
-                case "plus30m":
-                    DueDT += TimeSpan.FromMinutes(30);
-                    break;
-            }
+                "plus5m" => TimeSpan.FromMinutes(5),
+                "plus10m" => TimeSpan.FromMinutes(10),
+                "plus30m" => TimeSpan.FromMinutes(30),
+                _ => TimeSpan.FromTicks(0),
+            };
+
             TaskFile.SaveData();
             DueDateTimeLabelUpdate();
             NewDueDT();
