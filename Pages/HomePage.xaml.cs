@@ -55,7 +55,8 @@ namespace TemporaTasks.Pages
             mainWindow.MouseDown -= Window_MouseDown;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
-                task.StrokeOff(); // StrokeBorder.BorderThickness = new Thickness(0);
+                task.StrokeOff();
+                task.Background_MouseLeave(null, null);
                 task.IsTrashIconClicked -= TrashIcon_MouseDown;
                 task.IsEditIconClicked -= EditIcon_MouseDown;
                 task.Cursor = Cursors.None;
