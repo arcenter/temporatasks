@@ -80,20 +80,16 @@ namespace TemporaTasks.UserControls
             {
                 TemporaryRemainingTimer.Start();
                 UpdateDateTimeLabelWithRemaining(null, null);
-                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(193, TimeSpan.FromMilliseconds(250)));
+                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(183, TimeSpan.FromMilliseconds(250)));
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, TimeSpan.FromMilliseconds(250)));
         }
 
         public void Background_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Icons.IsMouseOver)
-            {
-                TemporaryRemainingTimer.Stop();
-                DueDateTimeLabelUpdate();
-            }
-            else
-                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+            TemporaryRemainingTimer.Stop();
+            DueDateTimeLabelUpdate();
+            if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
         }
 
