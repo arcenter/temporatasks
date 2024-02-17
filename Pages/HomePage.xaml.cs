@@ -418,5 +418,13 @@ namespace TemporaTasks.Pages
                 SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani2);
             }
         }
+
+        private void HomePagePage_MouseMove(object sender, MouseEventArgs e)
+        {
+            foreach (object obj in TaskStack.Children)
+                if (obj is IndividualTask task)
+                    if (!task.IsMouseOver)
+                        task.Background_MouseLeave(null, null);
+        }
     }
 }
