@@ -80,7 +80,7 @@ namespace TemporaTasks.UserControls
             {
                 TemporaryRemainingTimer.Start();
                 UpdateDateTimeLabelWithRemaining(null, null);
-                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(183, TimeSpan.FromMilliseconds(250)));
+                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(217, TimeSpan.FromMilliseconds(250)));
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, TimeSpan.FromMilliseconds(250)));
         }
@@ -217,11 +217,13 @@ namespace TemporaTasks.UserControls
         public void StrokeOn()
         {
             StrokeBorder.BorderThickness = new Thickness(3);
+            //StrokeBorder.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(50)));
         }
 
         public void StrokeOff()
         {
             StrokeBorder.BorderThickness = new Thickness(0);
+            //StrokeBorder.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(125)));
         }
 
         private void NewDueDT()
@@ -247,15 +249,17 @@ namespace TemporaTasks.UserControls
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!DueDT.HasValue) return;
-
-            DueDT = DueDT.Value + ((sender as Border).Name) switch
-            {
-                "plus5m" => TimeSpan.FromMinutes(5),
-                "plus10m" => TimeSpan.FromMinutes(10),
-                "plus30m" => TimeSpan.FromMinutes(30),
-                _ => TimeSpan.FromTicks(0),
-            };
+            string name = (sender as Border).Name;
+            if (!DueDT.HasValue || name == "now")
+                DueDT = DateTime.Now;
+            else
+                DueDT = DueDT.Value + (name) switch
+                {
+                    "plus5m" => TimeSpan.FromMinutes(5),
+                    "plus10m" => TimeSpan.FromMinutes(10),
+                    "plus30m" => TimeSpan.FromMinutes(30),
+                    _ => TimeSpan.FromTicks(0),
+                };
 
             TaskFile.SaveData();
             DueDateTimeLabelUpdate();
