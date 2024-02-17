@@ -86,6 +86,16 @@ namespace TemporaTasks.Pages
 
             switch (e.Key)
             {
+                case Key.Home:
+                    currentFocus = 0;
+                    FocusTask();
+                    return;
+
+                case Key.End:
+                    currentFocus = 0;
+                    PreviousTaskFocus();
+                    return;
+
                 case Key.N:
                     AddButton_MouseDown(null, null);
                     return;
