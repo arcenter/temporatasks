@@ -15,6 +15,7 @@ namespace TemporaTasks.Pages
     {
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
+        readonly TimeSpan milli250 = TimeSpan.FromMilliseconds(250);
         Nullable<int> currentFocus = null;
 
         IndividualTask lastTask;
@@ -73,7 +74,6 @@ namespace TemporaTasks.Pages
                     HomePagePage.Focus();
                     if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
                 }
-                    
                 return;
             }
 
@@ -120,34 +120,34 @@ namespace TemporaTasks.Pages
                 {
                     case Key.Up:
                         PreviousTaskFocus();
-                        break;
+                        return;
 
                     case Key.Down:
                         NextTaskFocus();
-                        break;
+                        return;
 
                     case Key.Space:
                         ToggleTaskCompletion((IndividualTask)TaskStack.Children[currentFocus.Value]);
-                        break;
+                        return;
 
                     case Key.E:
                     case Key.Enter:
                         mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)TaskStack.Children[currentFocus.Value]));
-                        break;
+                        return;
 
                     case Key.D:
                     case Key.Delete:
                         TrashIcon_MouseDown((IndividualTask)TaskStack.Children[currentFocus.Value]);
                         if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
-                        break;
-                    
+                        return;
+
                     case Key.Z:
                         lastTask.StrokeOff();
                         TaskFile.TaskList.Add(lastTask);
                         TaskFile.SaveData();
                         GenerateTaskStack();
-                        break;
+                        return;
                 }
             }
             else
@@ -156,12 +156,12 @@ namespace TemporaTasks.Pages
                     case Key.Up:
                         currentFocus = 0;
                         PreviousTaskFocus();
-                        break;
+                        return;
 
                     case Key.Down:
                         currentFocus = 0;
                         FocusTask();
-                        break;
+                        return;
                 }
         }
 
@@ -224,12 +224,12 @@ namespace TemporaTasks.Pages
 
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
+            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, milli250));
         }
 
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskStack.Children.RemoveRange(0, TaskStack.Children.Count-1);
+            TaskStack.Children.Clear();
             mainWindow.FrameView.Navigate(new AddTaskPage());
         }
 
@@ -244,6 +244,7 @@ namespace TemporaTasks.Pages
 
         private void FocusTask()
         {
+            if (!currentFocus.HasValue) return;
             UnfocusTasks();
             int count = TaskStack.Children.Count;
             if (count > 0)
@@ -377,8 +378,8 @@ namespace TemporaTasks.Pages
                 HomePagePage.Focus();
                 if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
             }
+            currentFocus = null;
             UnfocusTasks();
-            currentFocus = 0;
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -389,9 +390,7 @@ namespace TemporaTasks.Pages
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused && SearchTextBox.Text.Length == 0)
-            {
                 SearchTextBoxAnimate((bool)e.NewValue);
-            }
         }
 
         private void SearchBorder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -417,13 +416,13 @@ namespace TemporaTasks.Pages
             {
                 SearchIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
 
-                DoubleAnimation ani = new(1.25, TimeSpan.FromMilliseconds(250));
+                DoubleAnimation ani = new(1.25, milli250);
                 SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
                 SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
 
                 await Task.Delay(251);
 
-                DoubleAnimation ani2 = new(1, TimeSpan.FromMilliseconds(250));
+                DoubleAnimation ani2 = new(1, milli250);
                 SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani2);
                 SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani2);
             }
