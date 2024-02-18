@@ -162,6 +162,26 @@ namespace TemporaTasks.Core
                 return DateToString(DateTime.Now.AddDays(1));
             }
 
+            match = RegexDayOfWeek().Match(str);
+            if (match.Success)
+            {
+                int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
+                int selectedDayOfWeek = match.Value[3..5] switch
+                {
+                    "su" => 0,
+                    "mo" => 1,
+                    "tu" => 2,
+                    "we" => 3,
+                    "th" => 4,
+                    "fr" => 5,
+                    "sa" => 6,
+                    _ => 0
+                };
+                if (selectedDayOfWeek <= currentDayOfWeek) selectedDayOfWeek += 7 - currentDayOfWeek;
+                else selectedDayOfWeek -= currentDayOfWeek;
+                return DateToString(DateTime.Now.AddDays(selectedDayOfWeek));
+            }
+
             match = RegexDays().Match(str);
             if (match.Success)
             {
@@ -208,6 +228,9 @@ namespace TemporaTasks.Core
         public static partial Regex RegexDateDD();
 
         // >>> Calendar
+
+        [GeneratedRegex(@"(?i)on .{2,4}day")]
+        public static partial Regex RegexDayOfWeek();
 
         [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?days?")]
         public static partial Regex RegexDays();
