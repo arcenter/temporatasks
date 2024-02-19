@@ -80,7 +80,6 @@ namespace TemporaTasks.UserControls
             {
                 TemporaryRemainingTimer.Start();
                 UpdateDateTimeLabelWithRemaining(null, null);
-                Icons.BeginAnimation(WidthProperty, new DoubleAnimation(217, TimeSpan.FromMilliseconds(250)));
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, TimeSpan.FromMilliseconds(250)));
         }
@@ -89,8 +88,8 @@ namespace TemporaTasks.UserControls
         {
             TemporaryRemainingTimer.Stop();
             DueDateTimeLabelUpdate();
-            if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+            if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
         }
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
@@ -265,6 +264,13 @@ namespace TemporaTasks.UserControls
             TaskFile.SaveData();
             DueDateTimeLabelUpdate();
             NewDueDT();
+        }
+
+        private void DueDateTimeLabel_MouseEnter(object sender, MouseEventArgs e)
+        {
+            incrementsPanel.Width = (IsCompleted) ? 0 : double.NaN;
+            Icons.UpdateLayout();
+            Icons.BeginAnimation(WidthProperty, new DoubleAnimation(Icons.ActualWidth, TimeSpan.FromMilliseconds(250)));
         }
     }
 }
