@@ -138,7 +138,7 @@ namespace TemporaTasks.Pages
 
                     case Key.D:
                     case Key.Delete:
-                        TrashIcon_MouseDown((IndividualTask)TaskStack.Children[currentFocus.Value]);
+                        TrashIcon_MouseDown(task);
                         if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
                         return;
