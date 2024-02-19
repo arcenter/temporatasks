@@ -10,6 +10,8 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Diagnostics;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 
 namespace TemporaTasks
 {
@@ -97,6 +99,15 @@ namespace TemporaTasks
         private void TrayIcon_TrayRightMouseUp(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void Border_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = e.GetPosition(sender as UIElement);
+            ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
+            tooltip.Placement = PlacementMode.Relative;
+            tooltip.HorizontalOffset = mousePosition.X;
+            tooltip.VerticalOffset = mousePosition.Y;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
