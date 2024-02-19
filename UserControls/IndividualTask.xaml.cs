@@ -247,13 +247,14 @@ namespace TemporaTasks.UserControls
             DueDateTimeLabelUpdate();
         }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        public void Increment_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            string name = (sender as Border).Name;
+            string? name = (sender is Border border) ? border.Name : sender.ToString();
+
             if (!DueDT.HasValue || name == "now")
                 DueDT = DateTime.Now;
             else
-                DueDT = DueDT.Value + (name) switch
+                DueDT = DueDT.Value + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
                 {
                     "plus5m" => TimeSpan.FromMinutes(5),
                     "plus10m" => TimeSpan.FromMinutes(10),
