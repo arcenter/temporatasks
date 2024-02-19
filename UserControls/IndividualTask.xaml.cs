@@ -131,6 +131,7 @@ namespace TemporaTasks.UserControls
 
         private void TrashIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            TaskTimer.Stop();
             IsTrashIconClicked?.Invoke(this);
         }
 
