@@ -78,7 +78,12 @@
                 </Grid>
             </Border>
 
-            <Border x:Name="CloseButton" Grid.Column="3" IsMouseDirectlyOverChanged="CloseButton_IsMouseDirectlyOverChanged" MouseDown="CloseButton_MouseDown">
+            <Border x:Name="CloseButton" Grid.Column="3" IsMouseDirectlyOverChanged="CloseButton_IsMouseDirectlyOverChanged" MouseDown="CloseButton_MouseDown" MouseMove="Border_MouseMove">
+                <Border.ToolTip>
+                    <ToolTip>
+                        <userControl:ButtonToolTip ToolTipText="Exit" Button1Text="esc"/>
+                    </ToolTip>
+                </Border.ToolTip>
                 <Border.Background>
                     <SolidColorBrush Color="{Binding Color, Source={StaticResource DarkBlue}}" Opacity="0"/>
                 </Border.Background>
