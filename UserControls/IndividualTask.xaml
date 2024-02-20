@@ -31,24 +31,25 @@
 
                     <StackPanel x:Name="incrementsPanel" Orientation="Horizontal">
                     <Grid>
-                        <Border x:Name="now" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
+                            <Border x:Name="now" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
                         <Label Content="Now" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
 
                     <Grid Margin="5 0 0 0">
-                        <Border x:Name="plus5m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
+                            <Border x:Name="plus5m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
                         <Label Content="+5m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
 
                     <Grid Margin="5 0 0 0">
-                        <Border x:Name="plus10m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
+                            <Border x:Name="plus10m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
                         <Label Content="+10m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
 
                     <Grid Margin="5 0 13 0">
-                        <Border x:Name="plus30m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
+                            <Border x:Name="plus30m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
                         <Label Content="+30m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
+                    </StackPanel>
 
                     <local:IconButton x:Name="EditIcon" SVGSource="{StaticResource pencilIcon}" Width="30" Height="30" MouseDown="EditIcon_MouseDown">
                         <local:IconButton.ToolTip>
@@ -95,7 +96,7 @@
 
                     <TextBlock x:Name="taskNameTextBlock" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"/>
 
-                    <Line x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 14" StrokeThickness="2"  IsHitTestVisible="False" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left"/>
+                    <Rectangle x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 14" IsHitTestVisible="False" Height="2" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left"/>
 
                 </Grid>
 
