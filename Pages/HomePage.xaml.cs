@@ -21,6 +21,8 @@ namespace TemporaTasks.Pages
 
         IndividualTask lastTask;
 
+        Dictionary<string, ArrayList> days = [];
+
         public HomePage()
         {
             InitializeComponent();
@@ -252,7 +254,13 @@ namespace TemporaTasks.Pages
             {
                 if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
 
-                while (TaskStack.Children[currentFocus.Value] is not IndividualTask) currentFocus++;
+                Trace.WriteLine(currentFocus);
+                while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
+                {
+                    Trace.WriteLine(currentFocus);
+                    if (currentFocus.Value >= count) currentFocus = 0;
+                    currentFocus++;
+                }
 
                 double verticalOffset = TaskStackScroller.VerticalOffset;
                 
@@ -283,7 +291,7 @@ namespace TemporaTasks.Pages
             Dictionary<IndividualTask, object> matchesSort = [], completed = [], sortedDict = [];
             ArrayList doesntMatchSort = [];
 
-            ArrayList days = [];
+            days.Clear();
             Regex regex = new(SearchTextBox.Text.ToLower());
             switch (SortComboBox.SelectedIndex)
             {
@@ -311,48 +319,58 @@ namespace TemporaTasks.Pages
                     foreach (IndividualTask task in sortedDict.Keys)
                     {
                         DateTime date = (SortComboBox.SelectedIndex == 1) ? task.CreatedDT.Value : task.DueDT.Value;
-                        if (!days.Contains(date.ToShortDateString()))
+                        string dateString = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy");
+
+                        if (!days.ContainsKey(dateString))
                         {
-                            days.Add(date.ToShortDateString());
-                            TaskStack.Children.Add(new Label()
-                            {
-                                Content = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy"),
-                                Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
-                                FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
-                                FontSize = 14,
-                                Margin = new Thickness(9, (TaskStack.Children.Count > 0)? 28 : 0, 0, 0)
-                            });
+                            days[dateString] = [];
+                            
+                            SectionDivider sectionDivider = new(dateString);
+                            if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
+                            sectionDivider.MouseDown += Section_MouseDown;
+                            
+                            TaskStack.Children.Add(sectionDivider);
                         }
+
+                        days[dateString].Add(task);
                         TaskStack.Children.Add(task);
                     }
 
                     if (doesntMatchSort.Count > 0)
                     {
-                        TaskStack.Children.Add(new Label()
-                        {
-                            Content = "No date",
-                            Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
-                            FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
-                            FontSize = 14,
-                            Margin = new Thickness(9, (TaskStack.Children.Count > 0) ? 28 : 0, 0, 0)
-                        });
+                        days["No date"] = [];
 
-                        foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
+                        SectionDivider sectionDivider = new("No date");
+                        if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
+                        sectionDivider.MouseDown += Section_MouseDown;
+
+                        TaskStack.Children.Add(sectionDivider);
+
+                        foreach (IndividualTask task in doesntMatchSort)
+                        {
+                            days["No date"].Add(task);
+                            TaskStack.Children.Add(task);
+                        }
                     }
 
                     if (completed.Count > 0)
                     {
-                        TaskStack.Children.Add(new Label()
+                        days["Completed"] = [];
+
+                        SectionDivider sectionDivider = new("Completed");
+                        if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
+                        sectionDivider.MouseDown += Section_MouseDown;
+
+                        TaskStack.Children.Add(sectionDivider);
+
+                        foreach (IndividualTask task in completed.Keys)
                         {
-                            Content = "Completed",
-                            Foreground = (SolidColorBrush)mainWindow.FindResource("Border"),
-                            FontFamily = new FontFamily(new Uri("pack://TemporaTasks:,,,/Resources/Fonts/Manrope.ttf"), "Manrope Light"),
-                            FontSize = 14,
-                            Margin = new Thickness(9, (TaskStack.Children.Count > 0) ? 28 : 0, 0, 0)
-                        });
+                            TaskStack.Children.Add(task);
+                            days["Completed"].Add(task);
+                            task.Visibility = Visibility.Collapsed;
+                        }
 
-                        foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
-
+                        sectionDivider.Background_MouseDown(null, null);
                     }
 
                     break;
@@ -373,6 +391,24 @@ namespace TemporaTasks.Pages
                     foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
                     break;
             }
+        }
+
+        private void Section_MouseDown(object sender, MouseEventArgs e)
+        {
+            ArrayList aL = days[((SectionDivider)sender).SectionTitle.Content.ToString()];
+            if (((IndividualTask)aL[0]).Visibility == Visibility.Visible)
+                foreach (IndividualTask task in aL)
+                    task.Visibility = Visibility.Collapsed;
+            else
+                foreach (IndividualTask task in aL)
+                {
+                    task.Visibility = Visibility.Visible;
+                    if (task.IsCompleted)
+                    {
+                        task.UpdateLayout();
+                        task.UpdateTaskCheckBoxAndBackground();
+                    }
+                }
         }
 
         private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
