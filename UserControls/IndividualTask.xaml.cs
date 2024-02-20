@@ -55,7 +55,7 @@ namespace TemporaTasks.UserControls
             TaskUID = _TaskUID;
             TaskName = _TaskName;
             taskNameTextBlock.Text = _TaskName;
-            
+
             IsCompleted = _CompletedDT.HasValue;
             
             CreatedDT = _CreatedDT; 
@@ -68,6 +68,7 @@ namespace TemporaTasks.UserControls
             TemporaryRemainingTimer.Interval = TimeSpan.FromSeconds(1);
             TemporaryRemainingTimer.Tick += UpdateDateTimeLabelWithRemaining;
 
+            UpdateTaskCheckBoxAndBackground();
         }
 
         private void IndividualTask_Loaded(object sender, RoutedEventArgs e)
