@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="800" Loaded="IndividualTask_Loaded">
 
-    <Grid>
+    <Grid x:Name="ucGrid">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="14"/>
@@ -29,6 +29,7 @@
 
                 <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="#00000000" Margin="13 0 0 0">
 
+                    <StackPanel x:Name="incrementsPanel" Orientation="Horizontal">
                     <Grid>
                         <Border x:Name="now" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Border_MouseDown"/>
                         <Label Content="Now" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
