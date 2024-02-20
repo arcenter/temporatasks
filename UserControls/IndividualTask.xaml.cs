@@ -67,6 +67,7 @@ namespace TemporaTasks.UserControls
 
             TemporaryRemainingTimer.Interval = TimeSpan.FromSeconds(1);
             TemporaryRemainingTimer.Tick += UpdateDateTimeLabelWithRemaining;
+
         }
 
         private void IndividualTask_Loaded(object sender, RoutedEventArgs e)
@@ -110,11 +111,19 @@ namespace TemporaTasks.UserControls
             UpdateTaskCheckBoxAndBackground();
         }
 
-        private void UpdateTaskCheckBoxAndBackground()
+        public void UpdateTaskCheckBoxAndBackground()
         {
             checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? 1 : 0, TimeSpan.FromMilliseconds(250)));
-            taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
-            strikethroughLine.BeginAnimation(Line.X2Property, new DoubleAnimation(IsCompleted ? strikethroughLine.MaxWidth : 0, TimeSpan.FromMilliseconds(500)));
+            taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
+
+            var animation = new DoubleAnimation(IsCompleted ? 0 : strikethroughLine.MaxWidth, IsCompleted ? strikethroughLine.MaxWidth : 0, TimeSpan.FromMilliseconds(500));
+            Storyboard.SetTarget(animation, strikethroughLine);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
+            
+            Storyboard storyboard = new();
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
+
             DueDateTimeLabelUpdate();
         }
 
