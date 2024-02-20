@@ -25,30 +25,30 @@
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0 0 13 0">
 
-                <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  IsHitTestVisible="False" Padding="13 0 0 0"/>
+                <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsHitTestVisible="True" Padding="13 0 0 0" MouseEnter="DueDateTimeLabel_MouseEnter"/>
 
                 <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="#00000000" Margin="13 0 0 0">
 
                     <StackPanel x:Name="incrementsPanel" Orientation="Horizontal">
-                    <Grid>
+                        <Grid>
                             <Border x:Name="now" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
-                        <Label Content="Now" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                    </Grid>
+                            <Label Content="Now" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        </Grid>
 
-                    <Grid Margin="5 0 0 0">
+                        <Grid Margin="5 0 0 0">
                             <Border x:Name="plus5m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
-                        <Label Content="+5m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                    </Grid>
+                            <Label Content="+5m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        </Grid>
 
-                    <Grid Margin="5 0 0 0">
+                        <Grid Margin="5 0 0 0">
                             <Border x:Name="plus10m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
-                        <Label Content="+10m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                    </Grid>
+                            <Label Content="+10m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        </Grid>
 
-                    <Grid Margin="5 0 13 0">
+                        <Grid Margin="5 0 13 0">
                             <Border x:Name="plus30m" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" IsMouseDirectlyOverChanged="Button_IsMouseDirectlyOverChanged" Width="30" Height="30" MouseDown="Increment_MouseDown"/>
-                        <Label Content="+30m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                    </Grid>
+                            <Label Content="+30m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="9" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        </Grid>
                     </StackPanel>
 
                     <local:IconButton x:Name="EditIcon" SVGSource="{StaticResource pencilIcon}" Width="30" Height="30" MouseDown="EditIcon_MouseDown">

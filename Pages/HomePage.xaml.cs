@@ -119,6 +119,8 @@ namespace TemporaTasks.Pages
 
             if (currentFocus.HasValue)
             {
+                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+
                 switch (e.Key)
                 {
                     case Key.Up:
@@ -130,12 +132,28 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.Space:
-                        ToggleTaskCompletion((IndividualTask)TaskStack.Children[currentFocus.Value]);
+                        ToggleTaskCompletion(task);
+                        return;
+
+                    case Key.D0:
+                        task.Increment_MouseDown("now", null);
+                        return;
+
+                    case Key.D1:
+                        task.Increment_MouseDown("plus5m", null);
+                        return;
+
+                    case Key.D2:
+                        task.Increment_MouseDown("plus10m", null);
+                        return;
+
+                    case Key.D3:
+                        task.Increment_MouseDown("plus30m", null);
                         return;
 
                     case Key.E:
                     case Key.Enter:
-                        mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)TaskStack.Children[currentFocus.Value]));
+                        mainWindow.FrameView.Navigate(new EditTaskPage(task));
                         return;
 
                     case Key.D:
@@ -186,7 +204,7 @@ namespace TemporaTasks.Pages
             {
                 currentFocus--;
                 if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
-            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask);
+            } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
             FocusTask();
         }
 
@@ -201,11 +219,11 @@ namespace TemporaTasks.Pages
             FocusTask();
         }
 
-        private void ToggleTaskCompletion(IndividualTask sender)
+        private void ToggleTaskCompletion(IndividualTask task)
         {
-            sender.ToggleCompletionStatus();
+            task.ToggleCompletionStatus();
 
-            int temp = TaskStack.Children.IndexOf((IndividualTask)sender);
+            int temp = TaskStack.Children.IndexOf(task);
             if (temp > -1) currentFocus = temp;
             FocusTask();
         }
