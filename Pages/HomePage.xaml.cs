@@ -413,8 +413,12 @@ namespace TemporaTasks.Pages
 
         private void Section_MouseDown(object sender, MouseEventArgs e)
         {
-            ArrayList aL = days[((SectionDivider)sender).SectionTitle.Content.ToString()];
-            if (((IndividualTask)aL[0]).Visibility == Visibility.Visible)
+            ArrayList aL;
+            string? _ = ((SectionDivider)sender).SectionTitle.Content.ToString();
+            if (_ == null) return;
+            else aL = days[_];
+
+            if (((IndividualTask)aL[0]).IsVisible)
                 foreach (IndividualTask task in aL)
                     task.Visibility = Visibility.Collapsed;
             else
