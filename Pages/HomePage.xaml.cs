@@ -385,7 +385,7 @@ namespace TemporaTasks.Pages
                         {
                             TaskStack.Children.Add(task);
                             days["Completed"].Add(task);
-                            task.Visibility = Visibility.Collapsed;
+                            task.Disappear();
                         }
 
                         sectionDivider.Background_MouseDown(null, null);
@@ -420,11 +420,12 @@ namespace TemporaTasks.Pages
 
             if (((IndividualTask)aL[0]).IsVisible)
                 foreach (IndividualTask task in aL)
-                    task.Visibility = Visibility.Collapsed;
+                    task.Disappear();
+
             else
                 foreach (IndividualTask task in aL)
                 {
-                    task.Visibility = Visibility.Visible;
+                    task.Appear();
                     if (task.IsCompleted)
                     {
                         task.UpdateLayout();

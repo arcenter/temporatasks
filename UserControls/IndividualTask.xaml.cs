@@ -121,12 +121,12 @@ namespace TemporaTasks.UserControls
             if (strikethroughLine.Width != final)
             {
                 var animation = new DoubleAnimation(IsCompleted ? 0 : strikethroughLine.MaxWidth, final, TimeSpan.FromMilliseconds(500));
-            Storyboard.SetTarget(animation, strikethroughLine);
-            Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
+                Storyboard.SetTarget(animation, strikethroughLine);
+                Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
             
-            Storyboard storyboard = new();
-            storyboard.Children.Add(animation);
-            storyboard.Begin();
+                Storyboard storyboard = new();
+                storyboard.Children.Add(animation);
+                storyboard.Begin();
             }
 
             DueDateTimeLabelUpdate();
@@ -231,13 +231,11 @@ namespace TemporaTasks.UserControls
         public void StrokeOn()
         {
             StrokeBorder.BorderThickness = new Thickness(3);
-            //StrokeBorder.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(50)));
         }
 
         public void StrokeOff()
         {
             StrokeBorder.BorderThickness = new Thickness(0);
-            //StrokeBorder.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(125)));
         }
 
         private void NewDueDT()
@@ -286,6 +284,34 @@ namespace TemporaTasks.UserControls
             incrementsPanel.Width = (IsCompleted) ? 0 : double.NaN;
             Icons.UpdateLayout();
             Icons.BeginAnimation(WidthProperty, new DoubleAnimation(Icons.ActualWidth, TimeSpan.FromMilliseconds(250)));
+        }
+
+        public new bool IsVisible = true;
+
+        public void Appear()
+        {
+            Visibility = Visibility.Visible;
+            ChangeHeight(0, 69);
+            IsVisible = true;
+        }
+
+        public async void Disappear()
+        {
+            ChangeHeight(ActualHeight, 0);
+            IsVisible = false;
+            await Task.Delay(250);
+            Visibility = Visibility.Collapsed;
+        }
+
+        private void ChangeHeight(double oldValue, double newValue)
+        {
+            var animation = new DoubleAnimation(oldValue, newValue, TimeSpan.FromMilliseconds(250));
+            Storyboard.SetTarget(animation, this);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(HeightProperty));
+
+            Storyboard storyboard = new();
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
         }
     }
 }
