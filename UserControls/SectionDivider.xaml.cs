@@ -8,6 +8,8 @@ namespace TemporaTasks.UserControls
 {
     public partial class SectionDivider : UserControl
     {
+        private bool opened = true;
+
         public SectionDivider(string sectionTitle)
         {
             InitializeComponent();
@@ -27,17 +29,13 @@ namespace TemporaTasks.UserControls
 
         public void Background_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var scaleTransform = Arrow.RenderTransform as ScaleTransform;
-            if (scaleTransform != null)
-            {
-                double scale = scaleTransform.ScaleY;
-                DoubleAnimation animation = new DoubleAnimation(scale * (-1), TimeSpan.FromMilliseconds(500));
-                Storyboard.SetTarget(animation, Arrow);
-                Storyboard.SetTargetProperty(animation, new PropertyPath("RenderTransform.ScaleY"));
-                Storyboard storyboard = new();
-                storyboard.Children.Add(animation);
-                storyboard.Begin();
-            }
+            opened = !opened;
+            DoubleAnimation animation = new DoubleAnimation((opened) ? 1 : -1, TimeSpan.FromMilliseconds(500));
+            Storyboard.SetTarget(animation, Arrow);
+            Storyboard.SetTargetProperty(animation, new PropertyPath("RenderTransform.ScaleY"));
+            Storyboard storyboard = new();
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
         }
     }
 }
