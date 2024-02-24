@@ -278,7 +278,9 @@ namespace TemporaTasks.Pages
         private async void FocusTask()
         {
             if (!currentFocus.HasValue) return;
+            
             UnfocusTasks();
+            
             int count = TaskStack.Children.Count;
             if (count > 0)
             {
@@ -287,7 +289,6 @@ namespace TemporaTasks.Pages
                 int limit = count;
                 while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
                 {
-                    Trace.WriteLine(currentFocus);
                     if (currentFocus.Value >= count) currentFocus = 0;
                     currentFocus++;
                     if (--limit <= 0)
@@ -435,11 +436,16 @@ namespace TemporaTasks.Pages
             if (_ == null) return;
             else aL = days[_];
 
+            if (aL.Count <= 0 || aL[0] == null) return;
+
             if (((IndividualTask)aL[0]).IsVisible)
+            {
                 foreach (IndividualTask task in aL)
                     task.Disappear();
+            }
 
             else
+            {
                 foreach (IndividualTask task in aL)
                 {
                     task.Appear();
@@ -449,6 +455,7 @@ namespace TemporaTasks.Pages
                         task.UpdateTaskCheckBoxAndBackground();
                     }
                 }
+            }
         }
 
         private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
