@@ -200,21 +200,33 @@ namespace TemporaTasks.Pages
 
         private void PreviousTaskFocus()
         {
+            int limit = TaskStack.Children.Count;
             do
             {
                 currentFocus--;
                 if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+                if (--limit <= 0)
+                {
+                    currentFocus = null;
+                    return;
+                }
             } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
             FocusTask();
         }
 
         private void NextTaskFocus()
         {
+            int limit = TaskStack.Children.Count;
             do
             {
                 currentFocus++;
                 if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
-            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask);
+                if (--limit <= 0)
+                {
+                    currentFocus = null;
+                    return;
+                }
+            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
 
             FocusTask();
         }
@@ -272,12 +284,17 @@ namespace TemporaTasks.Pages
             {
                 if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
 
-                Trace.WriteLine(currentFocus);
+                int limit = count;
                 while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
                 {
                     Trace.WriteLine(currentFocus);
                     if (currentFocus.Value >= count) currentFocus = 0;
                     currentFocus++;
+                    if (--limit <= 0)
+                    {
+                        currentFocus = null;
+                        return;
+                    }
                 }
 
                 double verticalOffset = TaskStackScroller.VerticalOffset;
