@@ -217,7 +217,7 @@ namespace TemporaTasks
             };
         }
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Window_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (!FrameView.IsHitTestVisible)
             {
