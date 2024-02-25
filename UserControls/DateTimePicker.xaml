@@ -23,7 +23,7 @@
                     <local:IconButton SVGSource="{StaticResource backIcon}" Width="25" Height="25" MouseDown="BackIconButton_MouseDown" Cursor="Hand"/>
 
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
-                        <ComboBox x:Name="monthComboBox" Width="100" Margin="0 0 5 0" SelectionChanged="ComboBox_SelectionChanged" Cursor="Hand">
+                        <ComboBox x:Name="monthComboBox" Width="100" Margin="0 0 5 0" SelectionChanged="ComboBox_SelectionChanged" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
                             <ComboBoxItem Content="January"/>
                             <ComboBoxItem Content="February"/>
                             <ComboBoxItem Content="March"/>
@@ -37,7 +37,7 @@
                             <ComboBoxItem Content="November"/>
                             <ComboBoxItem Content="December"/>
                         </ComboBox>
-                        <ComboBox x:Name="yearComboBox" Width="75" Margin="5 0 0 0" SelectionChanged="ComboBox_SelectionChanged" Cursor="Hand"/>
+                        <ComboBox x:Name="yearComboBox" Width="75" Margin="5 0 0 0" SelectionChanged="ComboBox_SelectionChanged" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"/>
                     </StackPanel>
 
                     <local:IconButton SVGSource="{StaticResource backIcon}" Width="25" Height="25" Grid.Column="2" RenderTransformOrigin="0.5,0.5" MouseDown="NextIconButton_MouseDown" Cursor="Hand">
