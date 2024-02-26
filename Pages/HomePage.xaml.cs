@@ -423,8 +423,22 @@ namespace TemporaTasks.Pages
                     completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
 
                     foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
-                    foreach (IndividualTask task in doesntMatchSort) TaskStack.Children.Add(task);
-                    foreach (IndividualTask task in completed.Keys) TaskStack.Children.Add(task);
+                    
+                    days["Completed"] = [];
+                    SectionDivider sectionDividerDefault = new("Completed");
+                    if (TaskStack.Children.Count > 0) sectionDividerDefault.MainGrid.Margin = new Thickness(0, 14, 0, 0);
+                    sectionDividerDefault.MouseDown += Section_MouseDown;
+                    TaskStack.Children.Add(sectionDividerDefault);
+                    
+                    foreach (IndividualTask task in completed.Keys)
+                    {
+
+                        TaskStack.Children.Add(task);
+                        days["Completed"].Add(task);
+                        task.Disappear();
+                    }
+                    
+                    sectionDividerDefault.Background_MouseDown(null, null);
                     break;
             }
         }
