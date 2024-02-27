@@ -33,10 +33,9 @@ namespace TemporaTasks.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            window = (Window)sender;
-            window.Left = (SystemParameters.PrimaryScreenWidth - window.Width) / 2;
-            window.Top = 50;
-            window.BeginAnimation(Window.OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2; ;
+            BeginAnimation(Window.OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -132,7 +131,7 @@ namespace TemporaTasks.Windows
 
         private async void CloseWindow()
         {
-            window.BeginAnimation(Window.OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
+            BeginAnimation(Window.OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
             await Task.Delay(250);
             Close();
         }
