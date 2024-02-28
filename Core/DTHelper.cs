@@ -30,38 +30,58 @@ namespace TemporaTasks.Core
         {
             if (date.Length == 0 && time.Length == 0) return null;
 
-            int year = DateTime.Now.Year, month = DateTime.Now.Month, day, hour = 0, minute = 0;
+            int year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, hour = 0, minute = 0;
             string[] splits;
 
-            if (date.Length == 0)
-            {
-                year = DateTime.Now.Year;
-                month = DateTime.Now.Month;
-                day = DateTime.Now.Day;
-            }
-            else
+            if (date.Length != 0)
             {
                 try
                 {
-                    splits = date.Split('-');
-                    if (RegexDateYYYYMMDD().Match(date).Success)
+                    Match match;
+
+                    if ((match = RegexAddYear().Match(date)).Success)
                     {
-                        year = int.Parse(splits[0]);
-                        month = int.Parse(splits[1]);
-                        day = int.Parse(splits[2]);
+                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(365.25 * int.Parse(match.Value));
+                        year = newDate.Year;
+                        month = newDate.Month;
+                        day = newDate.Day;
                     }
-                    else if (RegexDateMMDD().Match(date).Success)
+                    else if ((match = RegexAddMonth().Match(date)).Success)
                     {
-                        month = int.Parse(splits[0]);
-                        day = int.Parse(splits[1]);
+                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(30.5 * int.Parse(match.Value));
+                        year = newDate.Year;
+                        month = newDate.Month;
+                        day = newDate.Day;
                     }
-                    else if (RegexDateDD().Match(date).Success)
+                    else if ((match = RegexAddDay().Match(date)).Success)
                     {
-                        day = int.Parse(splits[0]);
+                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(int.Parse(match.Value));
+                        year = newDate.Year;
+                        month = newDate.Month;
+                        day = newDate.Day;
                     }
                     else
                     {
-                        throw new IncorrectDateException();
+                        splits = date.Split('-');
+                        if (RegexDateYYYYMMDD().Match(date).Success)
+                        {
+                            year = int.Parse(splits[0]);
+                            month = int.Parse(splits[1]);
+                            day = int.Parse(splits[2]);
+                        }
+                        else if (RegexDateMMDD().Match(date).Success)
+                        {
+                            month = int.Parse(splits[0]);
+                            day = int.Parse(splits[1]);
+                        }
+                        else if (RegexDateDD().Match(date).Success)
+                        {
+                            day = int.Parse(splits[0]);
+                        }
+                        else
+                        {
+                            throw new IncorrectDateException();
+                        }
                     }
                 }
                 catch
@@ -220,16 +240,25 @@ namespace TemporaTasks.Core
 
         [GeneratedRegex("^\\d{1,4}-\\d{1,2}-\\d{1,2}$")]
         public static partial Regex RegexDateYYYYMMDD();
-        
+
+        [GeneratedRegex("^\\+\\d{1,3}y$")]
+        public static partial Regex RegexAddYear();
+
         [GeneratedRegex("^\\d{1,2}-\\d{1,2}$")]
         public static partial Regex RegexDateMMDD();
-        
+
+        [GeneratedRegex("^\\+\\d{1,3}m$")]
+        public static partial Regex RegexAddMonth();
+
         [GeneratedRegex("^\\d{1,2}$")]
         public static partial Regex RegexDateDD();
 
+        [GeneratedRegex("^\\+\\d{1,3}d?$")]
+        public static partial Regex RegexAddDay();
+
         // >>> Calendar
 
-        [GeneratedRegex(@"(?i)on .{2,4}day")]
+        [GeneratedRegex(@"(?i)on .{2,5}day")]
         public static partial Regex RegexDayOfWeek();
 
         [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?days?")]
