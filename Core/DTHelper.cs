@@ -185,6 +185,7 @@ namespace TemporaTasks.Core
             match = RegexDayOfWeek().Match(str);
             if (match.Success)
             {
+                matchedDate = match.Value;
                 int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
                 int selectedDayOfWeek = match.Value[3..5] switch
                 {
