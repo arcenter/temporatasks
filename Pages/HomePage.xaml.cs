@@ -17,7 +17,7 @@ namespace TemporaTasks.Pages
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         readonly TimeSpan milli250 = TimeSpan.FromMilliseconds(250);
-        Nullable<int> currentFocus = null;
+        int? currentFocus = null;
 
         IndividualTask lastTask;
 
@@ -100,10 +100,14 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.N:
+                    currentFocus = null;
+                    UnfocusTasks();
                     AddButton_MouseDown(null, null);
                     return;
 
                 case Key.S:
+                    currentFocus = null;
+                    UnfocusTasks();
                     SearchTextBoxAnimate(true);
                     return;
 
@@ -335,6 +339,7 @@ namespace TemporaTasks.Pages
                 case 2:
                     foreach (IndividualTask task in TaskFile.TaskList)
                         if (regex.Match(task.TaskName.ToLower()).Success)
+                        {
                             if (task.IsCompleted)
                                 completed[task] = task.CompletedDT.Value;
                             else
@@ -348,6 +353,7 @@ namespace TemporaTasks.Pages
                                     else doesntMatchSort.Add(task);
                                 }
                             }
+                        }
 
                     TaskCount.Content = $"{matchesSort.Count + doesntMatchSort.Count}t.{completed.Count}c";
 
