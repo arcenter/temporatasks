@@ -69,13 +69,19 @@
                         </ToolTip>
                     </Border.ToolTip>
 
-                    <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+                    <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
 
                 </Border>
 
             </StackPanel>
 
-            <Label FocusVisualStyle="{DynamicResource DummyFocus}" x:Name="label" Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Bold" Foreground="{StaticResource Text}" FontSize="28" DockPanel.Dock="Left" Padding="0,0,0,0" VerticalContentAlignment="Stretch"/>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+
+                <Label FocusVisualStyle="{DynamicResource DummyFocus}" x:Name="label" Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Bold" Foreground="{StaticResource Text}" FontSize="28" DockPanel.Dock="Left" Padding="0" VerticalContentAlignment="Stretch"/>
+
+                <Label x:Name="TaskCount" Content="42t.39c" FontFamily="Courier New" Foreground="{StaticResource Text}" FontSize="18" Padding="0" Margin="20 0 0 3" VerticalContentAlignment="Bottom" Opacity="0.4"/>
+
+            </StackPanel>
 
         </DockPanel>
 
