@@ -349,6 +349,8 @@ namespace TemporaTasks.Pages
                                 }
                             }
 
+                    TaskCount.Content = $"{matchesSort.Count + doesntMatchSort.Count}t.{completed.Count}c";
+
                     sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                     completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
