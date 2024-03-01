@@ -118,8 +118,15 @@ namespace TemporaTasks.UserControls
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
 
             double final = IsCompleted ? strikethroughLine.MaxWidth : 0;
-            if (strikethroughLine.Width != final)
+            if (strikethroughLine.Width != final) updateStrikethrough(final);
+
+            DueDateTimeLabelUpdate();
+        }
+
+        private async void updateStrikethrough(double final)
             {
+            await Task.Delay(250);
+
                 var animation = new DoubleAnimation(IsCompleted ? 0 : strikethroughLine.MaxWidth, final, TimeSpan.FromMilliseconds(500));
                 Storyboard.SetTarget(animation, strikethroughLine);
                 Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
@@ -128,9 +135,6 @@ namespace TemporaTasks.UserControls
                 storyboard.Children.Add(animation);
                 storyboard.Begin();
             }
-
-            DueDateTimeLabelUpdate();
-        }
 
         public delegate void EditIconClicked(object sender);
         public event EditIconClicked IsEditIconClicked;
