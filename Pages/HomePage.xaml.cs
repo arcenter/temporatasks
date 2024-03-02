@@ -72,10 +72,15 @@ namespace TemporaTasks.Pages
         {
             if (SearchTextBox.IsFocused)
             {
-                if (e.Key == Key.Escape || e.Key == Key.Tab)
+                if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Escape)
                 {
                     HomePagePage.Focus();
                     if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
+                    if (e.Key == Key.Enter || e.Key == Key.Tab)
+                    {
+                        currentFocus = 0;
+                        FocusTask();
+                }
                 }
                 return;
             }
