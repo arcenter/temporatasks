@@ -160,6 +160,14 @@ namespace TemporaTasks.Pages
                         task.Increment_MouseDown("plus30m", null);
                         return;
 
+                    case Key.D4:
+                        task.Increment_MouseDown("plus1h", null);
+                        return;
+
+                    case Key.D5:
+                        task.Increment_MouseDown("plus6h", null);
+                        return;
+
                     case Key.E:
                     case Key.Enter:
                         mainWindow.FrameView.Navigate(new EditTaskPage(task));
