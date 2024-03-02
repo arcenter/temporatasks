@@ -157,7 +157,7 @@ namespace TemporaTasks.UserControls
         {
             if (IsCompleted && CompletedDT.HasValue)
             {
-                string dateString = (CompletedDT.Value.Day - DateTime.Now.Day) switch
+                string dateString = (CompletedDT.Value.Date - DateTime.Now.Date).Days switch
                 {
                     0 => "today",
                     -1 => "yesterday",
@@ -169,7 +169,7 @@ namespace TemporaTasks.UserControls
 
             else if (DueDT.HasValue)
             {
-                string dateString = (DueDT.Value.Day - DateTime.Now.Day) switch
+                string dateString = (DueDT.Value.Date - DateTime.Now.Date).Days switch
                 {
                     0 => "today",
                     -1 => "yesterday",
