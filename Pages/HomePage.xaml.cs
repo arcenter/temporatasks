@@ -332,6 +332,8 @@ namespace TemporaTasks.Pages
             ArrayList doesntMatchSort = [];
 
             days.Clear();
+            int dueTasks = 0;
+
             Regex regex = new(SearchTextBox.Text.ToLower());
             switch (SortComboBox.SelectedIndex)
             {
@@ -352,9 +354,12 @@ namespace TemporaTasks.Pages
                                         matchesSort[task] = task.DueDT.Value;
                                     else doesntMatchSort.Add(task);
                                 }
+
+                                if (task.IsDue) dueTasks++;
                             }
                         }
 
+                    DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
                     TaskCount.Content = $"{matchesSort.Count + doesntMatchSort.Count}t.{completed.Count}c";
 
                     sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
