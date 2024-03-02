@@ -179,6 +179,11 @@ namespace TemporaTasks.UserControls
                 DueDateTimeLabel.Content = $"Due {dateString} {DueDT.Value:hh:mm tt}";
             }
 
+            else
+            {
+                DueDateTimeLabel.Content = "";
+            }
+
             DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
             DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : (IsDue ? 1 : 0.5), TimeSpan.FromMilliseconds(250)));
         }
