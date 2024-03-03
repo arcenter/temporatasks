@@ -353,7 +353,15 @@ namespace TemporaTasks.Pages
                 case 1:
                 case 2:
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (regex.Match(task.TaskName.ToLower()).Success)
+                        if (SearchTextBox.Text.Equals("$nodate", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            if (!task.DueDT.HasValue)
+                            {
+                                if (task.IsCompleted) completed[task] = task.CompletedDT.Value;
+                                else doesntMatchSort.Add(task);
+                            }
+                        }
+                        else if (regex.Match(task.TaskName.ToLower()).Success)
                         {
                             if (task.IsCompleted)
                                 completed[task] = task.CompletedDT.Value;
