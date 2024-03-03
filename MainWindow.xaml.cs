@@ -93,7 +93,7 @@ namespace TemporaTasks
 
         private void TrayIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            WindowHide(false);
+            WindowHide(Visibility == Visibility.Visible);
         }
 
         private void TrayIcon_TrayRightMouseUp(object sender, RoutedEventArgs e)
