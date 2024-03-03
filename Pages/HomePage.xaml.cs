@@ -318,15 +318,16 @@ namespace TemporaTasks.Pages
                 double verticalOffset = TaskStackScroller.VerticalOffset;
                 
                 IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
-                task.StrokeOn();
-                task.BringIntoView();
 
+                task.BringIntoView();
                 await Task.Delay(1);
                 
                 if (verticalOffset < TaskStackScroller.VerticalOffset)
                     TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + 50);
                 else if (verticalOffset > TaskStackScroller.VerticalOffset)
                     TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset - 50);
+
+                task.StrokeOn();
             }
         }
 
