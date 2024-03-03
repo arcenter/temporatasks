@@ -80,7 +80,7 @@ namespace TemporaTasks.Pages
                     {
                         currentFocus = 0;
                         FocusTask();
-                }
+                    }
                 }
                 return;
             }
@@ -145,7 +145,8 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.D0:
-                        task.Increment_MouseDown("now", null);
+                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) task.Increment_MouseDown("none", null);
+                        else task.Increment_MouseDown("now", null);
                         return;
 
                     case Key.D1:

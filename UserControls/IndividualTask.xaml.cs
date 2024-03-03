@@ -274,6 +274,8 @@ namespace TemporaTasks.UserControls
 
             if (!DueDT.HasValue || name == "now")
                 DueDT = DateTime.Now;
+            else if (name == "none")
+                DueDT = null;
             else
                 DueDT = DueDT.Value + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
                 {
