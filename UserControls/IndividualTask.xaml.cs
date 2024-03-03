@@ -124,17 +124,17 @@ namespace TemporaTasks.UserControls
         }
 
         private async void updateStrikethrough(double final)
-            {
+        {
             await Task.Delay(250);
 
-                var animation = new DoubleAnimation(IsCompleted ? 0 : strikethroughLine.MaxWidth, final, TimeSpan.FromMilliseconds(500));
-                Storyboard.SetTarget(animation, strikethroughLine);
-                Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
-            
-                Storyboard storyboard = new();
-                storyboard.Children.Add(animation);
-                storyboard.Begin();
-            }
+            var animation = new DoubleAnimation(IsCompleted ? 0 : strikethroughLine.MaxWidth, final, TimeSpan.FromMilliseconds(500));
+            Storyboard.SetTarget(animation, strikethroughLine);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
+
+            Storyboard storyboard = new();
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
+        }
 
         public delegate void EditIconClicked(object sender);
         public event EditIconClicked IsEditIconClicked;
