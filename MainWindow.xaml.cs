@@ -73,6 +73,9 @@ namespace TemporaTasks
             WindowHide();
         }
 
+        public delegate void WindowUnHidden();
+        public event WindowUnHidden IsWindowUnHidden;
+
         public async void WindowHide(bool check = true)
         {
             if (check)
@@ -88,6 +91,7 @@ namespace TemporaTasks
                 Show();
                 Activate();
                 BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(100)));
+                IsWindowUnHidden?.Invoke();
             }
         }
 
