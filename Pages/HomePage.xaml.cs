@@ -34,6 +34,7 @@ namespace TemporaTasks.Pages
             mainWindow.KeyDown += Page_KeyDown;
             mainWindow.KeyUp += Page_KeyUp;
             mainWindow.MouseDown += Window_MouseDown;
+            mainWindow.IsWindowUnHidden += Window_Unhidden;
             if (TaskFile.TaskList.Count == 0)
             {
                 NewTaskArrow.Visibility = Visibility.Visible;
@@ -57,6 +58,7 @@ namespace TemporaTasks.Pages
             mainWindow.KeyDown -= Page_KeyDown;
             mainWindow.KeyUp -= Page_KeyUp;
             mainWindow.MouseDown -= Window_MouseDown;
+            mainWindow.IsWindowUnHidden -= Window_Unhidden;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
                 task.StrokeOff();
@@ -247,6 +249,13 @@ namespace TemporaTasks.Pages
             } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
 
             FocusTask();
+        }
+
+        private void Window_Unhidden()
+        {
+            currentFocus = null;
+            UnfocusTasks();
+            GenerateTaskStack();
         }
 
         private void ToggleTaskCompletion(IndividualTask task)
