@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -326,5 +327,17 @@ namespace TemporaTasks.UserControls
             storyboard.Children.Add(animation);
             storyboard.Begin();
         }
+
+        public void LinkOpen()
+        {
+            Match match = LinkRegex().Match(TaskName);
+            if (match.Success)
+            {
+                Process.Start(new ProcessStartInfo("cmd", "/C start" + " " + match.Value));
+            }
+        }
+
+        [GeneratedRegex("\\b(https://|www.)\\S+")]
+        public static partial Regex LinkRegex();
     }
 }
