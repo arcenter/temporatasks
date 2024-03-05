@@ -18,6 +18,7 @@ namespace TemporaTasks.Pages
 
         readonly TimeSpan milli250 = TimeSpan.FromMilliseconds(250);
         int? currentFocus = null;
+        bool reverseSort = false;
 
         IndividualTask lastTask;
 
@@ -116,6 +117,12 @@ namespace TemporaTasks.Pages
                     currentFocus = null;
                     UnfocusTasks();
                     SearchTextBoxAnimate(true);
+                    return;
+
+                case Key.R:
+                    currentFocus = null;
+                    UnfocusTasks();
+                    SortButton_MouseDown(null, null);
                     return;
 
                 case Key.Escape:
@@ -394,8 +401,16 @@ namespace TemporaTasks.Pages
                     DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
                     TaskCount.Content = $"{matchesSort.Count + doesntMatchSort.Count}t.{completed.Count}c";
 
+                    if (reverseSort)
+                    {
+                        sortedDict = matchesSort.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        completed = completed.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    }
+                    else
+                    {
                     sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                     completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    }
 
                     foreach (IndividualTask task in sortedDict.Keys)
                     {
@@ -464,8 +479,16 @@ namespace TemporaTasks.Pages
                             else
                                 matchesSort[task] = task.TaskName;
 
+                    if (reverseSort)
+                    {
+                        sortedDict = matchesSort.OrderByDescending(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        completed = completed.OrderByDescending(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    }
+                    else
+                    {
                     sortedDict = matchesSort.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
                     completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    }
 
                     foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
                     
@@ -587,6 +610,25 @@ namespace TemporaTasks.Pages
                 if (obj is IndividualTask task)
                     if (!task.IsMouseOver)
                         task.Background_MouseLeave(null, null);
+        }
+
+        private void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            reverseSort = !reverseSort;
+            int temp = reverseSort ? 1 : -1;
+
+            DoubleAnimation ani = new(temp, TimeSpan.FromMilliseconds(250))
+            {
+                EasingFunction = new QuarticEase()
+                {
+                    EasingMode = EasingMode.EaseInOut
+                }
+            };
+
+            SortButton.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = -(temp) };
+            SortButton.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+
+            GenerateTaskStack();
         }
     }
 }

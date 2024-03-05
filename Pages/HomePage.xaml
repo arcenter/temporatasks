@@ -49,11 +49,27 @@
                     </DockPanel>
                 </Border>
 
-                <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" Padding="15 0 0 0" Margin="20 0 0 0" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
-                    <ComboBoxItem Content="Name"/>
-                    <ComboBoxItem Content="Created"/>
-                    <ComboBoxItem Content="Due"/>
-                </ComboBox>
+                <Border Background="{StaticResource Secondary}" CornerRadius="5" Margin="20 0 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" Padding="15 0 0 0" Margin="0" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
+                            <ComboBoxItem Content="Name"/>
+                            <ComboBoxItem Content="Created"/>
+                            <ComboBoxItem Content="Due"/>
+                        </ComboBox>
+                        <userControl:IconButton x:Name="SortButton" SVGSource="{StaticResource burgerIcon}" Width="40" Height="40" MouseDown="SortButton_MouseDown" RenderTransformOrigin="0.5,0.5">
+                            <userControl:IconButton.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleY="-1"/>
+                                </TransformGroup>
+                            </userControl:IconButton.RenderTransform>
+                            <userControl:IconButton.ToolTip>
+                                <ToolTip>
+                                    <userControl:ButtonToolTip ToolTipText="Reverse the sort" Button1Text="r"/>
+                                </ToolTip>
+                            </userControl:IconButton.ToolTip>
+                        </userControl:IconButton>
+                    </StackPanel>
+                </Border>
 
                 <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="Border_MouseMove" Margin="20 0 0 0" Cursor="Hand">
 
