@@ -122,4 +122,18 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <!--https://www.svgrepo.com/svg/532213/sort-amount-up-->
+
+    <DrawingImage x:Key="burgerIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                <GeometryDrawing Geometry="F1 M24,24z M0,0z M13,12L21,12 M13,8L21,8 M13,16L21,16 M6,7L6,17 M6,7L3,10 M6,7L9,10">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" MiterLimit="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
 </ResourceDictionary>
