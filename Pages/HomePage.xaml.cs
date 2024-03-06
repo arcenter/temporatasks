@@ -153,6 +153,10 @@ namespace TemporaTasks.Pages
                         ToggleTaskCompletion(task);
                         return;
 
+                    case Key.L:
+                        task.LinkOpen();
+                        return;
+
                     case Key.D0:
                         if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) task.Increment_MouseDown("none", null);
                         else task.Increment_MouseDown("now", null);
@@ -408,8 +412,8 @@ namespace TemporaTasks.Pages
                     }
                     else
                     {
-                    sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
                     foreach (IndividualTask task in sortedDict.Keys)
@@ -486,8 +490,8 @@ namespace TemporaTasks.Pages
                     }
                     else
                     {
-                    sortedDict = matchesSort.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        sortedDict = matchesSort.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
                     foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
