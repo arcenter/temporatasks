@@ -99,7 +99,7 @@ namespace TemporaTasks.Core
                     minute = int.Parse(matches[1].Value);
                 }
 
-                else if (RegexTimeMM().Match(time).Success)
+                else if (RegexTimeHH().Match(time).Success)
                     hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
 
                 else if (RegexTimeHHMM().Match(time).Success)
@@ -274,7 +274,7 @@ namespace TemporaTasks.Core
         public static partial Regex RegexTimeHH_MM();
         
         [GeneratedRegex("^\\d{1,2} ?[AaPp]?[Mm]?$")]
-        public static partial Regex RegexTimeMM();
+        public static partial Regex RegexTimeHH();
         
         [GeneratedRegex("^\\d{3,4} ?[AaPp]?[Mm]?$")]
         public static partial Regex RegexTimeHHMM();
