@@ -248,13 +248,14 @@ namespace TemporaTasks.UserControls
             StrokeBorder.BorderThickness = new Thickness(0);
         }
 
-        private void NewDueDT()
+        public void NewDueDT()
         {
             TaskTimer.Stop();
             if (DueDT.HasValue && !IsCompleted)
             {
                 double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
-                if (TimeSpan.FromSeconds(taskTimeRemaining) > TimeSpan.FromDays(1)) return;
+                if (taskTimeRemaining <= 120)
+                {
                 TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(2, taskTimeRemaining));
                 TaskTimer.Tick += (s, e) =>
                 {
@@ -265,6 +266,7 @@ namespace TemporaTasks.UserControls
                     TaskTimer.Interval = TimeSpan.FromMinutes(5);
                 };
                 TaskTimer.Start();
+            }
             }
             DueDateTimeLabelUpdate();
         }
