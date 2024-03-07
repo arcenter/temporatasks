@@ -36,7 +36,11 @@
                                 <Border.ToolTip>
                                     <ToolTip>
                                         <ToolTip.Content>
-                                            <local:ButtonToolTip ToolTipText="Set due datetime to current time" Button1Text="0" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <local:ButtonToolTip ToolTipText="Set due datetime to current time" Button1Text="0" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
+                                                <local:ButtonToolTip ToolTipText="Set due datetime to null" Button1Text="shift" CornerRadius="0" BorderPadding="0 5"/>
+                                                <local:ButtonToolTip ToolTipText="+" Button1Text="0" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
+                                            </StackPanel>
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </Border.ToolTip>
@@ -49,7 +53,7 @@
                                 <Border.ToolTip>
                                     <ToolTip>
                                         <ToolTip.Content>
-                                            <local:ButtonToolTip ToolTipText="Add 5 minutes to due datetime" Button1Text="1" />
+                                            <local:ButtonToolTip ToolTipText="Add 5 minutes to due datetime" Button1Text="2" />
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </Border.ToolTip>
@@ -62,7 +66,7 @@
                                 <Border.ToolTip>
                                     <ToolTip>
                                         <ToolTip.Content>
-                                            <local:ButtonToolTip ToolTipText="Add 10 minutes to due datetime" Button1Text="2" />
+                                            <local:ButtonToolTip ToolTipText="Add 10 minutes to due datetime" Button1Text="3" />
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </Border.ToolTip>
@@ -75,7 +79,7 @@
                                 <Border.ToolTip>
                                     <ToolTip>
                                         <ToolTip.Content>
-                                            <local:ButtonToolTip ToolTipText="Add 30 minutes to due datetime" Button1Text="3" />
+                                            <local:ButtonToolTip ToolTipText="Add 30 minutes to due datetime" Button1Text="4" />
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </Border.ToolTip>
