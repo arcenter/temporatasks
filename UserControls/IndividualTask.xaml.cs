@@ -282,6 +282,7 @@ namespace TemporaTasks.UserControls
             else
                 DueDT = DueDT.Value + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
                 {
+                    "plus1m" => TimeSpan.FromMinutes(1),
                     "plus5m" => TimeSpan.FromMinutes(5),
                     "plus10m" => TimeSpan.FromMinutes(10),
                     "plus30m" => TimeSpan.FromMinutes(30),
