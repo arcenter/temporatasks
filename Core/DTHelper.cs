@@ -41,21 +41,21 @@ namespace TemporaTasks.Core
 
                     if ((match = RegexAddYear().Match(date)).Success)
                     {
-                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(365.25 * int.Parse(match.Value));
+                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(365.25 * int.Parse(match.Value[..^1]));
                         year = newDate.Year;
                         month = newDate.Month;
                         day = newDate.Day;
                     }
                     else if ((match = RegexAddMonth().Match(date)).Success)
                     {
-                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(30.5 * int.Parse(match.Value));
+                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(30.5 * int.Parse(match.Value[..^1]));
                         year = newDate.Year;
                         month = newDate.Month;
                         day = newDate.Day;
                     }
                     else if ((match = RegexAddDay().Match(date)).Success)
                     {
-                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(int.Parse(match.Value));
+                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(int.Parse(match.Value[..^1]));
                         year = newDate.Year;
                         month = newDate.Month;
                         day = newDate.Day;
@@ -244,19 +244,19 @@ namespace TemporaTasks.Core
         [GeneratedRegex("^\\d{1,4}-\\d{1,2}-\\d{1,2}$")]
         public static partial Regex RegexDateYYYYMMDD();
 
-        [GeneratedRegex("^\\+\\d{1,3}y$")]
+        [GeneratedRegex("^\\d{1,3}y$")]
         public static partial Regex RegexAddYear();
 
         [GeneratedRegex("^\\d{1,2}-\\d{1,2}$")]
         public static partial Regex RegexDateMMDD();
 
-        [GeneratedRegex("^\\+\\d{1,3}m$")]
+        [GeneratedRegex("^\\d{1,3}m$")]
         public static partial Regex RegexAddMonth();
 
         [GeneratedRegex("^\\d{1,2}$")]
         public static partial Regex RegexDateDD();
 
-        [GeneratedRegex("^\\+\\d{1,3}d?$")]
+        [GeneratedRegex("^\\d{1,3}d$")]
         public static partial Regex RegexAddDay();
 
         // >>> Calendar
