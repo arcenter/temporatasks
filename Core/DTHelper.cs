@@ -97,18 +97,27 @@ namespace TemporaTasks.Core
                     MatchCollection matches = new Regex("\\d{1,2}").Matches(time);
                     hour = int.Parse(matches[0].Value);// + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
                     minute = int.Parse(matches[1].Value);
-                    if (!new Regex("[Aa]").Match(time).Success && (new DateTime(year, month, day, hour, minute - 30, 0) < DateTime.Now || new Regex(" ?[Pp][Mm]?$").Match(time).Success)) hour += 12;
+                    if (!new Regex("[Aa]").Match(time).Success)
+                        if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex(" ?[Pp][Mm]?$").Match(time).Success))
+                            if (hour < 12) hour += 12;
                 }
-
-                else if (RegexTimeHH().Match(time).Success)
-                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
 
                 else if (RegexTimeHHMM().Match(time).Success)
                 {
                     string timeString = new Regex("\\d{3,4}").Match(time).Value.PadLeft(4, '0');
                     minute = int.Parse(timeString[2..]);
                     hour = int.Parse(timeString[..2]);
-                    if (!new Regex("[Aa]").Match(time).Success && (new DateTime(year, month, day, hour, minute - 30, 0) < DateTime.Now || new Regex(" ?[Pp][Mm]?$").Match(time).Success)) hour += 12;
+                    if (!new Regex("[Aa]").Match(time).Success)
+                        if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex("[Pp][Mm]?$").Match(time).Success))
+                            if (hour < 12) hour += 12;
+                }
+
+                else if (RegexTimeHH().Match(time).Success)
+                {
+                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
+                    if (!new Regex("[Aa]").Match(time).Success)
+                        if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex("[Pp][Mm]?$").Match(time).Success))
+                            if (hour < 12) hour += 12;
                 }
 
                 else
