@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-
+using System.Windows.Threading;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
 
@@ -24,9 +24,13 @@ namespace TemporaTasks.Pages
 
         Dictionary<string, ArrayList> days = [];
 
+        public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromMinutes(5) };
+
         public HomePage()
         {
             InitializeComponent();
+            UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
+            UpdateTaskTimersTimer.Start();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -614,10 +618,10 @@ namespace TemporaTasks.Pages
 
         private void HomePagePage_MouseMove(object sender, MouseEventArgs e)
         {
-            foreach (object obj in TaskStack.Children)
-                if (obj is IndividualTask task)
-                    if (!task.IsMouseOver)
-                        task.Background_MouseLeave(null, null);
+            //foreach (object obj in TaskStack.Children)
+            //    if (obj is IndividualTask task)
+            //        if (!task.IsMouseOver)
+            //            task.Background_MouseLeave(null, null);
         }
 
         private void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
@@ -637,6 +641,12 @@ namespace TemporaTasks.Pages
             SortButton.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
 
             GenerateTaskStack();
+        }
+
+        private void UpdateTaskTimers(object sender, EventArgs e)
+        {
+            foreach (IndividualTask task in TaskFile.TaskList)
+                task.NewDueDT();
         }
     }
 }
