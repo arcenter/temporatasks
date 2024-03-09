@@ -39,4 +39,23 @@
         </Setter>
     </Style>
 
+    <Style TargetType="TextBox" x:Key="TransparentUnroundedTextBox">
+        <Setter Property="Background" Value="#1e1e1e" />
+        <Setter Property="Foreground" Value="#f2f2f2" />
+        <Setter Property="SelectionBrush" Value="#FFA7A7A7" />
+        <Setter Property="SelectionTextBrush" Value="#FF4A4A4A" />
+        <Setter Property="Padding" Value="10,5,0,5" />
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontFamily" Value="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="TextBoxBorder" BorderThickness="0">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>
