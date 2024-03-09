@@ -93,7 +93,7 @@
 
                                 <StackPanel Orientation="Horizontal" x:Name="TagsStack" DockPanel.Dock="Left"/>
 
-                                <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown"/>
+                                <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
 
                             </DockPanel>
 
