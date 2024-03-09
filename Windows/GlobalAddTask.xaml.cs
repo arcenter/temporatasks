@@ -112,7 +112,7 @@ namespace TemporaTasks.Windows
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
             long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, null));
             TaskFile.SaveData();
             ((MainWindow)Application.Current.MainWindow).FrameView.Navigate(new HomePage());
             CloseWindow();

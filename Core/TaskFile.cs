@@ -38,7 +38,6 @@ namespace TemporaTasks.Core
                     sortType = int.Parse(settings["sortType"]);
                 }
 
-                Random random = new();
                 foreach (string taskUID in data.Keys)
                 {
                     try
@@ -46,12 +45,16 @@ namespace TemporaTasks.Core
                         Nullable<DateTime> createdTime = null;
                         Nullable<DateTime> dueTime = null;
                         Nullable<DateTime> completedTime = null;
+                        ArrayList? tagList = null;
 
                         createdTime = StringToDateTime(data, taskUID, "createdTime");
                         dueTime = StringToDateTime(data, taskUID, "dueTime");
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
-                        
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime);
+
+                        if (data[taskUID]["tags"] != "")
+                            tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
+
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList);
                         _TasksList.Add(taskObj);
                     }
                     catch { }
@@ -60,10 +63,10 @@ namespace TemporaTasks.Core
             TaskList = _TasksList;
         }
 
-        private static Nullable<DateTime> StringToDateTime(Dictionary<string, Dictionary<string, string>> data, string taskName, string field)
+        private static Nullable<DateTime> StringToDateTime(Dictionary<string, Dictionary<string, string>> data, string taskUID, string field)
         {
-            if ((string)data[taskName][field] == "") return null;
-            return DateTimeOffset.FromUnixTimeSeconds(long.Parse(data[taskName][field])).LocalDateTime;
+            if ((string)data[taskUID][field] == "") return null;
+            return DateTimeOffset.FromUnixTimeSeconds(long.Parse(data[taskUID][field])).LocalDateTime;
         }
 
         public static void SaveData()
@@ -81,6 +84,7 @@ namespace TemporaTasks.Core
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
+                temp2["tags"] = (task.TagList != null) ? string.Join(';', task.TagList.ToArray()) : "";
                 temp[task.TaskUID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp);
