@@ -103,7 +103,7 @@ namespace TemporaTasks.Core
                 }
 
                 else if (RegexTimeHHMM().Match(time).Success)
-                {
+                {   
                     string timeString = new Regex("\\d{3,4}").Match(time).Value.PadLeft(4, '0');
                     minute = int.Parse(timeString[2..]);
                     hour = int.Parse(timeString[..2]);

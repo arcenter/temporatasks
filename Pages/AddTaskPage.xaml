@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TemporaTasks.Pages"
       xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="520" d:DesignWidth="1025"
       Title="AddTaskPage" Loaded="Page_Loaded" Unloaded="Page_Unloaded">
 
     <Grid>
@@ -79,6 +79,28 @@
                         </StackPanel>
                         
                     </Grid>
+
+                    <StackPanel Margin="0 15 0 0">
+
+                        <Label Content="Tags" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+
+                        <Grid Margin="0 5 0 0" Height="40">
+
+                            <DockPanel>
+
+                                <StackPanel Orientation="Horizontal" x:Name="TagsStack" DockPanel.Dock="Left"/>
+
+                                <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown"/>
+
+                            </DockPanel>
+
+                            <Border BorderBrush="#363636" BorderThickness="2" CornerRadius="10"/>
+
+                            <Border x:Name="TagsBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
+
+                        </Grid>
+
+                    </StackPanel>
 
                     <!--<DockPanel Margin="0 5 0 5" Height="30">
 

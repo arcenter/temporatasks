@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -29,6 +32,10 @@ namespace TemporaTasks.Pages
                 timeTextBox.Text = DTHelper.TimeToString(task.DueDT.Value);
             }
 
+            if (task.TagList != null)
+                foreach (String tag in task.TagList)
+                    TagsStackAdd(tag);
+
             TaskNameTextbox.Focus();
         }
 
@@ -46,8 +53,22 @@ namespace TemporaTasks.Pages
         {
             if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
             {
+                if (TagsTextbox.IsFocused)
+                {
+                    if (TagsTextbox.Text.Length != 0)
+                    {
+                        if (TagsTextbox.Text.Trim() != "" && !TagsTextbox.Text.Contains(';'))
+                        {
+                            TagsStackAdd(TagsTextbox.Text);
+                            TagsTextbox.Clear();
+                            e.Handled = true;
+                        }
+                        return;
+                    }
+                }
                 ConfirmButton_MouseDown(null, null);
             }
+
             else if (e.Key == Key.Escape)
             {
                 if (datePickerPopUp.IsOpen) datePickerPopUp.IsOpen = false;
@@ -108,8 +129,12 @@ namespace TemporaTasks.Pages
             if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
+            ArrayList? tagList = [];
+            foreach (Tags tag in TagsStack.Children)
+                tagList.Add(tag.TagText);
+
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList);
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
@@ -129,6 +154,34 @@ namespace TemporaTasks.Pages
 
             temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
             if (temp != null) dateTextBox.Text = temp;
+
+            // Error - '#something #thing' comes as a whole
+            //Match match = TagIdentifier().Match(TaskNameTextbox.Text);
+            //if (match.Success) TagsStackAdd(match.Value[2..^1]);
+        }
+
+        //[GeneratedRegex(" #.{1,} ")]
+        //private static partial Regex TagIdentifier();
+
+        private void TagsStackAdd(string value)
+        {
+            foreach (Tags tag in TagsStack.Children)
+                if (tag.TagText == value) return;
+            TagsStack.Children.Add(new Tags(value));
+        }
+
+        private void TagsTextbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space && TagsTextbox.Text.Trim() != "" && !TagsTextbox.Text.Contains(';'))
+            {
+                TagsStackAdd(TagsTextbox.Text);
+                TagsTextbox.Clear();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Back)
+            {
+                if (TagsTextbox.Text.Length == 0 && TagsStack.Children.Count > 0) TagsStack.Children.RemoveAt(TagsStack.Children.Count - 1);
+            }
         }
     }
 }

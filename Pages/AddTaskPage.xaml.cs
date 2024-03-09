@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -37,6 +38,19 @@ namespace TemporaTasks.Pages
         {
             if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
             {
+                if (TagsTextbox.IsFocused)
+                {
+                    if (TagsTextbox.Text.Length != 0)
+                    {
+                        if (TagsTextbox.Text.Trim() != "" && !TagsTextbox.Text.Contains(';'))
+                        {
+                            TagsStackAdd(TagsTextbox.Text);
+                            TagsTextbox.Clear();
+                            e.Handled = true;
+                        }
+                        return;
+                    }
+                }
                 AddButton_MouseDown(null, null);
             }
             else if (e.Key == Key.Escape)
@@ -111,7 +125,14 @@ namespace TemporaTasks.Pages
             randomLong = (long)(new Random().NextDouble() * long.MaxValue);
             foreach (IndividualTask task in TaskFile.TaskList) if (task.TaskUID == randomLong) { goto randomGen; }
 
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null));
+            // TODO
+            // this can probably be optimized by keeping a list of UIDs
+
+            ArrayList? tagList = [];
+            foreach (Tags tag in TagsStack.Children)
+                tagList.Add(tag.TagText);
+
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList));
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
@@ -126,6 +147,27 @@ namespace TemporaTasks.Pages
 
             temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
             if (temp != null) dateTextBox.Text = temp;
+        }
+
+        private void TagsStackAdd(string value)
+        {
+            foreach (Tags tag in TagsStack.Children)
+                if (tag.TagText == value) return;
+            TagsStack.Children.Add(new Tags(value));
+        }
+
+        private void TagsTextbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space && TagsTextbox.Text.Trim() != "" && !TagsTextbox.Text.Contains(';'))
+            {
+                TagsStackAdd(TagsTextbox.Text);
+                TagsTextbox.Clear();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Back)
+            {
+                if (TagsTextbox.Text.Length == 0 && TagsStack.Children.Count > 0) TagsStack.Children.RemoveAt(TagsStack.Children.Count - 1);
+            }
         }
     }
 }
