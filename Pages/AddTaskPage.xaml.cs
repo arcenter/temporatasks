@@ -149,6 +149,11 @@ namespace TemporaTasks.Pages
             if (temp != null) dateTextBox.Text = temp;
         }
 
+        private void Textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
+
         private void TagsStackAdd(string value)
         {
             foreach (Tags tag in TagsStack.Children)

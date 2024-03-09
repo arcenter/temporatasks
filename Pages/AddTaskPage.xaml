@@ -30,7 +30,7 @@
                         <Label Content="Task Name" Padding="0" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12"/>
 
                         <Grid Height="40" Margin="0 5 0 0">
-                            <TextBox x:Name="TaskNameTextbox" Style="{StaticResource RoundedTextBox}" TextChanged="TaskNameTextbox_TextChanged"/>
+                            <TextBox x:Name="TaskNameTextbox" Style="{StaticResource RoundedTextBox}" TextChanged="TaskNameTextbox_TextChanged" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
                             <Border x:Name="NameBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
                         </Grid>
 
@@ -52,7 +52,7 @@
 
                             <Grid Height="40">
 
-                                <TextBox x:Name="dateTextBox" Style="{StaticResource RoundedTextBox}"/>
+                                <TextBox x:Name="dateTextBox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
 
                                 <Border x:Name="calendarButtonBorder" HorizontalAlignment="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseUp="calendar_MouseUp" Focusable="False" Width="40" Cursor="Hand" CornerRadius="0 10 10 0">
                                     <Border.Background>
@@ -72,7 +72,7 @@
                             <Label Content="Time" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" Margin="0 0 0 5"/>
 
                             <Grid>
-                                <TextBox x:Name="timeTextBox" Style="{StaticResource RoundedTextBox}"/>
+                                <TextBox x:Name="timeTextBox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
                                 <Border x:Name="TimeBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" Height="40" CornerRadius="10"/>
                             </Grid>
                             
@@ -90,7 +90,7 @@
 
                                 <StackPanel Orientation="Horizontal" x:Name="TagsStack" DockPanel.Dock="Left"/>
 
-                                <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown"/>
+                                <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
 
                             </DockPanel>
 
