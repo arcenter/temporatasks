@@ -103,7 +103,7 @@
 
         </DockPanel>
 
-        <ScrollViewer x:Name="TaskStackScroller" Style="{StaticResource CustomScrollViewerStyle}" HorizontalScrollBarVisibility="Disabled" Margin="0 110 -17 0" Focusable="False">
+        <ScrollViewer x:Name="TaskStackScroller" Style="{StaticResource CustomScrollViewerStyle}" HorizontalScrollBarVisibility="Disabled" Margin="0 110 -17 0" Focusable="False" PreviewMouseWheel="TaskStackScroller_PreviewMouseWheel">
             <StackPanel>
                 <StackPanel x:Name="TaskStack"/>
                 <Rectangle Height="50"/>

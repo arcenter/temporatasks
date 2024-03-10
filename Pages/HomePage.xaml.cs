@@ -648,5 +648,21 @@ namespace TemporaTasks.Pages
             foreach (IndividualTask task in TaskFile.TaskList)
                 task.NewDueDT();
         }
+
+        private void TaskStackScroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            try
+            {
+                if (System.Windows.Forms.SystemInformation.MouseWheelScrollLines == -1)
+                    e.Handled = false;
+                else
+                {
+                    ScrollViewer SenderScrollViewer = (ScrollViewer)sender;
+                    SenderScrollViewer.ScrollToVerticalOffset(SenderScrollViewer.VerticalOffset - e.Delta);
+                    e.Handled = true;
+                }
+            }
+            catch { }
+        }
     }
 }

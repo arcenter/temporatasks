@@ -22,7 +22,7 @@ namespace TemporaTasks.Core
         public static ArrayList TaskList;
 
         public static int sortType = 1;
-
+        
         public static void LoadData()
         {
             ArrayList _TasksList = [];
