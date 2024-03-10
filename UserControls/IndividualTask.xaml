@@ -131,7 +131,7 @@
 
                     <TextBlock x:Name="taskNameTextBlock" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}" />
 
-                    <Rectangle x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 14" IsHitTestVisible="False" Height="2" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left" />
+                    <Rectangle x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 13" IsHitTestVisible="False" Height="2" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left" />
                 </Grid>
             </Grid>
         </DockPanel>
