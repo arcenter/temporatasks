@@ -417,6 +417,7 @@ namespace TemporaTasks.Pages
                     {
                         sortedDict = matchesSort.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                         completed = completed.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        doesntMatchSort.Reverse();
                     }
                     else
                     {
