@@ -129,6 +129,14 @@ namespace TemporaTasks.Pages
                     SortButton_MouseDown(null, null);
                     return;
 
+                case Key.H:
+                    currentFocus = null;
+                    UnfocusTasks();
+                    HomePagePage.Focus();
+                    SearchTextBox.Text = "";
+                    SearchTextBoxAnimate();
+                    return;
+
                 case Key.Escape:
                     if (currentFocus.HasValue)
                     {
