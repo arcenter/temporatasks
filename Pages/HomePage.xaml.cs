@@ -118,6 +118,7 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.S:
+                case Key.OemQuestion:
                     currentFocus = null;
                     UnfocusTasks();
                     SearchTextBoxAnimate(true);
@@ -235,14 +236,9 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyUp(object sender, KeyEventArgs e)
         {
-            if (SearchTextBox.IsFocused) return;
-
-            switch (e.Key)
-            {
-                case Key.S:
-                    SearchTextBox.Focus();
-                    break;
-            }
+            if (SearchTextBox.IsFocused || Keyboard.IsKeyDown(Key.LWin)) return;
+            if (e.Key == Key.S || e.Key == Key.OemQuestion)
+                SearchTextBox.Focus();
         }
 
         private void PreviousTaskFocus()
