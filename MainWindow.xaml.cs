@@ -95,6 +95,17 @@ namespace TemporaTasks
             }
         }
 
+        bool balloonCalledRecently = false;
+        public async void OnTaskDue(string title, string message, BalloonIcon symbol)
+        {
+            if (balloonCalledRecently) return;
+            WindowHide(false);
+            TrayIcon.ShowBalloonTip(title, message, symbol);
+            balloonCalledRecently = true;
+            await Task.Delay(1000);
+            balloonCalledRecently = false;
+        }
+
         private void TrayIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
             WindowHide(Visibility == Visibility.Visible);
