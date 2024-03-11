@@ -6,7 +6,7 @@
         <Setter Property="Foreground" Value="#f2f2f2" />
         <Setter Property="SelectionBrush" Value="#FFA7A7A7" />
         <Setter Property="SelectionTextBrush" Value="#FF4A4A4A" />
-        <Setter Property="Padding" Value="5,5,0,5" />
+        <Setter Property="Padding" Value="5,5,5,5" />
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"/>
         <Setter Property="Template">
@@ -25,7 +25,7 @@
         <Setter Property="Foreground" Value="#f2f2f2" />
         <Setter Property="SelectionBrush" Value="#FFA7A7A7" />
         <Setter Property="SelectionTextBrush" Value="#FF4A4A4A" />
-        <Setter Property="Padding" Value="10,5,0,5" />
+        <Setter Property="Padding" Value="10,5,10,5" />
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"/>
         <Setter Property="Template">
@@ -44,7 +44,7 @@
         <Setter Property="Foreground" Value="#f2f2f2" />
         <Setter Property="SelectionBrush" Value="#FFA7A7A7" />
         <Setter Property="SelectionTextBrush" Value="#FF4A4A4A" />
-        <Setter Property="Padding" Value="10,5,0,5" />
+        <Setter Property="Padding" Value="10,5,10,5" />
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"/>
         <Setter Property="Template">
