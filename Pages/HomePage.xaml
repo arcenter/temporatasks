@@ -7,7 +7,7 @@
       xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Home" Loaded="Page_Loaded" Unloaded="Page_Unloaded" Focusable="True" MouseMove="HomePagePage_MouseMove">
+      Title="Home" Loaded="Page_Loaded" Unloaded="Page_Unloaded" Focusable="True">
     
     <Page.Resources>
         <Style x:Key="DummyFocus" TargetType="{x:Type Control}">
