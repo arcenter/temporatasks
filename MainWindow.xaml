@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:TemporaTasks"
         xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        xmlns:aero="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
         Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" MouseUp="Window_MouseUp" MinWidth="404" MinHeight="500" Loaded="Window_Loaded"
@@ -68,6 +67,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
 
             <Border x:Name="MinimizeButton" Grid.Column="2" IsMouseDirectlyOverChanged="MinimizeButton_IsMouseDirectlyOverChanged" MouseDown="MinimizeButton_MouseDown">
@@ -79,7 +79,16 @@
                 </Grid>
             </Border>
 
-            <Border x:Name="CloseButton" Grid.Column="3" IsMouseDirectlyOverChanged="CloseButton_IsMouseDirectlyOverChanged" MouseDown="CloseButton_MouseDown" MouseMove="Border_MouseMove">
+            <Border x:Name="MaximizeButton" Grid.Column="3" IsMouseDirectlyOverChanged="MaximizeButton_IsMouseDirectlyOverChanged" MouseDown="MaximizeButton_MouseDown">
+                <Border.Background>
+                    <SolidColorBrush Color="{Binding Color, Source={StaticResource DarkBlue}}" Opacity="0"/>
+                </Border.Background>
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Rectangle x:Name="MaximizeRect" Width="10" Height="10" Stroke="{StaticResource Text}" StrokeThickness="1" IsHitTestVisible="False" Opacity="0.25"/>
+                </Grid>
+            </Border>
+
+            <Border x:Name="CloseButton" Grid.Column="4" IsMouseDirectlyOverChanged="CloseButton_IsMouseDirectlyOverChanged" MouseDown="CloseButton_MouseDown" MouseMove="Border_MouseMove">
                 <Border.ToolTip>
                     <ToolTip>
                         <userControl:ButtonToolTip ToolTipText="Exit" Button1Text="esc"/>
@@ -116,7 +125,7 @@
             </Grid>
         </Border>
 
-        <Border BorderBrush="{StaticResource Border}" BorderThickness="1" Grid.RowSpan="2" />
+        <Border x:Name="WindowBorder" BorderBrush="{StaticResource Border}" BorderThickness="1" Grid.RowSpan="2" />
 
     </Grid>
 

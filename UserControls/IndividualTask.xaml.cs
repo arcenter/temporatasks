@@ -263,7 +263,6 @@ namespace TemporaTasks.UserControls
                     TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(2, taskTimeRemaining));
                     TaskTimer.Tick += (s, e) =>
                     {
-                        mainWindow.WindowHide(false);
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
                         mainWindow.OnTaskDue("Task Due!", TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
