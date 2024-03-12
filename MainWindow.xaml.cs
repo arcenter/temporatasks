@@ -12,6 +12,7 @@ using System.Windows.Interop;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace TemporaTasks
 {
@@ -42,6 +43,30 @@ namespace TemporaTasks
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Q && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) Close();
+            else if (e.Key == Key.F && NoTextBoxHasFocus(this)) MaximizeButton_MouseDown(null, null);
+        }
+
+        private bool NoTextBoxHasFocus(DependencyObject parent)
+        {
+            foreach (var textBox in GetVisualChildren<TextBox>(parent))
+                if (textBox.IsFocused)
+                    return false;
+            return true;
+        }
+
+        private IEnumerable<T> GetVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+        {
+            if (parent != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                    if (child is T typedChild)
+                        yield return typedChild;
+                    foreach (var grandChild in GetVisualChildren<T>(child))
+                        yield return grandChild;
+                }
+            }
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -58,6 +83,27 @@ namespace TemporaTasks
         private void MinimizeButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            MaximizeButton.Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 1 : 0, TimeSpan.FromMilliseconds(250)));
+            MaximizeRect.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 1 : 0.25, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void MaximizeButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+                WindowBorder.BorderThickness = new Thickness(1);
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+                WindowBorder.BorderThickness = new Thickness(0);
+            }
+                
         }
 
         private void CloseButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -178,6 +224,8 @@ namespace TemporaTasks
 
         protected void Resize(object sender, MouseButtonEventArgs e)
         {
+            if (WindowState == WindowState.Maximized) return;
+
             FrameView.IsHitTestVisible = false;
             var clickedShape = sender as Shape;
 
@@ -222,6 +270,7 @@ namespace TemporaTasks
 
         protected void DisplayResizeCursor(object sender, MouseEventArgs e)
         {
+            if (WindowState == WindowState.Maximized) return;
             Cursor = (sender as Shape).Name switch
             {
                 "ResizeN" or "ResizeS" => Cursors.SizeNS,
@@ -234,11 +283,9 @@ namespace TemporaTasks
 
         private void Window_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!FrameView.IsHitTestVisible)
-            {
-                FrameView.IsHitTestVisible = true;
-                ResetCursor(null, null);
-            }
+            if (FrameView.IsHitTestVisible) return;
+            FrameView.IsHitTestVisible = true;
+            ResetCursor(null, null);
         }
 
         // -----------------------------------------------------------------------------------
