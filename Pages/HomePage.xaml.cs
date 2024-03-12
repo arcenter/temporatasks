@@ -15,16 +15,14 @@ namespace TemporaTasks.Pages
     public partial class HomePage : Page
     {
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+        public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromMinutes(5) };
 
-        readonly TimeSpan milli250 = TimeSpan.FromMilliseconds(250);
         int? currentFocus = null;
+        
         bool reverseSort = false;
-
-        IndividualTask lastTask;
-
         Dictionary<string, ArrayList> days = [];
 
-        public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromMinutes(5) };
+        IndividualTask lastTask;
 
         public HomePage()
         {
@@ -50,7 +48,6 @@ namespace TemporaTasks.Pages
                 {
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
                     task.IsEditIconClicked += EditIcon_MouseDown;
-                    task.Cursor = Cursors.Hand;
                 }
 
                 GenerateTaskStack();
@@ -70,7 +67,6 @@ namespace TemporaTasks.Pages
                 task.Background_MouseLeave(null, null);
                 task.IsTrashIconClicked -= TrashIcon_MouseDown;
                 task.IsEditIconClicked -= EditIcon_MouseDown;
-                task.Cursor = Cursors.None;
             }
             TaskStack.Children.Clear();
         }
@@ -82,7 +78,7 @@ namespace TemporaTasks.Pages
                 if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Escape)
                 {
                     HomePagePage.Focus();
-                    if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
+                    if (SearchTextBox.Text.Length == 0) RunSearchTextBoxCloseAnimation();
                     if (e.Key == Key.Enter || e.Key == Key.Tab)
                     {
                         currentFocus = 0;
@@ -95,7 +91,7 @@ namespace TemporaTasks.Pages
             else if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.F))
             {
                 SearchTextBox.Focus();
-                SearchTextBoxAnimate(true);
+                RunSearchTextBoxCloseAnimation(true);
                 return;
             }
 
@@ -111,17 +107,19 @@ namespace TemporaTasks.Pages
                     PreviousTaskFocus();
                     return;
 
-                case Key.N:
+                case Key.H:
                     currentFocus = null;
                     UnfocusTasks();
-                    AddButton_MouseDown(null, null);
+                    HomePagePage.Focus();
+                    SearchTextBox.Text = "";
+                    RunSearchTextBoxCloseAnimation();
                     return;
 
                 case Key.S:
                 case Key.OemQuestion:
                     currentFocus = null;
                     UnfocusTasks();
-                    SearchTextBoxAnimate(true);
+                    RunSearchTextBoxCloseAnimation(true);
                     return;
 
                 case Key.R:
@@ -130,12 +128,9 @@ namespace TemporaTasks.Pages
                     SortButton_MouseDown(null, null);
                     return;
 
-                case Key.H:
+                case Key.N:
                     currentFocus = null;
-                    UnfocusTasks();
-                    HomePagePage.Focus();
-                    SearchTextBox.Text = "";
-                    SearchTextBoxAnimate();
+                    AddButton_MouseDown(null, null);
                     return;
 
                 case Key.Escape:
@@ -219,6 +214,7 @@ namespace TemporaTasks.Pages
                         return;
                 }
             }
+
             else
                 switch (e.Key)
                 {
@@ -241,37 +237,15 @@ namespace TemporaTasks.Pages
                 SearchTextBox.Focus();
         }
 
-        private void PreviousTaskFocus()
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            int limit = TaskStack.Children.Count;
-            do
+            if (!SearchTextBox.IsMouseDirectlyOver && !SearchBorder.IsMouseDirectlyOver)
             {
-                currentFocus--;
-                if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
-                if (--limit <= 0)
-                {
-                    currentFocus = null;
-                    return;
-                }
-            } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
-            FocusTask();
-        }
-
-        private void NextTaskFocus()
-        {
-            int limit = TaskStack.Children.Count;
-            do
-            {
-                currentFocus++;
-                if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
-                if (--limit <= 0)
-                {
-                    currentFocus = null;
-                    return;
-                }
-            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
-
-            FocusTask();
+                HomePagePage.Focus();
+                if (SearchTextBox.Text.Length == 0) RunSearchTextBoxCloseAnimation();
+            }
+            currentFocus = null;
+            UnfocusTasks();
         }
 
         private void Window_Unhidden()
@@ -279,41 +253,6 @@ namespace TemporaTasks.Pages
             currentFocus = null;
             UnfocusTasks();
             GenerateTaskStack();
-        }
-
-        private void ToggleTaskCompletion(IndividualTask task)
-        {
-            task.ToggleCompletionStatus();
-
-            int temp = TaskStack.Children.IndexOf(task);
-            if (temp > -1) currentFocus = temp;
-            FocusTask();
-        }
-
-        private void EditIcon_MouseDown(object sender)
-        {
-            mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)sender));
-        }
-
-        private void TrashIcon_MouseDown(object sender)
-        {
-            IndividualTask task = (IndividualTask)sender;
-            task.TaskTimer.Stop();
-            lastTask = task;
-            TaskFile.TaskList.Remove(task);
-            TaskFile.SaveData();
-            GenerateTaskStack();
-        }
-
-        private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, milli250));
-        }
-
-        private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            TaskStack.Children.Clear();
-            mainWindow.FrameView.Navigate(new AddTaskPage());
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -325,50 +264,106 @@ namespace TemporaTasks.Pages
             tooltip.VerticalOffset = mousePosition.Y;
         }
 
-        private async void FocusTask()
+        private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!currentFocus.HasValue) return;
-            
-            UnfocusTasks();
-            
-            int count = TaskStack.Children.Count;
-            if (count > 0)
+            if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused && SearchTextBox.Text.Length == 0)
+                RunSearchTextBoxCloseAnimation((bool)e.NewValue);
+        }
+
+        private void SearchBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SearchTextBox.Focus();
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            GenerateTaskStack();
+        }
+
+        private async void RunSearchTextBoxCloseAnimation(bool open = false)
+        {
             {
-                if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
-
-                int limit = count;
-                while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
+                DoubleAnimation ani = new(open ? 190 : 0, TimeSpan.FromMilliseconds(500))
                 {
-                    if (currentFocus.Value >= count) currentFocus = 0;
-                    currentFocus++;
-                    if (--limit <= 0)
+                    EasingFunction = new QuarticEase()
                     {
-                        currentFocus = null;
-                        return;
+                        EasingMode = EasingMode.EaseInOut
                     }
-                }
+                };
 
-                double verticalOffset = TaskStackScroller.VerticalOffset;
-                
-                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+                SearchTextBox.BeginAnimation(WidthProperty, ani);
+            }
 
-                task.BringIntoView();
-                await Task.Delay(1);
-                
-                if (verticalOffset < TaskStackScroller.VerticalOffset)
-                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + 50);
-                else if (verticalOffset > TaskStackScroller.VerticalOffset)
-                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset - 50);
+            if (open)
+            {
+                SearchIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
 
-                task.StrokeOn();
+                DoubleAnimation ani = new(1.25, TimeSpan.FromMilliseconds(250));
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+
+                await Task.Delay(251);
+
+                DoubleAnimation ani2 = new(1, TimeSpan.FromMilliseconds(250));
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani2);
+                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani2);
             }
         }
 
-        private void UnfocusTasks()
+        private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (object obj in TaskStack.Children) if (obj is IndividualTask task) task.StrokeOff();
+            TaskFile.sortType = SortComboBox.SelectedIndex;
+            TaskFile.SaveData();
+            GenerateTaskStack();
         }
-        
+
+        private void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            reverseSort = !reverseSort;
+            int temp = reverseSort ? 1 : -1;
+
+            DoubleAnimation ani = new(temp, TimeSpan.FromMilliseconds(250))
+            {
+                EasingFunction = new QuarticEase()
+                {
+                    EasingMode = EasingMode.EaseInOut
+                }
+            };
+
+            SortButton.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = -(temp) };
+            SortButton.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+
+            GenerateTaskStack();
+        }
+
+        private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            UnfocusTasks();
+            TaskStack.Children.Clear();
+            mainWindow.FrameView.Navigate(new AddTaskPage());
+        }
+
+        private void TaskStackScroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            try
+            {
+                if (System.Windows.Forms.SystemInformation.MouseWheelScrollLines == -1)
+                    e.Handled = false;
+                else
+                {
+                    ScrollViewer SenderScrollViewer = (ScrollViewer)sender;
+                    SenderScrollViewer.ScrollToVerticalOffset(SenderScrollViewer.VerticalOffset - e.Delta);
+                    e.Handled = true;
+                }
+            }
+            catch { }
+        }
+
         private void GenerateTaskStack()
         {
             if (TaskStack == null) return;
@@ -437,11 +432,11 @@ namespace TemporaTasks.Pages
                         if (!days.ContainsKey(dateString))
                         {
                             days[dateString] = [];
-                            
+
                             SectionDivider sectionDivider = new(dateString);
                             if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
                             sectionDivider.MouseDown += Section_MouseDown;
-                            
+
                             TaskStack.Children.Add(sectionDivider);
                         }
 
@@ -508,13 +503,13 @@ namespace TemporaTasks.Pages
                     }
 
                     foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
-                    
+
                     days["Completed"] = [];
                     SectionDivider sectionDividerDefault = new("Completed");
                     if (TaskStack.Children.Count > 0) sectionDividerDefault.MainGrid.Margin = new Thickness(0, 14, 0, 0);
                     sectionDividerDefault.MouseDown += Section_MouseDown;
                     TaskStack.Children.Add(sectionDividerDefault);
-                    
+
                     foreach (IndividualTask task in completed.Keys)
                     {
 
@@ -522,7 +517,7 @@ namespace TemporaTasks.Pages
                         days["Completed"].Add(task);
                         task.Disappear();
                     }
-                    
+
                     sectionDividerDefault.Background_MouseDown(null, null);
                     break;
             }
@@ -557,117 +552,110 @@ namespace TemporaTasks.Pages
             }
         }
 
-        private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TaskFile.sortType = SortComboBox.SelectedIndex;
-            TaskFile.SaveData();
-            GenerateTaskStack();
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!SearchTextBox.IsMouseDirectlyOver && !SearchBorder.IsMouseDirectlyOver)
-            {
-                HomePagePage.Focus();
-                if (SearchTextBox.Text.Length == 0) SearchTextBoxAnimate();
-            }
-            currentFocus = null;
-            UnfocusTasks();
-        }
-
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            GenerateTaskStack();
-        }
-
-        private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused && SearchTextBox.Text.Length == 0)
-                SearchTextBoxAnimate((bool)e.NewValue);
-        }
-
-        private void SearchBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            SearchTextBox.Focus();
-        }
-
-        private async void SearchTextBoxAnimate(bool open = false)
-        {
-            {
-                DoubleAnimation ani = new(open ? 190 : 0, TimeSpan.FromMilliseconds(500))
-                {
-                    EasingFunction = new QuarticEase()
-                    {
-                        EasingMode = EasingMode.EaseInOut
-                    }
-                };
-
-                SearchTextBox.BeginAnimation(WidthProperty, ani);
-            }
-
-            if (open)
-            {
-                SearchIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
-
-                DoubleAnimation ani = new(1.25, milli250);
-                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
-                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
-
-                await Task.Delay(251);
-
-                DoubleAnimation ani2 = new(1, milli250);
-                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani2);
-                SearchIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani2);
-            }
-        }
-
-        private void HomePagePage_MouseMove(object sender, MouseEventArgs e)
-        {
-            //foreach (object obj in TaskStack.Children)
-            //    if (obj is IndividualTask task)
-            //        if (!task.IsMouseOver)
-            //            task.Background_MouseLeave(null, null);
-        }
-
-        private void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            reverseSort = !reverseSort;
-            int temp = reverseSort ? 1 : -1;
-
-            DoubleAnimation ani = new(temp, TimeSpan.FromMilliseconds(250))
-            {
-                EasingFunction = new QuarticEase()
-                {
-                    EasingMode = EasingMode.EaseInOut
-                }
-            };
-
-            SortButton.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = -(temp) };
-            SortButton.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
-
-            GenerateTaskStack();
-        }
-
         private void UpdateTaskTimers(object sender, EventArgs e)
         {
             foreach (IndividualTask task in TaskFile.TaskList)
                 task.NewDueDT();
         }
 
-        private void TaskStackScroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void PreviousTaskFocus()
         {
-            try
+            int limit = TaskStack.Children.Count;
+            do
             {
-                if (System.Windows.Forms.SystemInformation.MouseWheelScrollLines == -1)
-                    e.Handled = false;
-                else
+                currentFocus--;
+                if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+                if (--limit <= 0)
                 {
-                    ScrollViewer SenderScrollViewer = (ScrollViewer)sender;
-                    SenderScrollViewer.ScrollToVerticalOffset(SenderScrollViewer.VerticalOffset - e.Delta);
-                    e.Handled = true;
+                    currentFocus = null;
+                    return;
                 }
+            } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
+            FocusTask();
+        }
+
+        private void NextTaskFocus()
+        {
+            int limit = TaskStack.Children.Count;
+            do
+            {
+                currentFocus++;
+                if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+                if (--limit <= 0)
+                {
+                    currentFocus = null;
+                    return;
+                }
+            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
+
+            FocusTask();
+        }
+
+        private async void FocusTask()
+        {
+            if (!currentFocus.HasValue) return;
+
+            UnfocusTasks();
+
+            int count = TaskStack.Children.Count;
+            if (count > 0)
+            {
+                if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
+
+                int limit = count;
+                while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
+                {
+                    if (currentFocus.Value >= count) currentFocus = 0;
+                    currentFocus++;
+                    if (--limit <= 0)
+                    {
+                        currentFocus = null;
+                        return;
+                    }
+                }
+
+                double verticalOffset = TaskStackScroller.VerticalOffset;
+
+                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+
+                task.BringIntoView();
+                await Task.Delay(1);
+
+                if (verticalOffset < TaskStackScroller.VerticalOffset)
+                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + 50);
+                else if (verticalOffset > TaskStackScroller.VerticalOffset)
+                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset - 50);
+
+                task.StrokeOn();
             }
-            catch { }
+        }
+
+        private void UnfocusTasks()
+        {
+            foreach (object obj in TaskStack.Children) if (obj is IndividualTask task) task.StrokeOff();
+        }
+        private void ToggleTaskCompletion(IndividualTask task)
+        {
+            task.ToggleCompletionStatus();
+
+            int temp = TaskStack.Children.IndexOf(task);
+            if (temp > -1) currentFocus = temp;
+            FocusTask();
+        }
+
+        private void EditIcon_MouseDown(object sender)
+        {
+            mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)sender));
+        }
+
+        private void TrashIcon_MouseDown(object sender)
+        {
+            IndividualTask task = (IndividualTask)sender;
+            task.TaskTimer.Stop();
+            lastTask = task;
+            TaskFile.TaskList.Remove(task);
+            TaskFile.SaveData();
+            GenerateTaskStack();
         }
     }
 }
