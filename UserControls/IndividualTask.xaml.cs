@@ -40,6 +40,8 @@ namespace TemporaTasks.UserControls
         public Nullable<DateTime> DueDT;
         public Nullable<DateTime> CompletedDT;
         
+        public Nullable<TimeSpan> RecurranceTimeSpan;
+        
         public DispatcherTimer TaskTimer = new();
         readonly private DispatcherTimer TemporaryRemainingTimer = new();
 
@@ -52,7 +54,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList)
+        public IndividualTask(long _TaskUID, String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan = null)
         {
             InitializeComponent();
 
@@ -63,9 +65,11 @@ namespace TemporaTasks.UserControls
 
             IsCompleted = _CompletedDT.HasValue;
             
-            CreatedDT = _CreatedDT; 
+            CreatedDT = _CreatedDT;
             DueDT = _DueDT;
             CompletedDT = _CompletedDT;
+
+            RecurranceTimeSpan = _RecurranceTimeSpan;
 
             DueDateTimeLabelUpdate();
             NewDueDT();
@@ -168,7 +172,7 @@ namespace TemporaTasks.UserControls
                     0 => "today",
                     -1 => "yesterday",
                     1 => "tomorrow",
-                    _ => CompletedDT.Value.ToString("dd\\/MM"),
+                    _ => CompletedDT.Value.ToString("dd\\/MM")
                 };
                 DueDateTimeLabel.Content = $"Done {dateString} {CompletedDT.Value:hh:mm tt}";
             }

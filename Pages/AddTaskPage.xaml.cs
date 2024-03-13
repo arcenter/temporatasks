@@ -116,6 +116,17 @@ namespace TemporaTasks.Pages
                 return;
             }
 
+            Nullable<TimeSpan> recurranceTimeSpan;
+            try
+            {
+                recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);
+            }
+            catch
+            {
+                RecurranceBorder.BorderThickness = new Thickness(2);
+                return;
+            }
+
             if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
             if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
@@ -132,7 +143,7 @@ namespace TemporaTasks.Pages
             foreach (Tags tag in TagsStack.Children)
                 tagList.Add(tag.TagText);
 
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList));
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, recurranceTimeSpan));
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
