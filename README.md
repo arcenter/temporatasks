@@ -29,6 +29,8 @@ TemporaTasks is a simple, minimalistic, open-source task manager, build for swif
 
 You'll have to install the [.NET 8.0 framework](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) for TemporaTasks to work. You can install it [here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
+Once [.NET 8.0 framework](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed, extract the `TemporaTasks-version.zip` file that you have downloaded. It is portable, so running the program is as easy as opening the `TemporaTasks.exe`.
+
 ## System Requirements
 
 - Windows 10
