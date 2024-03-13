@@ -129,6 +129,22 @@ namespace TemporaTasks.Core
             return new DateTime(year, month, day, hour, minute, 0);
         }
 
+        public static Nullable<TimeSpan> RecurranceStringToDateTime(string timespan)
+        {
+            Match match;
+
+            if ((match = RegexAddYear().Match(timespan)).Success)
+                return TimeSpan.FromDays(365.25 * int.Parse(match.Value[..^1]));
+
+            else if ((match = RegexAddMonth().Match(timespan)).Success)
+                return TimeSpan.FromDays(30.5 * int.Parse(match.Value[..^1]));
+            
+            else if ((match = RegexAddDay().Match(timespan)).Success)
+                return TimeSpan.FromDays(int.Parse(match.Value[..^1]));
+
+            return null;
+        }
+
         public static string? matchedTime;
         public static string? matchedDate;
 
