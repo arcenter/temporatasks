@@ -79,6 +79,7 @@ namespace TemporaTasks.UserControls
         private void IndividualTask_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateTaskCheckBoxAndBackground();
+            Cursor = Cursors.Hand;
         }
 
         private void Background_MouseEnter(object sender, MouseEventArgs e)
