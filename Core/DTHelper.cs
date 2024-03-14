@@ -142,6 +142,15 @@ namespace TemporaTasks.Core
             else if ((match = RegexAddDay().Match(timespan)).Success)
                 return TimeSpan.FromDays(int.Parse(match.Value[..^1]));
 
+            else if ((match = RegexAddHour().Match(timespan)).Success)
+                return TimeSpan.FromHours(int.Parse(match.Value[..^1]));
+
+            else if ((match = RegexAddMinute().Match(timespan)).Success)
+                return TimeSpan.FromMinutes(int.Parse(match.Value[..^1]));
+
+            else if ((match = RegexAddSecond().Match(timespan)).Success)
+                return TimeSpan.FromSeconds(int.Parse(match.Value[..^1]));
+
             return null;
         }
 
@@ -305,6 +314,15 @@ namespace TemporaTasks.Core
         
         [GeneratedRegex("^\\d{3,4} ?[AaPp]?[Mm]?$")]
         public static partial Regex RegexTimeHHMM();
+
+        [GeneratedRegex("^\\d{1,3}h$")]
+        public static partial Regex RegexAddHour();
+
+        [GeneratedRegex("^\\d{1,3}(M|[Mm]in)$")]
+        public static partial Regex RegexAddMinute();
+
+        [GeneratedRegex("^\\d{1,3}s$")]
+        public static partial Regex RegexAddSecond();
 
         // >>> Calendar
 
