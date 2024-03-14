@@ -45,16 +45,21 @@ namespace TemporaTasks.Core
                         Nullable<DateTime> createdTime = null;
                         Nullable<DateTime> dueTime = null;
                         Nullable<DateTime> completedTime = null;
+                        
+                        Nullable<TimeSpan> recurranceTimeSpan = null;
                         ArrayList? tagList = null;
 
                         createdTime = StringToDateTime(data, taskUID, "createdTime");
                         dueTime = StringToDateTime(data, taskUID, "dueTime");
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
 
+                        if (data[taskUID]["recurranceTS"] != "")
+                            recurranceTimeSpan = TimeSpan.Parse(data[taskUID]["recurranceTS"]);
+
                         if (data[taskUID]["tags"] != "")
                             tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList);
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, recurranceTimeSpan);
                         _TasksList.Add(taskObj);
                     }
                     catch { }
@@ -84,7 +89,8 @@ namespace TemporaTasks.Core
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
-                temp2["tags"] = (task.TagList != null) ? string.Join(';', task.TagList.ToArray()) : "";
+                temp2["recurranceTS"] = (task.RecurranceTimeSpan == null) ? "" : task.RecurranceTimeSpan.ToString();
+                temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
                 temp[task.TaskUID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp);
