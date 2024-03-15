@@ -22,7 +22,7 @@ namespace TemporaTasks.Pages
         bool reverseSort = false;
         Dictionary<string, ArrayList> days = [];
 
-        IndividualTask lastTask;
+        List<IndividualTask> lastTask;
 
         public HomePage()
         {
@@ -207,9 +207,10 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.Z:
-                        lastTask.StrokeOff();
+                        lastTask.Last().StrokeOff();
                         TaskFile.TaskList.Add(lastTask);
                         TaskFile.SaveData();
+                        lastTask.RemoveAt(lastTask.Count-1);
                         GenerateTaskStack();
                         return;
                 }
@@ -652,7 +653,7 @@ namespace TemporaTasks.Pages
         {
             IndividualTask task = (IndividualTask)sender;
             task.TaskTimer.Stop();
-            lastTask = task;
+            lastTask.Add(task);
             TaskFile.TaskList.Remove(task);
             TaskFile.SaveData();
             GenerateTaskStack();
