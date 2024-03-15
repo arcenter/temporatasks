@@ -175,19 +175,19 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.D2:
-                        task.Increment_MouseDown("plus5m", null);
-                        return;
-
-                    case Key.D3:
                         task.Increment_MouseDown("plus10m", null);
                         return;
 
-                    case Key.D4:
+                    case Key.D3:
                         task.Increment_MouseDown("plus30m", null);
                         return;
 
-                    case Key.D5:
+                    case Key.D4:
                         task.Increment_MouseDown("plus1h", null);
+                        return;
+
+                    case Key.D5:
+                        task.Increment_MouseDown("plus5m", null);
                         return;
 
                     case Key.D6:
