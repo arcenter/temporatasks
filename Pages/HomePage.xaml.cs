@@ -447,9 +447,8 @@ namespace TemporaTasks.Pages
                             TaskStack.Children.Add(sectionDivider);
                         }
 
+                        AddToTaskStack(task);
                         days[dateString].Add(task);
-                        task.GarbleMode(garbleMode);
-                        TaskStack.Children.Add(task);
                     }
 
                     if (doesntMatchSort.Count > 0)
@@ -464,9 +463,8 @@ namespace TemporaTasks.Pages
 
                         foreach (IndividualTask task in doesntMatchSort)
                         {
+                            AddToTaskStack(task);
                             days["No date"].Add(task);
-                            task.GarbleMode(garbleMode);
-                            TaskStack.Children.Add(task);
                         }
                     }
 
@@ -482,8 +480,7 @@ namespace TemporaTasks.Pages
 
                         foreach (IndividualTask task in completed.Keys)
                         {
-                            task.GarbleMode(garbleMode);
-                            TaskStack.Children.Add(task);
+                            AddToTaskStack(task);
                             days["Completed"].Add(task);
                             task.Disappear();
                         }
@@ -512,11 +509,7 @@ namespace TemporaTasks.Pages
                         completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
-                    foreach (IndividualTask task in sortedDict.Keys)
-                    {
-                        task.GarbleMode(garbleMode);
-                        TaskStack.Children.Add(task);
-                    }
+                    foreach (IndividualTask task in sortedDict.Keys) AddToTaskStack(task);
 
                     days["Completed"] = [];
                     SectionDivider sectionDividerDefault = new("Completed");
@@ -526,8 +519,7 @@ namespace TemporaTasks.Pages
 
                     foreach (IndividualTask task in completed.Keys)
                     {
-                        task.GarbleMode(garbleMode);
-                        TaskStack.Children.Add(task);
+                        AddToTaskStack(task);
                         days["Completed"].Add(task);
                         task.Disappear();
                     }
@@ -535,6 +527,14 @@ namespace TemporaTasks.Pages
                     sectionDividerDefault.Background_MouseDown(null, null);
                     break;
             }
+        }
+
+        private void AddToTaskStack(IndividualTask task)
+        {
+            task.GarbleMode(garbleMode); // , rect.Contains(bounds.TopLeft) || rect.Contains(bounds.BottomRight));
+            TaskStack.Children.Add(task);
+            //Rect bounds = task.TransformToAncestor(mainWindow).TransformBounds(new Rect(0.0, 0.0, task.ActualWidth, task.ActualHeight));
+            //Rect rect = new(0.0, 0.0, mainWindow.ActualWidth, mainWindow.ActualHeight);
         }
 
         private void Section_MouseDown(object sender, MouseEventArgs e)
