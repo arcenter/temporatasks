@@ -20,6 +20,7 @@ namespace TemporaTasks.Pages
         int? currentFocus = null;
         
         bool reverseSort = false;
+        bool garbleMode = false;
         Dictionary<string, ArrayList> days = [];
 
         List<IndividualTask> lastTask;
@@ -107,6 +108,11 @@ namespace TemporaTasks.Pages
                     PreviousTaskFocus();
                     return;
 
+                case Key.G:
+                    garbleMode = !garbleMode;
+                    GenerateTaskStack();
+                    return;
+                
                 case Key.H:
                     currentFocus = null;
                     UnfocusTasks();
@@ -442,6 +448,7 @@ namespace TemporaTasks.Pages
                         }
 
                         days[dateString].Add(task);
+                        task.GarbleMode(garbleMode);
                         TaskStack.Children.Add(task);
                     }
 
@@ -458,6 +465,7 @@ namespace TemporaTasks.Pages
                         foreach (IndividualTask task in doesntMatchSort)
                         {
                             days["No date"].Add(task);
+                            task.GarbleMode(garbleMode);
                             TaskStack.Children.Add(task);
                         }
                     }
@@ -474,6 +482,7 @@ namespace TemporaTasks.Pages
 
                         foreach (IndividualTask task in completed.Keys)
                         {
+                            task.GarbleMode(garbleMode);
                             TaskStack.Children.Add(task);
                             days["Completed"].Add(task);
                             task.Disappear();
@@ -503,7 +512,11 @@ namespace TemporaTasks.Pages
                         completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
-                    foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
+                    foreach (IndividualTask task in sortedDict.Keys)
+                    {
+                        task.GarbleMode(garbleMode);
+                        TaskStack.Children.Add(task);
+                    }
 
                     days["Completed"] = [];
                     SectionDivider sectionDividerDefault = new("Completed");
@@ -513,7 +526,7 @@ namespace TemporaTasks.Pages
 
                     foreach (IndividualTask task in completed.Keys)
                     {
-
+                        task.GarbleMode(garbleMode);
                         TaskStack.Children.Add(task);
                         days["Completed"].Add(task);
                         task.Disappear();
