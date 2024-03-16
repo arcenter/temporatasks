@@ -350,5 +350,49 @@ namespace TemporaTasks.UserControls
 
         [GeneratedRegex("\\b(https://|www.)\\S+")]
         public static partial Regex LinkRegex();
+
+        public async void GarbleMode(bool mode)
+        {
+            //if (this == null || !this.IsVisible || !this.TransformedBounds?.Clip.IsEmpty)
+            //{
+
+            //}
+
+            if (mode)
+            {
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                await Task.Delay(300);
+                taskNameTextBlock.Visibility = Visibility.Hidden;
+                Random random = new();
+                int limit = 3 + random.Next() % 2;
+                List<Line> lines = new();
+                for (int i = 0; i < limit; i++)
+                {
+                    lines.Add(new Line() {
+                        X1 = 0,
+                        X2 = 0,
+                        Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
+                        StrokeThickness = 4,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        StrokeEndLineCap = PenLineCap.Round,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        IsHitTestVisible = false
+                    });
+                }
+                foreach (Line line in lines)
+                {
+                    TextSP.Children.Add(line);
+                    line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
+                    await Task.Delay(300);
+                }
+            }
+            else
+            {
+                TextSP.Children.Clear();
+                await Task.Delay(100);
+                taskNameTextBlock.Visibility = Visibility.Visible;
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
+            }
+        }
     }
 }
