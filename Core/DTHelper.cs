@@ -295,7 +295,7 @@ namespace TemporaTasks.Core
 
         // >>> Calendar
 
-        [GeneratedRegex(@"(?i)on .{2,5}day")]
+        [GeneratedRegex(@"(?i)on (su|mo|tu|we|th|fr|sa).*(day)?")]
         public static partial Regex RegexDayOfWeek();
 
         [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?days?")]
