@@ -153,6 +153,43 @@ namespace TemporaTasks.Pages
             {
                 IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
 
+                if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    if (Keyboard.IsKeyDown(Key.Down))
+                    {
+                        int limit = TaskStack.Children.Count;
+                        do
+                        {
+                            currentFocus++;
+                            if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+                            if (--limit <= 0)
+                            {
+                                currentFocus = null;
+                                return;
+                            }
+                        } while (TaskStack.Children[currentFocus.Value] is IndividualTask && limit > 0);
+                        NextTaskFocus();
+                        return;
+                    }
+                    else if (Keyboard.IsKeyDown(Key.Up))
+                    {
+                        PreviousTaskFocus();
+                        int limit = TaskStack.Children.Count;
+                        do
+                        {
+                            currentFocus--;
+                            if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+                            if (--limit <= 0)
+                            {
+                                currentFocus = null;
+                                return;
+                            }
+                        } while (TaskStack.Children[currentFocus.Value] is IndividualTask);
+                        NextTaskFocus();
+                        return;
+                    }
+                }
+
                 switch (e.Key)
                 {
                     case Key.Up:
