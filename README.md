@@ -13,15 +13,16 @@ TemporaTasks is a simple, minimalistic, open-source task manager, build for swif
 
 ## Features
 
-- Global Task Add – Shortcut `Win+'` for adding tasks from anywhere on your PC, without having to be on Tempora
-- Fully keyboard accessible – Open Tempora, add tasks, complete tasks, and hide Tempora, with only your keyboard. Hovering over buttons shows their respective keybinds.
-- Add tasks relatively – Keywords like "Get eggs in 3 hours" and "Pay bills on Friday" will automatically recognize and assign due date relatively
-- Relatively increment due date-time – Add 5, 10, 30 minutes to the due date-time of tasks
-- Show remaining time  – Tasks will show how long is left before task is due on mouse hover
-- Reminders on due – Tempora sends a toast notification whenever a task is due, and then every 5 minutes if ignored.
-- Aesthetically stunning – Beautifully crafted UI
-- Easy sorting – Task sorting, by creation date or due date, or alphabetically
-- Clean sections – Show or hide sections based on dates, grouping the tasks together
+- **Global Task Add** – Shortcut `Win+'` for adding tasks from anywhere on your PC, without having to be on Tempora
+- **Fully keyboard accessible** – Open Tempora, add tasks, complete tasks, and hide Tempora, with only your keyboard. Hovering over buttons shows their respective keybinds.
+- **Add tasks relatively** – Keywords like "Get eggs in 3 hours" and "Pay bills on Friday" will automatically recognize and assign due date relatively
+- **Relatively increment due date-time** – Add 5, 10, 30 minutes to the due date-time of tasks
+- **Show remaining time**  – Tasks will show how long is left before task is due on mouse hover
+- **Reminders on due** – Tempora sends a toast notification whenever a task is due, and then every 5 minutes if ignored.
+- **Aesthetically stunning** – Beautifully crafted UI
+- **Easy sorting** – Task sorting, by creation date or due date, or alphabetically
+- **Clean sections** – Show or hide sections based on dates, grouping the tasks together
+- **Garble Mode** - Hide your private tasks effortlessly with _Garble Mode_, which replaces task names with lines of varying lengths.
 
 ## Installation
 
