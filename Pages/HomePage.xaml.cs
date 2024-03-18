@@ -23,6 +23,7 @@ namespace TemporaTasks.Pages
         bool garbleMode = false;
         Dictionary<string, ArrayList> days = [];
 
+        Nullable<DateTime> dateClipboard = null;
         List<IndividualTask> lastTask;
 
         public HomePage()
@@ -247,6 +248,20 @@ namespace TemporaTasks.Pages
                         TrashIcon_MouseDown(task);
                         if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
+                        return;
+
+                    case Key.C:
+                        dateClipboard = task.DueDT;
+                        return;
+
+                    case Key.V:
+                        if (dateClipboard.HasValue)
+                        {
+                            task.DueDT = dateClipboard;
+                            TaskFile.SaveData();
+                            task.DueDateTimeLabelUpdate();
+                            task.NewDueDT();
+                        }
                         return;
 
                     case Key.Z:
