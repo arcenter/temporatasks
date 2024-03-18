@@ -124,14 +124,14 @@ namespace TemporaTasks
 
         public async void WindowHide(bool check = true)
         {
-            if (check)
+            if (check && Opacity == 1)
             {
                 // TrayIcon.Visibility = Visibility.Visible;
                 BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(100)));
                 await Task.Delay(125);
                 Hide();
             }
-            else
+            else if (Opacity == 0)
             {
                 // TrayIcon.Visibility = Visibility.Hidden;
                 Show();
