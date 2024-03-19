@@ -49,6 +49,8 @@ namespace TemporaTasks.Core
                         Nullable<TimeSpan> recurranceTimeSpan = null;
                         ArrayList? tagList = null;
 
+                        bool garbled = false;
+
                         createdTime = StringToDateTime(data, taskUID, "createdTime");
                         dueTime = StringToDateTime(data, taskUID, "dueTime");
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
@@ -59,7 +61,9 @@ namespace TemporaTasks.Core
                         if (data[taskUID]["tags"] != "")
                             tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, recurranceTimeSpan);
+                        if (data[taskUID]["garbled"] != "0") garbled = true;
+
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, recurranceTimeSpan, garbled);
                         _TasksList.Add(taskObj);
                     }
                     catch { }
@@ -74,8 +78,14 @@ namespace TemporaTasks.Core
             return DateTimeOffset.FromUnixTimeSeconds(long.Parse(data[taskUID][field])).LocalDateTime;
         }
 
-        public static void SaveData()
+        public static bool saveLock = false;
+        public static async void SaveData()
         {
+            if (saveLock) return;
+
+            saveLock = true;
+            await Task.Delay(2000);
+
             Dictionary<string, Dictionary<string, string>> temp = [];
 
             Dictionary<string, string> temp2 = [];
@@ -91,14 +101,16 @@ namespace TemporaTasks.Core
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
                 temp2["recurranceTS"] = (task.RecurranceTimeSpan == null) ? "" : task.RecurranceTimeSpan.ToString();
                 temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
+                temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp[task.TaskUID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp);
             File.WriteAllText(saveFilePath, temp3);
 
             string saveTime = DateTime.Now.ToString("yyMMddHHmm");
-            File.WriteAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\TemporaTasks\\backups\\data{saveTime}.json", temp3);
-            temp3 = "";
+            File.WriteAllText($"{backupPath}\\data{saveTime}.json", temp3);
+
+            saveLock = false;
         }
 
         private static string DateTimeToString(Nullable<DateTime> dateTime)
