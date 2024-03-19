@@ -97,6 +97,13 @@ namespace TemporaTasks.Pages
                 return;
             }
 
+            else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && Keyboard.IsKeyDown(Key.G))
+            {
+                foreach (IndividualTask task in TaskFile.TaskList)
+                    task.Garble(null, TaskStackScroller);
+                return;
+            }
+
             switch (e.Key)
             {
                 case Key.Home:
@@ -236,6 +243,14 @@ namespace TemporaTasks.Pages
 
                     case Key.D6:
                         task.Increment_MouseDown("plus6h", null);
+                        return;
+
+                    case Key.D7:
+                        task.Increment_MouseDown("plus1w", null);
+                        return;
+
+                    case Key.G:
+                        task.Garble(null, TaskStackScroller);
                         return;
 
                     case Key.E:
