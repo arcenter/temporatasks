@@ -22,6 +22,8 @@ namespace TemporaTasks.UserControls
         public ArrayList? TagList { get; set; }
 
         private bool completed = false;
+        private bool garbled = false;
+
         public bool IsCompleted
         {
             get
@@ -53,7 +55,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan = null)
+        public IndividualTask(long _TaskUID, String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled)
         {
             InitializeComponent();
 
@@ -69,6 +71,9 @@ namespace TemporaTasks.UserControls
             CompletedDT = _CompletedDT;
 
             RecurranceTimeSpan = _RecurranceTimeSpan;
+
+            if (_garbled)
+                Garble();
 
             DueDateTimeLabelUpdate();
             NewDueDT();
@@ -162,7 +167,7 @@ namespace TemporaTasks.UserControls
             IsTrashIconClicked?.Invoke(this);
         }
 
-        private void DueDateTimeLabelUpdate()
+        public void DueDateTimeLabelUpdate()
         {
             if (IsCompleted && CompletedDT.HasValue)
             {
@@ -269,7 +274,7 @@ namespace TemporaTasks.UserControls
                     {
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
-                        mainWindow.OnTaskDue("Task Due!", TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                        mainWindow.OnTaskDue("Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         TaskTimer.Interval = TimeSpan.FromMinutes(5);
                     };
                     TaskTimer.Start();
@@ -351,77 +356,108 @@ namespace TemporaTasks.UserControls
         [GeneratedRegex("\\b(https://|www.)\\S+")]
         public static partial Regex LinkRegex();
 
-        public async void GarbleMode(bool mode)
+        public bool IsGarbled()
         {
-            if (false)
+            return garbled;
+        }
+
+        public async void Garble(bool? mode = null, ScrollViewer? scrollViewer = null)
+        {
+            mode ??= !garbled;
+
+            if (!IsVisible || scrollViewer != null)
             {
-                if (mode && taskNameTextBlock.Visibility == Visibility.Visible)
+                GeneralTransform transform = TransformToAncestor(scrollViewer);
+                Rect bounds = transform.TransformBounds(new Rect(0.0, 0.0, ActualWidth, ActualHeight));
+                Rect viewBounds = new(0.0, 0.0, scrollViewer.ViewportWidth, scrollViewer.ViewportHeight);
+                if (bounds.IntersectsWith(viewBounds))
                 {
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                    await Task.Delay(300);
-                    taskNameTextBlock.Visibility = Visibility.Hidden;
-                    Random random = new();
-                    int limit = 3 + random.Next() % 2;
-                    List<Line> lines = [];
-                    for (int i = 0; i < limit; i++)
+                    if (mode.Value && !garbled)
                     {
-                        lines.Add(new Line()
-                        {
-                            X1 = 0,
-                            X2 = 0,
-                            Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
-                            StrokeThickness = 4,
-                            StrokeStartLineCap = PenLineCap.Round,
-                            StrokeEndLineCap = PenLineCap.Round,
-                            Margin = new Thickness(0, 0, 10, 0),
-                            IsHitTestVisible = false
-                        });
-                    }
-                    foreach (Line line in lines)
-                    {
-                        TextSP.Children.Add(line);
-                        line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
+                        garbled = true;
+                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
                         await Task.Delay(300);
+                        taskNameTextBlock.Visibility = Visibility.Hidden;
+
+                        Random random = new();
+                        int limit = 3 + random.Next() % 2;
+
+                        for (int i = 0; i < limit; i++)
+                        {
+                            Line line = new()
+                            {
+                                X1 = 0,
+                                X2 = 0,
+                                Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
+                                StrokeThickness = 4,
+                                StrokeStartLineCap = PenLineCap.Round,
+                                StrokeEndLineCap = PenLineCap.Round,
+                                Margin = new Thickness(0, 0, 10, 0),
+                                IsHitTestVisible = false
+                            };
+
+                            TextSP.Children.Add(line);
+                            line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
+                            await Task.Delay(300);
+                        }
+
+                        TaskFile.SaveData();
                     }
-                }
-                else if (taskNameTextBlock.Visibility == Visibility.Hidden)
-                {
-                    TextSP.Children.Clear();
-                    await Task.Delay(100);
-                    taskNameTextBlock.Visibility = Visibility.Visible;
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
+                    else if (garbled)
+                    {
+                        garbled = false;
+
+                        TextSP.Children.Clear();
+                        taskNameTextBlock.Opacity = 0;
+                        taskNameTextBlock.Visibility = Visibility.Visible;
+                        await Task.Delay(100);
+                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
+
+                        TaskFile.SaveData();
+                    }
+
+                    return;
                 }
             }
-            else
+            
+            if (mode.Value && !garbled)
             {
-                if (mode && taskNameTextBlock.Visibility == Visibility.Visible)
+                garbled = true;
+                taskNameTextBlock.Visibility = Visibility.Hidden;
+                taskNameTextBlock.Opacity = 0;
+
+                Random random = new();
+                int limit = 3 + random.Next() % 2;
+
+                for (int i = 0; i < limit; i++)
                 {
-                    taskNameTextBlock.Visibility = Visibility.Hidden;
-                    taskNameTextBlock.Opacity = 0;
-                    Random random = new();
-                    int limit = 3 + random.Next() % 2;
-                    for (int i = 0; i < limit; i++)
+                    TextSP.Children.Add(new Line()
                     {
-                        Line line = new()
-                        {
-                            X1 = 0,
-                            X2 = 50 + random.Next() % 100,
-                            Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
-                            StrokeThickness = 4,
-                            StrokeStartLineCap = PenLineCap.Round,
-                            StrokeEndLineCap = PenLineCap.Round,
-                            Margin = new Thickness(0, 0, 10, 0),
-                            IsHitTestVisible = false
-                        };
-                        TextSP.Children.Add(line);
-                    }
+                        X1 = 0,
+                        X2 = 50 + random.Next() % 100,
+                        Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
+                        StrokeThickness = 4,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        StrokeEndLineCap = PenLineCap.Round,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        IsHitTestVisible = false
+                    });
                 }
-                else if (taskNameTextBlock.Visibility == Visibility.Hidden)
-                {
-                    TextSP.Children.Clear();
-                    taskNameTextBlock.Opacity = 1;
-                    taskNameTextBlock.Visibility = Visibility.Visible;
-                }
+
+                TaskFile.SaveData();
+            }
+            else if (garbled)
+            {
+                garbled = false;
+
+                TextSP.Children.Clear();
+                taskNameTextBlock.Opacity = 1;
+                
+                if (taskNameTextBlock.Opacity != 1 && !IsCompleted) Trace.WriteLine(TaskName);
+                
+                taskNameTextBlock.Visibility = Visibility.Visible;
+
+                TaskFile.SaveData();
             }
         }
     }
