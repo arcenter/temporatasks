@@ -295,6 +295,7 @@ namespace TemporaTasks.UserControls
                     "plus30m" => TimeSpan.FromMinutes(30),
                     "plus1h" => TimeSpan.FromHours(1),
                     "plus6h" => TimeSpan.FromHours(6),
+                    "plus1w" => TimeSpan.FromDays(7),
                     _ => TimeSpan.FromTicks(0),
                 };
 
