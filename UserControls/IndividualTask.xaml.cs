@@ -375,9 +375,11 @@ namespace TemporaTasks.UserControls
                     if (mode.Value && !garbled)
                     {
                         garbled = true;
-                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
+                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                         await Task.Delay(300);
                         taskNameTextBlock.Visibility = Visibility.Hidden;
+
+                        TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(1)));
 
                         Random random = new();
                         int limit = 3 + random.Next() % 2;
@@ -407,8 +409,10 @@ namespace TemporaTasks.UserControls
                     {
                         garbled = false;
 
+                        TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                        await Task.Delay(250);
                         TextSP.Children.Clear();
-                        taskNameTextBlock.Opacity = 0;
+                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(1)));
                         taskNameTextBlock.Visibility = Visibility.Visible;
                         await Task.Delay(100);
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
@@ -451,10 +455,8 @@ namespace TemporaTasks.UserControls
                 garbled = false;
 
                 TextSP.Children.Clear();
-                taskNameTextBlock.Opacity = 1;
-                
-                if (taskNameTextBlock.Opacity != 1 && !IsCompleted) Trace.WriteLine(TaskName);
-                
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(1)));
+
                 taskNameTextBlock.Visibility = Visibility.Visible;
 
                 TaskFile.SaveData();
