@@ -42,7 +42,7 @@ namespace TemporaTasks
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Q && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) Close();
+            if (!TaskFile.saveLock && e.Key == Key.Q && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) Close();
             else if (e.Key == Key.F && NoTextBoxHasFocus(this)) MaximizeButton_MouseDown(null, null);
         }
 
@@ -144,7 +144,7 @@ namespace TemporaTasks
         bool balloonCalledRecently = false;
         public async void OnTaskDue(string title, string message, BalloonIcon symbol)
         {
-            if (balloonCalledRecently) return;
+            if (!TaskFile.NotificationsOn || balloonCalledRecently) return;
             WindowHide(false);
             TrayIcon.ShowBalloonTip(title, message, symbol);
             balloonCalledRecently = true;
