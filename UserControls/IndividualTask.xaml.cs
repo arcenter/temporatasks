@@ -363,12 +363,12 @@ namespace TemporaTasks.UserControls
 
         public async void Garble(bool? mode = null, ScrollViewer? scrollViewer = null)
         {
+            // if mode = null, then toggle. so if garbled mode, make it ungarbled.
             mode ??= !garbled;
 
-            if (!IsVisible || scrollViewer != null)
+            if (IsVisible && scrollViewer != null)
             {
-                GeneralTransform transform = TransformToAncestor(scrollViewer);
-                Rect bounds = transform.TransformBounds(new Rect(0.0, 0.0, ActualWidth, ActualHeight));
+                Rect bounds = TransformToAncestor(scrollViewer).TransformBounds(new Rect(0.0, 0.0, ActualWidth, ActualHeight));
                 Rect viewBounds = new(0.0, 0.0, scrollViewer.ViewportWidth, scrollViewer.ViewportHeight);
                 if (bounds.IntersectsWith(viewBounds))
                 {
@@ -376,9 +376,10 @@ namespace TemporaTasks.UserControls
                     {
                         garbled = true;
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                        await Task.Delay(300);
+                        await Task.Delay(400);
                         taskNameTextBlock.Visibility = Visibility.Hidden;
 
+                        TextSP.Children.Clear();
                         TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(1)));
 
                         Random random = new();
@@ -410,10 +411,12 @@ namespace TemporaTasks.UserControls
                         garbled = false;
 
                         TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                        await Task.Delay(250);
+                        await Task.Delay(300);
                         TextSP.Children.Clear();
+
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(1)));
                         taskNameTextBlock.Visibility = Visibility.Visible;
+
                         await Task.Delay(100);
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
 
@@ -428,7 +431,10 @@ namespace TemporaTasks.UserControls
             {
                 garbled = true;
                 taskNameTextBlock.Visibility = Visibility.Hidden;
-                taskNameTextBlock.Opacity = 0;
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(1)));
+
+                TextSP.Children.Clear();
+                TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(1)));
 
                 Random random = new();
                 int limit = 3 + random.Next() % 2;
@@ -455,6 +461,7 @@ namespace TemporaTasks.UserControls
                 garbled = false;
 
                 TextSP.Children.Clear();
+                TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(1)));
                 taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(1)));
 
                 taskNameTextBlock.Visibility = Visibility.Visible;
