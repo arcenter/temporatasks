@@ -33,7 +33,7 @@ namespace TemporaTasks.Core
 
                 if (data.Keys.Contains("settings"))
                 {
-                    Dictionary<string, string>  settings = data["settings"];
+                    Dictionary<string, string> settings = data["settings"];
                     data.Remove("settings");
 
                     sortType = int.Parse(settings["sortType"]);
@@ -44,11 +44,11 @@ namespace TemporaTasks.Core
                 {
                     try
                     {
-                        Nullable<DateTime> createdTime = null;
-                        Nullable<DateTime> dueTime = null;
-                        Nullable<DateTime> completedTime = null;
+                        DateTime? createdTime = null;
+                        DateTime? dueTime = null;
+                        DateTime? completedTime = null;
                         
-                        Nullable<TimeSpan> recurranceTimeSpan = null;
+                        TimeSpan? recurranceTimeSpan = null;
                         ArrayList? tagList = null;
 
                         bool garbled = false;
@@ -74,9 +74,9 @@ namespace TemporaTasks.Core
             TaskList = _TasksList;
         }
 
-        private static Nullable<DateTime> StringToDateTime(Dictionary<string, Dictionary<string, string>> data, string taskUID, string field)
+        private static DateTime? StringToDateTime(Dictionary<string, Dictionary<string, string>> data, string taskUID, string field)
         {
-            if ((string)data[taskUID][field] == "") return null;
+            if (data[taskUID][field] == "") return null;
             return DateTimeOffset.FromUnixTimeSeconds(long.Parse(data[taskUID][field])).LocalDateTime;
         }
 
@@ -86,7 +86,7 @@ namespace TemporaTasks.Core
             if (saveLock) return;
 
             saveLock = true;
-            await Task.Delay(2000);
+            await Task.Delay(5000);
 
             Dictionary<string, Dictionary<string, string>> temp = [];
 
@@ -107,7 +107,7 @@ namespace TemporaTasks.Core
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp[task.TaskUID.ToString()] = temp2;
             }
-            string temp3 = JsonSerializer.Serialize<Dictionary<string, Dictionary<string, string>>>(temp);
+            string temp3 = JsonSerializer.Serialize(temp);
             File.WriteAllText(saveFilePath, temp3);
 
             string saveTime = DateTime.Now.ToString("yyMMddHHmm");
@@ -116,7 +116,7 @@ namespace TemporaTasks.Core
             saveLock = false;
         }
 
-        private static string DateTimeToString(Nullable<DateTime> dateTime)
+        private static string DateTimeToString(DateTime? dateTime)
         {
             if (dateTime.HasValue) return ((long)(dateTime.Value.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds).ToString();
             else return "";
