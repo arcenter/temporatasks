@@ -22,6 +22,7 @@ namespace TemporaTasks.Core
         public static ArrayList TaskList;
 
         public static int sortType = 1;
+        public static bool NotificationsOn = true;
         
         public static void LoadData()
         {
@@ -36,6 +37,7 @@ namespace TemporaTasks.Core
                     data.Remove("settings");
 
                     sortType = int.Parse(settings["sortType"]);
+                    if (settings["notifs"] == "0") NotificationsOn = false;
                 }
 
                 foreach (string taskUID in data.Keys)
@@ -90,6 +92,7 @@ namespace TemporaTasks.Core
 
             Dictionary<string, string> temp2 = [];
             temp2["sortType"] = sortType.ToString();
+            temp2["notifs"] = NotificationsOn ? "1" : "0";
             temp["settings"] = temp2;            
 
             foreach (IndividualTask task in TaskList)
