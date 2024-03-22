@@ -33,6 +33,17 @@
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
 
+                <Grid Margin="0 0 20 0">
+                    <userControl:IconButton SVGSource="{StaticResource bellIcon}" Width="40" Cursor="Hand" MouseDown="IconButton_MouseDown">
+                        <userControl:IconButton.ToolTip>
+                            <ToolTip>
+                                <userControl:ButtonToolTip ToolTipText="Toggle notifications" Button1Text="b"/>
+                            </ToolTip>
+                        </userControl:IconButton.ToolTip>
+                    </userControl:IconButton>
+                    <Line x:Name="notifLine" X2="12" Y2="12" Stroke="#505050" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1 2 0 0" Opacity="0" IsHitTestVisible="False"/>
+                </Grid>
+
                 <Border x:Name="SearchBorder" Background="{StaticResource Secondary}" CornerRadius="5" Padding="5 0 5 0" IsMouseDirectlyOverChanged="SearchBorder_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="SearchBorder_MouseDown" Cursor="IBeam">
                     <Border.ToolTip>
                         <ToolTip>
