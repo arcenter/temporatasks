@@ -55,6 +55,8 @@ namespace TemporaTasks.Pages
                 GenerateTaskStack();
                 if (currentFocus.HasValue) FocusTask();
             }
+            TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
+            IconButton_MouseDown(null, null);
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -336,6 +338,20 @@ namespace TemporaTasks.Pages
             tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
+        }
+
+        private void IconButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (TaskFile.NotificationsOn)
+            {
+                notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                TaskFile.NotificationsOn = false;
+            }
+            else
+            {
+                notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                TaskFile.NotificationsOn = true;
+            }
         }
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
