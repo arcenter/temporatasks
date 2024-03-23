@@ -23,7 +23,7 @@ namespace TemporaTasks.Pages
         bool garbleMode = false;
         Dictionary<string, ArrayList> days = [];
 
-        Nullable<DateTime> dateClipboard = null;
+        DateTime? dateClipboard = null;
         List<IndividualTask> lastTask;
 
         public HomePage()
@@ -118,9 +118,9 @@ namespace TemporaTasks.Pages
                     PreviousTaskFocus();
                     return;
 
-                case Key.G:
-                    garbleMode = !garbleMode;
-                    GenerateTaskStack();
+                case Key.K:
+                    SearchTextBox.Text = "$n";
+                    RunSearchTextBoxCloseAnimation(true);
                     return;
                 
                 case Key.H:
