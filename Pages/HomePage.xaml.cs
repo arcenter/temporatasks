@@ -24,7 +24,7 @@ namespace TemporaTasks.Pages
         Dictionary<string, ArrayList> days = [];
 
         DateTime? dateClipboard = null;
-        List<IndividualTask> lastTask;
+        List<IndividualTask> lastTask = [];
 
         public HomePage()
         {
@@ -283,9 +283,9 @@ namespace TemporaTasks.Pages
 
                     case Key.Z:
                         lastTask.Last().StrokeOff();
-                        TaskFile.TaskList.Add(lastTask);
+                        TaskFile.TaskList.Add(lastTask.Last());
                         TaskFile.SaveData();
-                        lastTask.RemoveAt(lastTask.Count-1);
+                        lastTask.Remove(lastTask.Last());
                         GenerateTaskStack();
                         return;
                 }
