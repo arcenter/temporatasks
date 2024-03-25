@@ -134,7 +134,7 @@ namespace TemporaTasks.Pages
                 tagList.Add(tag.TagText);
 
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, task.IsGarbled());
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());
