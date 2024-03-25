@@ -32,8 +32,8 @@ namespace TemporaTasks.Core
             source = HwndSource.FromHwnd(handle);
             source.AddHook(HwndHook);
 
-            if (!RegisterHotKey(handle, HOTKEY_ID_1, MOD_WIN, VK_KEY_1)) mainWindow.TrayIcon.ShowBalloonTip("Hotkey Registration Failed", "Hehe failed", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
-            if (!RegisterHotKey(handle, HOTKEY_ID_2, MOD_WIN, VK_KEY_2)) mainWindow.TrayIcon.ShowBalloonTip("Hotkey Registration Failed", "Hehe failed", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+            if (!RegisterHotKey(handle, HOTKEY_ID_1, MOD_WIN, VK_KEY_1)) mainWindow.OnTaskDue("Hotkey Registration Failed", "TemporaTasks wasn't able to register hotkeys, as another application might be using them", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+            if (!RegisterHotKey(handle, HOTKEY_ID_2, MOD_WIN, VK_KEY_2)) mainWindow.OnTaskDue("Hotkey Registration Failed", "TemporaTasks wasn't able to register hotkeys, as another application might be using them", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
         }
 
         private static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
