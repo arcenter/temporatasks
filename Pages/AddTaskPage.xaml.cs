@@ -143,7 +143,7 @@ namespace TemporaTasks.Pages
             foreach (Tags tag in TagsStack.Children)
                 tagList.Add(tag.TagText);
 
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, recurranceTimeSpan));
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, recurranceTimeSpan, false));
             TaskFile.SaveData();
             mainWindow.FrameView.RemoveBackEntry();
             mainWindow.FrameView.Navigate(new HomePage());

@@ -117,12 +117,12 @@ namespace TemporaTasks.Pages
                     currentFocus = 0;
                     PreviousTaskFocus();
                     return;
-
+                
                 case Key.K:
                     SearchTextBox.Text = "$n";
                     RunSearchTextBoxCloseAnimation(true);
                     return;
-                
+
                 case Key.H:
                     currentFocus = null;
                     UnfocusTasks();
@@ -141,7 +141,7 @@ namespace TemporaTasks.Pages
                 case Key.R:
                     currentFocus = null;
                     UnfocusTasks();
-                    SortButton_MouseDown(null, null);
+                    ReverseButton_MouseDown(null, null);
                     return;
 
                 case Key.N:
@@ -407,7 +407,7 @@ namespace TemporaTasks.Pages
             GenerateTaskStack();
         }
 
-        private void SortButton_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ReverseButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             reverseSort = !reverseSort;
             int temp = reverseSort ? 1 : -1;
@@ -472,7 +472,7 @@ namespace TemporaTasks.Pages
                 case 1:
                 case 2:
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (SearchTextBox.Text.Equals("$nodate", StringComparison.CurrentCultureIgnoreCase))
+                        if (SearchTextBox.Text.Equals("$n", StringComparison.CurrentCultureIgnoreCase))
                         {
                             if (!task.DueDT.HasValue)
                             {
@@ -530,7 +530,7 @@ namespace TemporaTasks.Pages
                             TaskStack.Children.Add(sectionDivider);
                         }
 
-                        AddToTaskStack(task);
+                        TaskStack.Children.Add(task);
                         days[dateString].Add(task);
                     }
 
@@ -546,7 +546,7 @@ namespace TemporaTasks.Pages
 
                         foreach (IndividualTask task in doesntMatchSort)
                         {
-                            AddToTaskStack(task);
+                            TaskStack.Children.Add(task);
                             days["No date"].Add(task);
                         }
                     }
@@ -563,7 +563,7 @@ namespace TemporaTasks.Pages
 
                         foreach (IndividualTask task in completed.Keys)
                         {
-                            AddToTaskStack(task);
+                            TaskStack.Children.Add(task);
                             days["Completed"].Add(task);
                             task.Disappear();
                         }
@@ -592,7 +592,7 @@ namespace TemporaTasks.Pages
                         completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
-                    foreach (IndividualTask task in sortedDict.Keys) AddToTaskStack(task);
+                    foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
 
                     days["Completed"] = [];
                     SectionDivider sectionDividerDefault = new("Completed");
@@ -602,7 +602,7 @@ namespace TemporaTasks.Pages
 
                     foreach (IndividualTask task in completed.Keys)
                     {
-                        AddToTaskStack(task);
+                        TaskStack.Children.Add(task);
                         days["Completed"].Add(task);
                         task.Disappear();
                     }
@@ -707,12 +707,16 @@ namespace TemporaTasks.Pages
                     }
                 }
 
+                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+
                 double verticalOffset = TaskStackScroller.VerticalOffset;
 
-                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+                // DueTaskCount.Content = task.TransformToVisual(TaskStack.Children[0]).Transform(new Point(0, 0)).Y.ToString();
 
                 task.BringIntoView();
                 await Task.Delay(1);
+
+                // TaskCount.Content = TaskStackScroller.VerticalOffset.ToString();
 
                 if (verticalOffset < TaskStackScroller.VerticalOffset)
                     TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + 50);
