@@ -612,15 +612,7 @@ namespace TemporaTasks.Pages
             }
         }
 
-        private void AddToTaskStack(IndividualTask task)
-        {
-            task.GarbleMode(garbleMode); // , rect.Contains(bounds.TopLeft) || rect.Contains(bounds.BottomRight));
-            TaskStack.Children.Add(task);
-            //Rect bounds = task.TransformToAncestor(mainWindow).TransformBounds(new Rect(0.0, 0.0, task.ActualWidth, task.ActualHeight));
-            //Rect rect = new(0.0, 0.0, mainWindow.ActualWidth, mainWindow.ActualHeight);
-        }
-
-        private void Section_MouseDown(object sender, MouseEventArgs e)
+        private async void Section_MouseDown(object sender, MouseEventArgs e)
         {
             ArrayList aL;
             string? _ = ((SectionDivider)sender).SectionTitle.Content.ToString();
@@ -632,13 +624,17 @@ namespace TemporaTasks.Pages
             if (((IndividualTask)aL[0]).IsVisible)
             {
                 foreach (IndividualTask task in aL)
+                {
                     task.Disappear();
+                    await Task.Delay(60);
+                }
             }
 
             else
             {
                 foreach (IndividualTask task in aL)
                 {
+                    await Task.Delay(60);
                     task.Appear();
                     if (task.IsCompleted)
                     {
