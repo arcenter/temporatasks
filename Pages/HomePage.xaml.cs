@@ -56,7 +56,7 @@ namespace TemporaTasks.Pages
                 if (currentFocus.HasValue) FocusTask();
             }
             TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
-            IconButton_MouseDown(null, null);
+            NotifButton_MouseDown(null, null);
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -255,6 +255,10 @@ namespace TemporaTasks.Pages
                         task.Garble(null, TaskStackScroller);
                         return;
 
+                    case Key.M:
+                        NotifButton_MouseDown(null, null);
+                        return;
+
                     case Key.E:
                     case Key.Enter:
                         mainWindow.FrameView.Navigate(new EditTaskPage(task));
@@ -340,18 +344,10 @@ namespace TemporaTasks.Pages
             tooltip.VerticalOffset = mousePosition.Y;
         }
 
-        private void IconButton_MouseDown(object sender, MouseButtonEventArgs e)
+        private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (TaskFile.NotificationsOn)
-            {
-                notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
-                TaskFile.NotificationsOn = false;
-            }
-            else
-            {
-                notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                TaskFile.NotificationsOn = true;
-            }
+            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 1 : 0, TimeSpan.FromMilliseconds(250)));
+            TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
         }
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
