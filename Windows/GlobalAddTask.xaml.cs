@@ -118,6 +118,11 @@ namespace TemporaTasks.Windows
             CloseWindow();
         }
 
+        private void Textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
+
         private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string? temp;
