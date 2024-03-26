@@ -149,6 +149,10 @@ namespace TemporaTasks.Pages
                     AddButton_MouseDown(null, null);
                     return;
 
+                case Key.M:
+                    NotifButton_MouseDown(null, null);
+                    return;
+
                 case Key.Escape:
                     if (currentFocus.HasValue)
                     {
@@ -255,10 +259,6 @@ namespace TemporaTasks.Pages
                         task.Garble(null, TaskStackScroller);
                         return;
 
-                    case Key.M:
-                        NotifButton_MouseDown(null, null);
-                        return;
-
                     case Key.E:
                     case Key.Enter:
                         mainWindow.FrameView.Navigate(new EditTaskPage(task));
@@ -344,10 +344,36 @@ namespace TemporaTasks.Pages
             tooltip.VerticalOffset = mousePosition.Y;
         }
 
+        private async void NotifButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            NotifButton.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            NotifIcon.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
+
+            if (NotifButton.IsMouseOver)
+            {
+                NotifIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+                {
+                    DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+
+                await Task.Delay(251);
+
+                {
+                    DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+            }
+        }
+
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 1 : 0, TimeSpan.FromMilliseconds(250)));
             TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
+            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 1 : 0, TimeSpan.FromMilliseconds(250)));
+            TaskFile.SaveData();
         }
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
