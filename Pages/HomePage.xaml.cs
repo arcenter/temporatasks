@@ -372,7 +372,7 @@ namespace TemporaTasks.Pages
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
-            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 1 : 0, TimeSpan.FromMilliseconds(250)));
+            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 0 : 1, TimeSpan.FromMilliseconds(250)));
             TaskFile.SaveData();
         }
 
