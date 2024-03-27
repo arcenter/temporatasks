@@ -15,7 +15,7 @@ namespace TemporaTasks.Pages
     public partial class HomePage : Page
     {
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-        public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromMinutes(5) };
+        public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromSeconds(100) };
 
         int? currentFocus = null;
         
@@ -669,8 +669,16 @@ namespace TemporaTasks.Pages
 
         private void UpdateTaskTimers(object sender, EventArgs e)
         {
+            double taskTimeRemaining;
             foreach (IndividualTask task in TaskFile.TaskList)
-                task.NewDueDT();
+            {
+                if (task.IsCompleted || task.IsDue) continue;
+                if (task.DueDT.HasValue)
+                {
+                    taskTimeRemaining = (task.DueDT.Value - DateTime.Now).TotalSeconds;
+                    if (taskTimeRemaining < TimeSpan.FromHours(1).TotalSeconds) task.NewDueDT();
+                }
+            }
         }
 
         private void PreviousTaskFocus()
