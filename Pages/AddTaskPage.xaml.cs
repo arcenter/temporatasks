@@ -116,16 +116,16 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            Nullable<TimeSpan> recurranceTimeSpan;
-            try
-            {
-                recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);
-            }
-            catch
-            {
-                RecurranceBorder.BorderThickness = new Thickness(2);
-                return;
-            }
+            Nullable<TimeSpan> recurranceTimeSpan = null;
+            //try
+            //{
+            //    recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);
+            //}
+            //catch
+            //{
+            //    RecurranceBorder.BorderThickness = new Thickness(2);
+            //    return;
+            //}
 
             if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
             if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
