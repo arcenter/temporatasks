@@ -375,6 +375,9 @@ namespace TemporaTasks.UserControls
                     if (mode.Value && !garbled)
                     {
                         garbled = true;
+
+                        strikethroughLine.Visibility = Visibility.Hidden;
+
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                         await Task.Delay(400);
                         taskNameTextBlock.Visibility = Visibility.Hidden;
@@ -420,6 +423,8 @@ namespace TemporaTasks.UserControls
                         await Task.Delay(100);
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
 
+                        strikethroughLine.Visibility = Visibility.Visible;
+
                         TaskFile.SaveData();
                     }
 
@@ -454,6 +459,8 @@ namespace TemporaTasks.UserControls
                     });
                 }
 
+                strikethroughLine.Visibility = Visibility.Hidden;
+
                 TaskFile.SaveData();
             }
             else if (garbled)
@@ -465,6 +472,7 @@ namespace TemporaTasks.UserControls
                 taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(1)));
 
                 taskNameTextBlock.Visibility = Visibility.Visible;
+                strikethroughLine.Visibility = Visibility.Visible;
 
                 TaskFile.SaveData();
             }
