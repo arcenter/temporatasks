@@ -456,6 +456,22 @@ namespace TemporaTasks.Pages
             GenerateTaskStack();
         }
 
+        private void CategoryButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void CategoryButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if ((sender as FrameworkElement).Name == "HomeButton")
+                currentViewCategory = ViewCategory.Home;
+            else
+                currentViewCategory = ViewCategory.Completed;
+
+            label.Content = currentViewCategory.ToString();
+            GenerateTaskStack();
+        }
+
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
