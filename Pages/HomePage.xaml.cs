@@ -26,6 +26,14 @@ namespace TemporaTasks.Pages
         DateTime? dateClipboard = null;
         List<IndividualTask> lastTask = [];
 
+        private enum ViewCategory
+        {
+            Home,
+            Completed
+        }
+
+        ViewCategory currentViewCategory = ViewCategory.Home;
+
         public HomePage()
         {
             InitializeComponent();
