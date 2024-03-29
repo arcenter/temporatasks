@@ -25,6 +25,45 @@
         <Style/>
     </Page.FocusVisualStyle>
 
+    <DockPanel>
+
+        <Grid x:Name="CategoriesGrid" DockPanel.Dock="Left">
+
+            <Border Background="{StaticResource Secondary}" Opacity="0.25"/>
+            <Line Y2="{Binding ActualHeight, ElementName=CategoriesGrid}" StrokeThickness="2" Stroke="{StaticResource Accent}" HorizontalAlignment="Right"/>
+
+            <Image Source="{StaticResource miniIcon}" Width="20" Height="20" VerticalAlignment="Top" Margin="0 60 0 0"/>
+
+            <StackPanel HorizontalAlignment="Center" Margin="20 110 20 20">
+
+                <userControl:IconButton SVGSource="{StaticResource homeIcon}" x:Name="HomeButton" Width="40" Height="40" Cursor="Hand" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" MouseDown="CategoryButton_MouseDown"/>
+
+                <userControl:IconButton SVGSource="{StaticResource completedIcon}" x:Name="CompletedButton" Width="40" Height="40" Cursor="Hand" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" MouseDown="CategoryButton_MouseDown"/>
+
+                <!--<Border x:Name="HomeButton" Height="30" CornerRadius="10" Cursor="Hand" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" MouseDown="CategoryButton_MouseDown">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                    </Border.Background>
+
+                    <Label Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" Padding="15 0 0 0" IsHitTestVisible="False" VerticalAlignment="Center"/>
+
+                </Border>
+
+                <Border x:Name="CompletedButton" Height="30" CornerRadius="10" Cursor="Hand" Margin="0 5 0 0" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" MouseDown="CategoryButton_MouseDown">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                    </Border.Background>
+
+                    <Label Content="Completed" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" Padding="15 0 0 0" IsHitTestVisible="False" VerticalAlignment="Center"/>
+
+                </Border>-->
+
+            </StackPanel>
+
+        </Grid>
+
     <Grid x:Name="MainGrid" Margin="50 0 50 0">
 
         <Image x:Name="NewTaskArrow" Source="{StaticResource NewTaskArrow}" HorizontalAlignment="Right" VerticalAlignment="Top" MaxWidth="200" Margin="0 120 40 0" Visibility="Collapsed"/>
@@ -127,5 +166,7 @@
         </ScrollViewer>
 
     </Grid>
+
+    </DockPanel>
 
 </Page>
