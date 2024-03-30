@@ -44,19 +44,7 @@
             <Image Source="{StaticResource homePageBackground}" VerticalAlignment="Bottom" Grid.Column="1"/>
         </Grid>
 
-        <DockPanel Grid.Row="1">
-
-            <Grid x:Name="CategoriesGrid" Width="0" DockPanel.Dock="Left">
-
-                <Border Background="{StaticResource Secondary}" Opacity="0.25"/>
-
-                <Line Y2="{Binding ActualHeight, ElementName=CategoriesGrid}" StrokeThickness="2" Stroke="{StaticResource Accent}" HorizontalAlignment="Right"/>
-
-            </Grid>
-
-            <Frame x:Name="FrameView" NavigationUIVisibility="Hidden" DockPanel.Dock="Right" Focusable="False" IsTabStop="False"/>
-
-        </DockPanel>
+        <Frame x:Name="FrameView" NavigationUIVisibility="Hidden" DockPanel.Dock="Right" Focusable="False" IsTabStop="False" Grid.Row="1"/>
 
         <Border x:Name="TitleBar" Background="{StaticResource TitleBar}" MouseDown="TitleBar_MouseDown"/>
 
