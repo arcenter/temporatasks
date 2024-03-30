@@ -506,11 +506,27 @@ namespace TemporaTasks.Pages
 
             TaskStack.Children.Clear();
 
-            Dictionary<IndividualTask, object> matchesSort = [], completed = [], sortedDict = [];
-            ArrayList doesntMatchSort = [];
+            Dictionary<IndividualTask, object> yesDueDate = [], sortedDict = [];
+            ArrayList noDueDate = [];
 
             days.Clear();
             int dueTasks = 0;
+
+            List<IndividualTask> tasks = [];
+
+            // Gets completed / uncompleted tasks, based on current view (Home/Completed)
+
+            if (currentViewCategory == ViewCategory.Completed)
+                foreach (IndividualTask task in TaskFile.TaskList)
+                {
+                    if (task.IsCompleted) tasks.Add(task);
+                }
+            else
+                foreach (IndividualTask task in TaskFile.TaskList)
+                {
+                    if (task.IsCompleted) continue;
+                    tasks.Add(task);
+                }
 
             Regex regex = new(SearchTextBox.Text.ToLower());
             switch (SortComboBox.SelectedIndex)
