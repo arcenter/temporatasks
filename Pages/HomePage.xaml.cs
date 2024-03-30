@@ -533,10 +533,15 @@ namespace TemporaTasks.Pages
             {
                 case 1:
                 case 2:
-                    foreach (IndividualTask task in TaskFile.TaskList)
+
+                    if (SearchTextBox.Text.Length != 0)
+                    {
                         if (SearchTextBox.Text.Equals("$n", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            if (!task.DueDT.HasValue)
+                            foreach (IndividualTask task in tasks)
+                                if (!task.DueDT.HasValue) noDueDate.Add(task);
+                        }
+                        else
                             {
                                 if (task.IsCompleted) completed[task] = task.CompletedDT.Value;
                                 else doesntMatchSort.Add(task);
