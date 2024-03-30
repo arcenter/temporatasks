@@ -543,11 +543,19 @@ namespace TemporaTasks.Pages
                         }
                         else
                             {
-                                if (task.IsCompleted) completed[task] = task.CompletedDT.Value;
-                                else doesntMatchSort.Add(task);
+                            if (SortComboBox.SelectedIndex == 1)
+                            {
+                                foreach (IndividualTask task in tasks)
+                                    if (regex.Match(task.TaskName.ToLower()).Success)
+                                    {
+                                        yesDueDate[task] = task.CreatedDT.Value;
+                                        if (task.IsDue) dueTasks++;
                             }
                         }
-                        else if (regex.Match(task.TaskName.ToLower()).Success)
+
+                            else
+                                foreach (IndividualTask task in tasks)
+                                    if (regex.Match(task.TaskName.ToLower()).Success)
                         {
                             if (task.IsCompleted)
                                 completed[task] = task.CompletedDT.Value;
