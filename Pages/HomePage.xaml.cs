@@ -557,18 +557,25 @@ namespace TemporaTasks.Pages
                                 foreach (IndividualTask task in tasks)
                                     if (regex.Match(task.TaskName.ToLower()).Success)
                         {
-                            if (task.IsCompleted)
-                                completed[task] = task.CompletedDT.Value;
+                                        if (task.DueDT.HasValue)
+                                        {
+                                            yesDueDate[task] = task.DueDT.Value;
+                                            if (task.IsDue) dueTasks++;
+                                        }
+                                        else noDueDate.Add(task);
+                                    }
+                        }
+                    }
                             else
                             {
                                 if (SortComboBox.SelectedIndex == 1)
-                                    matchesSort[task] = task.CreatedDT.Value;
-                                else
                                 {
-                                    if (task.DueDT.HasValue)
-                                        matchesSort[task] = task.DueDT.Value;
-                                    else doesntMatchSort.Add(task);
+                            foreach (IndividualTask task in tasks)
+                            {
+                                yesDueDate[task] = task.CreatedDT.Value;
+                                if (task.IsDue) dueTasks++;
                                 }
+                        }
 
                                 if (task.IsDue) dueTasks++;
                             }
