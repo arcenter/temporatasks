@@ -640,45 +640,29 @@ namespace TemporaTasks.Pages
                         }
                     }
 
-                    if (completed.Count > 0)
-                    {
-                        days["Completed"] = [];
-
-                        SectionDivider sectionDivider = new("Completed");
-                        if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
-                        sectionDivider.MouseDown += Section_MouseDown;
-
-                        TaskStack.Children.Add(sectionDivider);
-
-                        foreach (IndividualTask task in completed.Keys)
-                        {
-                            TaskStack.Children.Add(task);
-                            days["Completed"].Add(task);
-                            task.Disappear();
-                        }
-
-                        sectionDivider.Background_MouseDown(null, null);
-                    }
-
                     break;
 
                 default:
-                    foreach (IndividualTask task in TaskFile.TaskList)
-                        if (regex.Match(task.TaskName.ToLower()).Success)
-                            if (task.IsCompleted)
-                                completed[task] = task.CreatedDT.Value;
-                            else
-                                matchesSort[task] = task.TaskName;
 
-                    if (reverseSort)
+                    if (SearchTextBox.Text.Length != 0)
                     {
-                        sortedDict = matchesSort.OrderByDescending(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        completed = completed.OrderByDescending(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        if (SearchTextBox.Text.Equals("$n", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            foreach (IndividualTask task in tasks)
+                                if (task.DueDT.HasValue) tasks.Remove(task);
                     }
                     else
                     {
-                        sortedDict = matchesSort.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        completed = completed.OrderBy(pair => (pair.Key).TaskName).ToDictionary(pair => pair.Key, pair => pair.Value);
+                            foreach (IndividualTask task in tasks)
+                            {
+                                if (regex.Match(task.TaskName.ToLower()).Success)
+                                {
+                                    if (task.IsDue) dueTasks++;
+                                    continue;
+                    }
+                                tasks.Remove(task);
+                            }
+                        }
                     }
 
                     foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
