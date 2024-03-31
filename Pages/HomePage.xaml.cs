@@ -577,23 +577,29 @@ namespace TemporaTasks.Pages
                                 }
                         }
 
+                        else
+                            foreach (IndividualTask task in tasks)
+                            {
+                                if (task.DueDT.HasValue)
+                                {
+                                    yesDueDate[task] = task.DueDT.Value;
                                 if (task.IsDue) dueTasks++;
                             }
+                                else noDueDate.Add(task);
                         }
+                    }
 
                     DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
-                    TaskCount.Content = $"{matchesSort.Count + doesntMatchSort.Count}t.{completed.Count}c";
+                    TaskCount.Content = $"{yesDueDate.Count + noDueDate.Count}t";
 
                     if (reverseSort)
                     {
-                        sortedDict = matchesSort.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        completed = completed.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        doesntMatchSort.Reverse();
+                        sortedDict = yesDueDate.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        noDueDate.Reverse();
                     }
                     else
                     {
-                        sortedDict = matchesSort.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        completed = completed.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        sortedDict = yesDueDate.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
                     foreach (IndividualTask task in sortedDict.Keys)
