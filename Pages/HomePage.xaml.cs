@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -622,7 +623,7 @@ namespace TemporaTasks.Pages
                         days[dateString].Add(task);
                     }
 
-                    if (doesntMatchSort.Count > 0)
+                    if (noDueDate.Count > 0)
                     {
                         days["No date"] = [];
 
@@ -632,7 +633,7 @@ namespace TemporaTasks.Pages
 
                         TaskStack.Children.Add(sectionDivider);
 
-                        foreach (IndividualTask task in doesntMatchSort)
+                        foreach (IndividualTask task in noDueDate)
                         {
                             TaskStack.Children.Add(task);
                             days["No date"].Add(task);
