@@ -515,8 +515,6 @@ namespace TemporaTasks.Pages
 
             List<IndividualTask> tasks = [];
 
-            // Gets completed / uncompleted tasks, based on current view (Home/Completed)
-
             if (currentViewCategory == ViewCategory.Completed)
                 foreach (IndividualTask task in TaskFile.TaskList)
                 {
@@ -543,7 +541,7 @@ namespace TemporaTasks.Pages
                                 if (!task.DueDT.HasValue) noDueDate.Add(task);
                         }
                         else
-                            {
+                        {
                             if (SortComboBox.SelectedIndex == 1)
                             {
                                 foreach (IndividualTask task in tasks)
@@ -551,13 +549,13 @@ namespace TemporaTasks.Pages
                                     {
                                         yesDueDate[task] = task.CreatedDT.Value;
                                         if (task.IsDue) dueTasks++;
+                                    }
                             }
-                        }
 
                             else
                                 foreach (IndividualTask task in tasks)
                                     if (regex.Match(task.TaskName.ToLower()).Success)
-                        {
+                                    {
                                         if (task.DueDT.HasValue)
                                         {
                                             yesDueDate[task] = task.DueDT.Value;
@@ -567,15 +565,15 @@ namespace TemporaTasks.Pages
                                     }
                         }
                     }
-                            else
-                            {
-                                if (SortComboBox.SelectedIndex == 1)
-                                {
+                    else
+                    {
+                        if (SortComboBox.SelectedIndex == 1)
+                        {
                             foreach (IndividualTask task in tasks)
                             {
                                 yesDueDate[task] = task.CreatedDT.Value;
                                 if (task.IsDue) dueTasks++;
-                                }
+                            }
                         }
 
                         else
@@ -584,10 +582,10 @@ namespace TemporaTasks.Pages
                                 if (task.DueDT.HasValue)
                                 {
                                     yesDueDate[task] = task.DueDT.Value;
-                                if (task.IsDue) dueTasks++;
-                            }
+                                    if (task.IsDue) dueTasks++;
+                                }
                                 else noDueDate.Add(task);
-                        }
+                            }
                     }
 
                     DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
@@ -650,37 +648,28 @@ namespace TemporaTasks.Pages
                         {
                             foreach (IndividualTask task in tasks)
                                 if (task.DueDT.HasValue) tasks.Remove(task);
-                    }
-                    else
-                    {
+                        }
+                        else
+                        {
                             foreach (IndividualTask task in tasks)
                             {
                                 if (regex.Match(task.TaskName.ToLower()).Success)
                                 {
                                     if (task.IsDue) dueTasks++;
                                     continue;
-                    }
+                                }
                                 tasks.Remove(task);
                             }
                         }
                     }
 
-                    foreach (IndividualTask task in sortedDict.Keys) TaskStack.Children.Add(task);
+                    if (reverseSort)
+                        tasks = [.. tasks.OrderByDescending(pair => pair.TaskName)];
+                    else
+                        tasks = [.. tasks.OrderBy(pair => pair.TaskName)];
 
-                    days["Completed"] = [];
-                    SectionDivider sectionDividerDefault = new("Completed");
-                    if (TaskStack.Children.Count > 0) sectionDividerDefault.MainGrid.Margin = new Thickness(0, 14, 0, 0);
-                    sectionDividerDefault.MouseDown += Section_MouseDown;
-                    TaskStack.Children.Add(sectionDividerDefault);
+                    foreach (IndividualTask task in tasks) TaskStack.Children.Add(task);
 
-                    foreach (IndividualTask task in completed.Keys)
-                    {
-                        TaskStack.Children.Add(task);
-                        days["Completed"].Add(task);
-                        task.Disappear();
-                    }
-
-                    sectionDividerDefault.Background_MouseDown(null, null);
                     break;
             }
         }
