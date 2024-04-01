@@ -84,8 +84,33 @@ namespace TemporaTasks.Pages
             TaskStack.Children.Clear();
         }
 
+        private void RefreshToPage(ViewCategory viewCategory)
+        {
+            currentViewCategory = viewCategory;
+            currentFocus = null;
+            UnfocusTasks();
+            HomePagePage.Focus();
+            SearchTextBox.Text = "";
+            RunSearchTextBoxCloseAnimation();
+            GenerateTaskStack();
+        }
+
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
+            if ((Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
+            {
+                if (Keyboard.IsKeyDown(Key.Up))
+                {
+                    HomeButton.RunAnimation();
+                    RefreshToPage(ViewCategory.Home);
+                }
+                else if (Keyboard.IsKeyDown(Key.Down))
+                {
+                    CompletedButton.RunAnimation();
+                    RefreshToPage(ViewCategory.Completed);
+                }
+            }
+
             if (SearchTextBox.IsFocused)
             {
                 if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Escape)
@@ -133,11 +158,8 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.H:
-                    currentFocus = null;
-                    UnfocusTasks();
-                    HomePagePage.Focus();
-                    SearchTextBox.Text = "";
-                    RunSearchTextBoxCloseAnimation();
+                    HomeButton.RunAnimation();
+                    RefreshToPage(ViewCategory.Home);
                     return;
 
                 case Key.S:
@@ -315,6 +337,11 @@ namespace TemporaTasks.Pages
                     case Key.Down:
                         currentFocus = 0;
                         FocusTask();
+                        return;
+
+                    case Key.C:
+                        CompletedButton.RunAnimation();
+                        RefreshToPage(ViewCategory.Completed);
                         return;
                 }
         }
@@ -506,6 +533,7 @@ namespace TemporaTasks.Pages
             if (TaskStack == null) return;
 
             TaskStack.Children.Clear();
+            TaskStackScroller.ScrollToVerticalOffset(0);
 
             Dictionary<IndividualTask, object> yesDueDate = [], sortedDict = [];
             ArrayList noDueDate = [];

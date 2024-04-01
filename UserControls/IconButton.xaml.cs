@@ -56,5 +56,24 @@ namespace TemporaTasks.UserControls
                 }
             }
         }
+
+        public async void RunAnimation()
+        {
+            Icon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+            {
+                DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+            }
+
+            await Task.Delay(251);
+
+            {
+                DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+            }
+        }
     }
 }
