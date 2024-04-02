@@ -286,6 +286,10 @@ namespace TemporaTasks.Pages
                         task.Increment_MouseDown("plus1w", null);
                         return;
 
+                    case Key.D8:
+                        task.Increment_MouseDown("plus1d", null);
+                        return;
+
                     case Key.G:
                         task.Garble(null, TaskStackScroller);
                         return;
