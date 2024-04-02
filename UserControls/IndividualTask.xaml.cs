@@ -173,24 +173,24 @@ namespace TemporaTasks.UserControls
             {
                 string dateString = (CompletedDT.Value.Date - DateTime.Now.Date).Days switch
                 {
-                    0 => "today",
-                    -1 => "yesterday",
-                    1 => "tomorrow",
-                    _ => CompletedDT.Value.ToString("dd\\/MM")
+                    0 => "",
+                    -1 => "yesterday ",
+                    1 => "tomorrow ",
+                    _ => CompletedDT.Value.ToString("dd\\/MM ")
                 };
-                DueDateTimeLabel.Content = $"Done {dateString} {CompletedDT.Value:hh:mm tt}";
+                DueDateTimeLabel.Content = $"Done {dateString}{CompletedDT.Value:hh:mm tt}";
             }
 
             else if (DueDT.HasValue)
             {
                 string dateString = (DueDT.Value.Date - DateTime.Now.Date).Days switch
                 {
-                    0 => "today",
-                    -1 => "yesterday",
-                    1 => "tomorrow",
-                    _ => DueDT.Value.ToString("dd\\/MM")
+                    0 => "",
+                    -1 => "yesterday ",
+                    1 => "tomorrow ",
+                    _ => DueDT.Value.ToString("dd\\/MM ")
                 };
-                DueDateTimeLabel.Content = $"Due {dateString} {DueDT.Value:hh:mm tt}";
+                DueDateTimeLabel.Content = $"Due {dateString}{DueDT.Value:hh:mm tt}";
             }
 
             else
