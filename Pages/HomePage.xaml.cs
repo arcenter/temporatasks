@@ -392,20 +392,20 @@ namespace TemporaTasks.Pages
 
             if (NotifButton.IsMouseOver)
             {
-                NotifIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+                NotifGrid.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
 
                 {
                     DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
-                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
-                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                    NotifGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    NotifGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
                 }
 
                 await Task.Delay(251);
 
                 {
                     DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
-                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
-                    NotifIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                    NotifGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    NotifGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
                 }
             }
         }
