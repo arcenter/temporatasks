@@ -87,6 +87,7 @@ namespace TemporaTasks.Pages
         private void RefreshToPage(ViewCategory viewCategory)
         {
             currentViewCategory = viewCategory;
+            label.Content = currentViewCategory.ToString();
             currentFocus = null;
             UnfocusTasks();
             HomePagePage.Focus();
@@ -496,12 +497,9 @@ namespace TemporaTasks.Pages
         private void CategoryButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if ((sender as FrameworkElement).Name == "HomeButton")
-                currentViewCategory = ViewCategory.Home;
+                RefreshToPage(ViewCategory.Home);
             else
-                currentViewCategory = ViewCategory.Completed;
-
-            label.Content = currentViewCategory.ToString();
-            GenerateTaskStack();
+                RefreshToPage(ViewCategory.Completed);
         }
 
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
