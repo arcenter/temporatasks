@@ -110,7 +110,7 @@ namespace TemporaTasks.UserControls
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ToggleCompletionStatus();
+            if (e.ChangedButton == MouseButton.Left) ToggleCompletionStatus();
         }
 
         private void Button_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
