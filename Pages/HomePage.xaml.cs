@@ -219,7 +219,7 @@ namespace TemporaTasks.Pages
                     }
                     else if (Keyboard.IsKeyDown(Key.Up))
                     {
-                        PreviousTaskFocus();
+                        currentFocus--;
                         int limit = TaskStack.Children.Count;
                         do
                         {
