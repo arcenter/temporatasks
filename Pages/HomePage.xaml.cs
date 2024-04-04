@@ -27,6 +27,8 @@ namespace TemporaTasks.Pages
         DateTime? dateClipboard = null;
         List<IndividualTask> lastTask = [];
 
+        IndividualTask hoveredTask;
+
         private enum ViewCategory
         {
             Home,
@@ -175,6 +177,15 @@ namespace TemporaTasks.Pages
                 case Key.K:
                     SearchTextBox.Text = "$n";
                     RunSearchTextBoxCloseAnimation(true);
+                    return;
+
+                case Key.X:
+                    if (hoveredTask.IsMouseOver)
+                    {
+                        currentFocus = TaskStack.Children.IndexOf(hoveredTask);
+                        UnfocusTasks();
+                        FocusTask();
+                    }
                     return;
 
                 case Key.H:
@@ -874,7 +885,11 @@ namespace TemporaTasks.Pages
             lastTask.Add(task);
             TaskFile.TaskList.Remove(task);
             TaskFile.SaveData();
-            GenerateTaskStack();
+        }
+
+        private void TaskMouseEnter(object sender, MouseEventArgs e)
+        {
+            hoveredTask = (IndividualTask)sender;
         }
     }
 }
