@@ -96,18 +96,37 @@ namespace TemporaTasks.Pages
             GenerateTaskStack();
         }
 
+        private async void RunAnimation(Image Icon)
+        {
+            Icon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+            {
+                DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+            }
+
+            await Task.Delay(251);
+
+            {
+                DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                Icon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+            }
+        }
+
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
             if ((Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
             {
                 if (Keyboard.IsKeyDown(Key.Up))
                 {
-                    HomeButton.RunAnimation();
+                    RunAnimation(HomeIcon);
                     RefreshToPage(ViewCategory.Home);
                 }
                 else if (Keyboard.IsKeyDown(Key.Down))
                 {
-                    CompletedButton.RunAnimation();
+                    RunAnimation(CompletedIcon);
                     RefreshToPage(ViewCategory.Completed);
                 }
             }
@@ -159,7 +178,7 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.H:
-                    HomeButton.RunAnimation();
+                    RunAnimation(HomeIcon);
                     RefreshToPage(ViewCategory.Home);
                     return;
 
@@ -345,7 +364,7 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.C:
-                        CompletedButton.RunAnimation();
+                        RunAnimation(CompletedIcon);
                         RefreshToPage(ViewCategory.Completed);
                         return;
                 }
@@ -491,15 +510,18 @@ namespace TemporaTasks.Pages
 
         private void CategoryButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ((Border)sender).Background.BeginAnimation(Brush.OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            if ((bool)e.NewValue)
+            {
+                if (((Border)sender).Name == "HomeButton") RunAnimation(HomeIcon);
+                else RunAnimation(CompletedIcon);
+            }
         }
 
         private void CategoryButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if ((sender as FrameworkElement).Name == "HomeButton")
-                RefreshToPage(ViewCategory.Home);
-            else
-                RefreshToPage(ViewCategory.Completed);
+            if (((Border)sender).Name == "HomeButton") RefreshToPage(ViewCategory.Home);
+            else RefreshToPage(ViewCategory.Completed);
         }
 
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
