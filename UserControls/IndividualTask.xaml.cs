@@ -288,7 +288,10 @@ namespace TemporaTasks.UserControls
             string? name = (sender is Border border) ? border.Name : sender.ToString();
 
             if (!DueDT.HasValue || name == "now")
-                DueDT = DateTime.Now;
+            {
+                DateTime currentDT = DateTime.Now;
+                DueDT = new DateTime(currentDT.Year, currentDT.Month, currentDT.Day, currentDT.Hour, DateTime.Now.Minute, 0);
+            }
             else if (name == "none")
                 DueDT = null;
             else
