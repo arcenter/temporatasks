@@ -417,14 +417,13 @@ namespace TemporaTasks.UserControls
                     {
                         garbled = false;
 
-                        TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                        await Task.Delay(300);
-                        TextSP.Children.Clear();
-
-                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(1)));
+                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
                         taskNameTextBlock.Visibility = Visibility.Visible;
 
-                        await Task.Delay(100);
+                        TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                        await Task.Delay(400);
+                        TextSP.Children.Clear();
+
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
 
                         strikethroughLine.Visibility = Visibility.Visible;
