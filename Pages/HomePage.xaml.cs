@@ -157,7 +157,8 @@ namespace TemporaTasks.Pages
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && Keyboard.IsKeyDown(Key.G))
             {
-                foreach (IndividualTask task in TaskFile.TaskList)
+                foreach (object obj in TaskStack.Children)
+                    if (obj is IndividualTask task)
                     task.Garble(null, TaskStackScroller);
                 return;
             }
