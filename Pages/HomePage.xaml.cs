@@ -67,8 +67,8 @@ namespace TemporaTasks.Pages
                 GenerateTaskStack();
                 if (currentFocus.HasValue) FocusTask();
             }
-            TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
-            NotifButton_MouseDown(null, null);
+
+            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 0 : 1, TimeSpan.FromMilliseconds(250)));
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
