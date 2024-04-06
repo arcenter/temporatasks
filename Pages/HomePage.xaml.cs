@@ -61,6 +61,7 @@ namespace TemporaTasks.Pages
                 {
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
                     task.IsEditIconClicked += EditIcon_MouseDown;
+                    task.MouseEnter += TaskMouseEnter;
                 }
 
                 GenerateTaskStack();
@@ -82,6 +83,7 @@ namespace TemporaTasks.Pages
                 task.Background_MouseLeave(null, null);
                 task.IsTrashIconClicked -= TrashIcon_MouseDown;
                 task.IsEditIconClicked -= EditIcon_MouseDown;
+                task.MouseEnter -= TaskMouseEnter;
             }
             TaskStack.Children.Clear();
         }
@@ -265,6 +267,25 @@ namespace TemporaTasks.Pages
                         NextTaskFocus();
                         return;
                     }
+                    else if (Keyboard.IsKeyDown(Key.Left))
+                    {
+                        int limit = TaskStack.Children.Count;
+                        do
+                        {
+                            currentFocus--;
+                            if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+                            if (--limit <= 0)
+                            {
+                                currentFocus = null;
+                                return;
+                            }
+                        } while (TaskStack.Children[currentFocus.Value] is not SectionDivider);
+                        Section_MouseDown(TaskStack.Children[currentFocus.Value], null);
+                        
+                        currentFocus = null;
+
+                                return;
+                }
                 }
 
                 switch (e.Key)
