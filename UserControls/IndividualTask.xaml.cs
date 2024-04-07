@@ -75,6 +75,8 @@ namespace TemporaTasks.UserControls
             if (_garbled)
                 Garble();
 
+            TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
+
             DueDateTimeLabelUpdate();
             NewDueDT();
 
@@ -106,6 +108,15 @@ namespace TemporaTasks.UserControls
             DueDateTimeLabelUpdate();
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
             if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void Background_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = e.GetPosition(sender as UIElement);
+            ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
+            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+            tooltip.HorizontalOffset = mousePosition.X;
+            tooltip.VerticalOffset = mousePosition.Y;
         }
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
