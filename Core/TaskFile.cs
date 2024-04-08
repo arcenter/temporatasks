@@ -24,6 +24,17 @@ namespace TemporaTasks.Core
         public static int sortType = 1;
         public static bool NotificationsOn = true;
         
+        public enum NotificationMode
+        {
+            Normal = 0,
+            High = 1,
+            Muted = 2
+        }
+
+        public static NotificationMode notificationMode = NotificationMode.Normal;
+
+        // public static bool NotificationsOn = true;
+        
         public static void LoadData()
         {
             ArrayList _TasksList = [];
@@ -37,7 +48,7 @@ namespace TemporaTasks.Core
                     data.Remove("settings");
 
                     sortType = int.Parse(settings["sortType"]);
-                    if (settings["notifs"] == "0") NotificationsOn = false;
+                    notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
                 }
 
                 foreach (string taskUID in data.Keys)
@@ -53,11 +64,11 @@ namespace TemporaTasks.Core
 
                         bool garbled = false;
 
-                        createdTime = StringToDateTime(data, taskUID, "createdTime");
+                        IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
                         dueTime = StringToDateTime(data, taskUID, "dueTime");
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
 
-                        if (data[taskUID]["recurranceTS"] != "")
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority);
                             recurranceTimeSpan = TimeSpan.Parse(data[taskUID]["recurranceTS"]);
 
                         if (data[taskUID]["tags"] != "")
@@ -92,7 +103,7 @@ namespace TemporaTasks.Core
 
             Dictionary<string, string> temp2 = [];
             temp2["sortType"] = sortType.ToString();
-            temp2["notifs"] = NotificationsOn ? "1" : "0";
+            temp2["notifMode"] = ((int)notificationMode).ToString();
             temp["settings"] = temp2;            
 
             foreach (IndividualTask task in TaskList)
@@ -105,6 +116,7 @@ namespace TemporaTasks.Core
                 temp2["recurranceTS"] = (task.RecurranceTimeSpan == null) ? "" : task.RecurranceTimeSpan.ToString();
                 temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
+                temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
                 temp[task.TaskUID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize(temp);

@@ -24,6 +24,14 @@ namespace TemporaTasks.UserControls
         private bool completed = false;
         private bool garbled = false;
 
+        public enum TaskPriority
+        {
+            Normal,
+            High
+        }
+
+        public TaskPriority taskPriority = TaskPriority.Normal;
+
         public bool IsCompleted
         {
             get
@@ -55,7 +63,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, String _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled)
+        public IndividualTask(long _TaskUID, string _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority)
         {
             InitializeComponent();
 
@@ -285,7 +293,10 @@ namespace TemporaTasks.UserControls
                     {
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                        if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal)
                         mainWindow.OnTaskDue("Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                        else if (TaskFile.notificationMode == TaskFile.NotificationMode.High && taskPriority == TaskPriority.High)
+                            mainWindow.OnTaskDue("⚠ Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         TaskTimer.Interval = TimeSpan.FromMinutes(5);
                     };
                     TaskTimer.Start();

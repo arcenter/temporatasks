@@ -144,7 +144,7 @@ namespace TemporaTasks
         bool balloonCalledRecently = false;
         public async void OnTaskDue(string title, string message, BalloonIcon symbol)
         {
-            if (!TaskFile.NotificationsOn || balloonCalledRecently) return;
+            if (balloonCalledRecently) return;
             WindowHide(false);
             TrayIcon.ShowBalloonTip(title, message, symbol);
             balloonCalledRecently = true;

@@ -186,7 +186,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Border BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False">
+                <Border x:Name="CheckBox" BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False">
                     <Path Data="M1,4 L4,6 L7,1" x:Name="checkMark" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0" />
                 </Border>
 

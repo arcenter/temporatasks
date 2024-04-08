@@ -68,7 +68,7 @@ namespace TemporaTasks.Pages
                 if (currentFocus.HasValue) FocusTask();
             }
 
-            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 0 : 1, TimeSpan.FromMilliseconds(250)));
+            UpdateNotificationMode();
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -464,9 +464,27 @@ namespace TemporaTasks.Pages
 
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskFile.NotificationsOn = !TaskFile.NotificationsOn;
-            notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.NotificationsOn ? 0 : 1, TimeSpan.FromMilliseconds(250)));
+            TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), ((((int)TaskFile.notificationMode) + 1) % 3).ToString());
+            UpdateNotificationMode();
             TaskFile.SaveData();
+        }
+        private void UpdateNotificationMode()
+        {
+            if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal)
+            {
+                if (notifLine.Opacity != 0) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                if (notifLineHP.Opacity != 0) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+            }
+            else if (TaskFile.notificationMode == TaskFile.NotificationMode.High)
+            {
+                if (notifLine.Opacity != 0) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                if (notifLineHP.Opacity != 1) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+            }
+            else
+            {
+                if (notifLine.Opacity != 1) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                if (notifLineHP.Opacity != 0) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+            }
         }
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
