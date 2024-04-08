@@ -22,7 +22,7 @@ namespace TemporaTasks.Core
         public static ArrayList TaskList;
 
         public static int sortType = 1;
-        
+
         public enum NotificationMode
         {
             Normal = 0,
@@ -62,7 +62,7 @@ namespace TemporaTasks.Core
 
                         DateTime? completedTime = null;
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
-                        
+
                         // TimeSpan? recurranceTimeSpan = null;
                         // if (data[taskUID]["recurranceTS"] != "") recurranceTimeSpan = TimeSpan.Parse(data[taskUID]["recurranceTS"]);
 
@@ -90,10 +90,18 @@ namespace TemporaTasks.Core
         }
 
         public static bool saveLock = false;
+
+        public delegate void SaveDone();
+        public static event SaveDone OnSaveDone;
+
+        public delegate void SaveStart();
+        public static event SaveStart OnSaveStart;
+
         public static async void SaveData()
         {
             if (saveLock) return;
 
+            OnSaveStart?.Invoke();
             saveLock = true;
             await Task.Delay(5000);
 
@@ -102,7 +110,7 @@ namespace TemporaTasks.Core
             Dictionary<string, string> temp2 = [];
             temp2["sortType"] = sortType.ToString();
             temp2["notifMode"] = ((int)notificationMode).ToString();
-            temp["settings"] = temp2;            
+            temp["settings"] = temp2;
 
             foreach (IndividualTask task in TaskList)
             {
@@ -124,6 +132,7 @@ namespace TemporaTasks.Core
             File.WriteAllText($"{backupPath}\\data{saveTime}.json", temp3);
 
             saveLock = false;
+            OnSaveDone?.Invoke();
         }
 
         private static string DateTimeToString(DateTime? dateTime)

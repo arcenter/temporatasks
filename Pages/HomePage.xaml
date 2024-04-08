@@ -47,6 +47,8 @@
                     </Grid>
 
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                    <Image x:Name="SaveIcon" Source="{StaticResource saveIcon}" Width="17" Height="17" Opacity="0" Visibility="Collapsed"/>
+                </StackPanel>
 
             </DockPanel>
 
