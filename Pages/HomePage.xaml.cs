@@ -67,7 +67,7 @@ namespace TemporaTasks.Pages
                     task.MouseEnter += TaskMouseEnter;
                 }
 
-                GenerateTaskStack();
+                GenerateTaskStack(false);
                 if (currentFocus.HasValue) FocusTask();
             }
 
@@ -614,12 +614,12 @@ namespace TemporaTasks.Pages
             catch { }
         }
 
-        private void GenerateTaskStack()
+        private void GenerateTaskStack(bool scrollToTop = true)
         {
             if (TaskStack == null) return;
 
             TaskStack.Children.Clear();
-            TaskStackScroller.ScrollToVerticalOffset(0);
+            if (scrollToTop) TaskStackScroller.ScrollToVerticalOffset(0);
 
             Dictionary<IndividualTask, object> yesDueDate = [], sortedDict = [];
             ArrayList noDueDate = [];

@@ -145,8 +145,7 @@ namespace TemporaTasks.Pages
 
             TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, recurranceTimeSpan, false, IndividualTask.TaskPriority.Normal));
             TaskFile.SaveData();
-            mainWindow.FrameView.RemoveBackEntry();
-            mainWindow.FrameView.Navigate(new HomePage());
+            mainWindow.FrameView.GoBack();
         }
 
         private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)

@@ -136,8 +136,7 @@ namespace TemporaTasks.Pages
             task.TaskTimer.Stop();
             TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, task.IsGarbled(), task.taskPriority);
             TaskFile.SaveData();
-            mainWindow.FrameView.RemoveBackEntry();
-            mainWindow.FrameView.Navigate(new HomePage());
+            mainWindow.FrameView.GoBack();
         }
 
         private void Textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
