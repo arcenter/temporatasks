@@ -48,27 +48,7 @@
 
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
 
-                <!--<Border x:Name="HomeButton" Height="30" CornerRadius="10" Cursor="Hand" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" MouseDown="CategoryButton_MouseDown">
-
-                    <Border.Background>
-                        <SolidColorBrush Opacity="0" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
-                    </Border.Background>
-
-                    <Label Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" Padding="15 0 0 0" IsHitTestVisible="False" VerticalAlignment="Center"/>
-
-                </Border>
-
-                <Border x:Name="CompletedButton" Height="30" CornerRadius="10" Cursor="Hand" Margin="0 5 0 0" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" MouseDown="CategoryButton_MouseDown">
-
-                    <Border.Background>
-                        <SolidColorBrush Opacity="0" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
-                    </Border.Background>
-
-                    <Label Content="Completed" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" Padding="15 0 0 0" IsHitTestVisible="False" VerticalAlignment="Center"/>
-
-                </Border>-->
-
-            </StackPanel>
+            </DockPanel>
 
         </Grid>
 
@@ -85,7 +65,7 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <ToolTip.Content>
-                                        <userControl:ButtonToolTip ToolTipText="Mute notifications" Button1Text="m"/>
+                                        <userControl:ButtonToolTip ToolTipText="Toggle between mute states" Button1Text="m"/>
                                     </ToolTip.Content>
                                 </ToolTip>
                             </Border.ToolTip>

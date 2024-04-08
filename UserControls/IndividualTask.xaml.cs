@@ -49,7 +49,7 @@ namespace TemporaTasks.UserControls
         public Nullable<DateTime> DueDT;
         public Nullable<DateTime> CompletedDT;
         
-        public Nullable<TimeSpan> RecurranceTimeSpan;
+        // public Nullable<TimeSpan> RecurranceTimeSpan;
         
         public DispatcherTimer TaskTimer = new();
         readonly private DispatcherTimer TemporaryRemainingTimer = new();
@@ -68,22 +68,24 @@ namespace TemporaTasks.UserControls
             InitializeComponent();
 
             TaskUID = _TaskUID;
-            TaskName = _TaskName;
-            TagList = _TagList;
-            taskNameTextBlock.Text = _TaskName;
 
-            IsCompleted = _CompletedDT.HasValue;
+            taskNameTextBlock.Text = TaskName = _TaskName;
+            TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
             
             CreatedDT = _CreatedDT;
             DueDT = _DueDT;
             CompletedDT = _CompletedDT;
+            IsCompleted = _CompletedDT.HasValue;
 
-            RecurranceTimeSpan = _RecurranceTimeSpan;
+            // RecurranceTimeSpan = _RecurranceTimeSpan;
+            TagList = _TagList;
 
-            if (_garbled)
-                Garble();
-
-            TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
+            garbled = _garbled;
+            if (_taskPriority == TaskPriority.High)
+            {
+                taskPriority = _taskPriority;
+                CheckBox.BorderBrush = (SolidColorBrush)mainWindow.FindResource("HighPriority");
+            }
 
             DueDateTimeLabelUpdate();
             NewDueDT();
@@ -134,7 +136,7 @@ namespace TemporaTasks.UserControls
 
         private void Button_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ((Border)sender).BeginAnimation(Border.OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
         }
 
         public void ToggleCompletionStatus()

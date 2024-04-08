@@ -121,20 +121,6 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
-            {
-                if (Keyboard.IsKeyDown(Key.Up))
-                {
-                    RunAnimation(HomeIcon);
-                    RefreshToPage(ViewCategory.Home);
-                }
-                else if (Keyboard.IsKeyDown(Key.Down))
-                {
-                    RunAnimation(CompletedIcon);
-                    RefreshToPage(ViewCategory.Completed);
-                }
-            }
-
             if (SearchTextBox.IsFocused)
             {
                 if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Escape)
@@ -150,19 +136,39 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            else if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.F))
+            if ((Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
             {
+                if (Keyboard.IsKeyDown(Key.Up))
+                {
+                    RunAnimation(HomeIcon);
+                    RefreshToPage(ViewCategory.Home);
+                }
+                else if (Keyboard.IsKeyDown(Key.Down))
+                {
+                    RunAnimation(CompletedIcon);
+                    RefreshToPage(ViewCategory.Completed);
+                }
+            }
+
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                if (Keyboard.IsKeyDown(Key.F))
+                    {
                 SearchTextBox.Focus();
                 RunSearchTextBoxCloseAnimation(true);
                 return;
             }
+            }
 
-            else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && Keyboard.IsKeyDown(Key.G))
+            else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+            {
+                if (Keyboard.IsKeyDown(Key.G))
             {
                 foreach (object obj in TaskStack.Children)
                     if (obj is IndividualTask task)
                     task.Garble(null, TaskStackScroller);
                 return;
+            }
             }
 
             switch (e.Key)

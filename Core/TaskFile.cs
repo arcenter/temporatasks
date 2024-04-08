@@ -22,7 +22,6 @@ namespace TemporaTasks.Core
         public static ArrayList TaskList;
 
         public static int sortType = 1;
-        public static bool NotificationsOn = true;
         
         public enum NotificationMode
         {
@@ -56,27 +55,26 @@ namespace TemporaTasks.Core
                     try
                     {
                         DateTime? createdTime = null;
+                        createdTime = StringToDateTime(data, taskUID, "createdTime");
+
                         DateTime? dueTime = null;
+                        dueTime = StringToDateTime(data, taskUID, "dueTime");
+
                         DateTime? completedTime = null;
+                        completedTime = StringToDateTime(data, taskUID, "completedTime");
                         
-                        TimeSpan? recurranceTimeSpan = null;
+                        // TimeSpan? recurranceTimeSpan = null;
+                        // if (data[taskUID]["recurranceTS"] != "") recurranceTimeSpan = TimeSpan.Parse(data[taskUID]["recurranceTS"]);
+
                         ArrayList? tagList = null;
+                        if (data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
 
                         bool garbled = false;
-
-                        IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
-                        dueTime = StringToDateTime(data, taskUID, "dueTime");
-                        completedTime = StringToDateTime(data, taskUID, "completedTime");
-
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority);
-                            recurranceTimeSpan = TimeSpan.Parse(data[taskUID]["recurranceTS"]);
-
-                        if (data[taskUID]["tags"] != "")
-                            tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
-
                         if (data[taskUID]["garbled"] != "0") garbled = true;
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, recurranceTimeSpan, garbled);
+                        IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
+
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority);
                         _TasksList.Add(taskObj);
                     }
                     catch { }
@@ -113,7 +111,7 @@ namespace TemporaTasks.Core
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
-                temp2["recurranceTS"] = (task.RecurranceTimeSpan == null) ? "" : task.RecurranceTimeSpan.ToString();
+                // temp2["recurranceTS"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.ToString() : "";
                 temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
