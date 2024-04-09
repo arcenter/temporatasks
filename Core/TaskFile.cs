@@ -97,13 +97,16 @@ namespace TemporaTasks.Core
         public delegate void SaveStart();
         public static event SaveStart OnSaveStart;
 
-        public static async void SaveData()
+        public static async void SaveData(MainWindow? mainWindow = null)
+        {
+            if (mainWindow == null)
         {
             if (saveLock) return;
-
             OnSaveStart?.Invoke();
             saveLock = true;
             await Task.Delay(5000);
+                if (!saveLock) return;
+            }
 
             Dictionary<string, Dictionary<string, string>> temp = [];
 
@@ -130,6 +133,8 @@ namespace TemporaTasks.Core
 
             string saveTime = DateTime.Now.ToString("yyMMddHHmm");
             File.WriteAllText($"{backupPath}\\data{saveTime}.json", temp3);
+
+            if (mainWindow != null) mainWindow.Close();
 
             saveLock = false;
             OnSaveDone?.Invoke();

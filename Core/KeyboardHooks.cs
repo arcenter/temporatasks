@@ -47,10 +47,7 @@ namespace TemporaTasks.Core
                     {
                         case HOTKEY_ID_1:
                             vkey = (((int)lParam >> 16) & 0xFFFF);
-                            if (vkey == VK_KEY_1)
-                            {
-                                mainWindow.WindowHide(mainWindow.IsActive);
-                            }
+                            if (vkey == VK_KEY_1) mainWindow.WindowHide(mainWindow.IsActive);
                             handled = true;
                             break;
                         case HOTKEY_ID_2:
