@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
 
@@ -44,16 +45,60 @@ namespace TemporaTasks.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             mainWindow.KeyDown += Page_KeyDown;
+            mainWindow.PreviewKeyUp += Page_PreviewKeyUp;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             mainWindow.KeyDown -= Page_KeyDown;
+            mainWindow.PreviewKeyUp -= Page_PreviewKeyUp;
         }
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+            {
+                if (Keyboard.IsKeyDown(Key.N))
+                {
+                    TaskNameTextbox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.D))
+                {
+                    dateTextBox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.T))
+                {
+                    timeTextBox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.G))
+                {
+                    TagsTextbox.Focus();
+                    e.Handled = true; 
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.P))
+                {
+                    HighPriority_MouseDown(null, null);
+                    e.Handled = true;
+                    return;
+                }
+                
+                else
+                    foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
+                        L.Visibility = Visibility.Visible;
+            }
+
+            else if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
             {
                 if (TagsTextbox.IsFocused)
                 {
@@ -77,6 +122,17 @@ namespace TemporaTasks.Pages
                 else mainWindow.FrameView.GoBack();
             }
         }
+
+        private void Page_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (!(Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
+            {
+                foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
+                    L.Visibility = Visibility.Collapsed;
+                e.Handled = true;
+            }
+        }
+
 
         private void Border_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

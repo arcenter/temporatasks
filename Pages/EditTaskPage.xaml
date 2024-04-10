@@ -27,7 +27,10 @@
 
                     <StackPanel>
 
-                        <Label Content="Task Name" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                        <Grid>
+                            <Label Content="Task Name" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                            <Line x:Name="L1" Stroke="{StaticResource Text}" X2="7" Margin="28.5 14 0 0"/>
+                        </Grid>
 
                         <Grid Margin="0 5 0 0" Height="40">
                             <TextBox x:Name="TaskNameTextbox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TaskNameTextbox_TextChanged"/>
@@ -48,7 +51,10 @@
 
                             <Popup x:Name="datePickerPopUp" PlacementTarget="{Binding ElementName=calendarButtonBorder}" StaysOpen="False" VerticalOffset="10"/>
 
-                            <Label Content="Date" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Margin="0 0 0 5" Padding="0"/>
+                            <Grid>
+                                <Label Content="Date" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Margin="0 0 0 5" Padding="0"/>
+                                <Line x:Name="L2" Stroke="{StaticResource Text}" X2="7" Margin="0 14 0 0"/>
+                            </Grid>
                             
                             <Grid Height="40">
 
@@ -68,8 +74,11 @@
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
-                            
-                            <Label Content="Time" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" Margin="0 0 0 5"/>
+
+                            <Grid>
+                                <Label Content="Time" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" Margin="0 0 0 5"/>
+                                <Line x:Name="L3" Stroke="{StaticResource Text}" X2="7" Margin="0 14 0 0"/>
+                            </Grid>
 
                             <Grid>
 
@@ -85,7 +94,10 @@
 
                     <StackPanel Margin="0 15 0 0">
 
-                        <Label Content="Tags" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                        <Grid>
+                            <Label Content="Tags" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                            <Line x:Name="L4" Stroke="{StaticResource Text}" X2="7" Margin="13 14 0 0"/>
+                        </Grid>
 
                         <Grid Margin="0 5 0 0" Height="40">
 
@@ -110,7 +122,11 @@
                         <Border Background="Transparent" MouseDown="HighPriority_MouseDown" Cursor="Hand">
 
                             <StackPanel Orientation="Horizontal">
+
+                                <Grid>
                                     <Label Content="High Priority" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" VerticalAlignment="Center"/>
+                                    <Line x:Name="L5" Stroke="{StaticResource Text}" X2="6" Margin="28 26 0 0"/>
+                                </Grid>
 
                                 <Border BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" Margin="10 0 0 0">
                                     <Path Data="M1,4 L4,6 L7,1" x:Name="checkMark" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0" />
@@ -122,43 +138,43 @@
 
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
 
-                        <Border x:Name="CancelButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="CancelButton_MouseDown" MouseMove="Border_MouseMove" Height="40" Cursor="Hand">
+                            <Border x:Name="CancelButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="CancelButton_MouseDown" MouseMove="Border_MouseMove" Height="40" Cursor="Hand">
 
-                            <Border.Background>
-                                <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource Secondary}}"/>
-                            </Border.Background>
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource Secondary}}"/>
+                                </Border.Background>
 
-                            <Border.ToolTip>
-                                <ToolTip>
-                                    <ToolTip.Content>
-                                        <userControl:ButtonToolTip ToolTipText="Cancel changes" Button1Text="esc"/>
-                                    </ToolTip.Content>
-                                </ToolTip>
-                            </Border.ToolTip>
+                                <Border.ToolTip>
+                                    <ToolTip>
+                                        <ToolTip.Content>
+                                            <userControl:ButtonToolTip ToolTipText="Cancel changes" Button1Text="esc"/>
+                                        </ToolTip.Content>
+                                    </ToolTip>
+                                </Border.ToolTip>
 
-                            <Label Content="Cancel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+                                <Label Content="Cancel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
 
-                        </Border>
+                            </Border>
 
-                        <Border x:Name="ConfirmButton" CornerRadius="5" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="ConfirmButton_MouseDown" MouseMove="Border_MouseMove" Margin="10 0 0 0" Height="40" Cursor="Hand">
+                            <Border x:Name="ConfirmButton" CornerRadius="5" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="ConfirmButton_MouseDown" MouseMove="Border_MouseMove" Margin="10 0 0 0" Height="40" Cursor="Hand">
 
-                            <Border.Background>
-                                <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
-                            </Border.Background>
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                                </Border.Background>
 
-                            <Border.ToolTip>
-                                <ToolTip>
-                                    <ToolTip.Content>
-                                        <userControl:ButtonToolTip ToolTipText="Confirm changes" Button1Text="enter"/>
-                                    </ToolTip.Content>
-                                </ToolTip>
-                            </Border.ToolTip>
+                                <Border.ToolTip>
+                                    <ToolTip>
+                                        <ToolTip.Content>
+                                            <userControl:ButtonToolTip ToolTipText="Confirm changes" Button1Text="enter"/>
+                                        </ToolTip.Content>
+                                    </ToolTip>
+                                </Border.ToolTip>
 
-                            <Label Content="Confirm" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+                                <Label Content="Confirm" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0,0,0,0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
 
-                        </Border>
+                            </Border>
 
-                    </StackPanel>
+                        </StackPanel>
 
                     </DockPanel>
 
