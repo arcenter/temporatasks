@@ -315,6 +315,12 @@ namespace TemporaTasks.Pages
 
                                 return;
                 }
+                    else if (Keyboard.IsKeyDown(Key.C))
+                    {
+                        Clipboard.SetText(task.TaskName);
+                        return;
+                }
+
                 }
 
                 switch (e.Key)
