@@ -24,6 +24,13 @@ namespace TemporaTasks.UserControls
         private bool completed = false;
         private bool garbled = false;
 
+        public enum TempGarbleMode
+        {
+            TempGarbleOff,
+            TempGarbleOn,
+            None
+        }
+
         public enum TaskPriority
         {
             Normal,
@@ -98,6 +105,7 @@ namespace TemporaTasks.UserControls
 
         private void IndividualTask_Loaded(object sender, RoutedEventArgs e)
         {
+            TempGarble(TaskFile.tempGarbleMode);
             UpdateTaskCheckBoxAndBackground();
             Cursor = Cursors.Hand;
         }
@@ -451,21 +459,25 @@ namespace TemporaTasks.UserControls
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
 
                         strikethroughLine.Visibility = Visibility.Visible;
+                }
+            }
+
+            else TempGarble(garble ? TempGarbleMode.TempGarbleOn : TempGarbleMode.TempGarbleOff);
 
                         TaskFile.SaveData();
                     }
 
-                    return;
-                }
-            }
-            
-            if (mode.Value && !garbled)
+        public void TempGarble(TempGarbleMode garbleMode)
+        {
+            TextSP.Children.Clear();
+            if (garbleMode == TempGarbleMode.TempGarbleOn || (garbleMode == TempGarbleMode.None && garbled))
             {
-                garbled = true;
+                ToolTipService.SetIsEnabled(Background, true);
+            
+                strikethroughLine.Visibility = Visibility.Hidden;
                 taskNameTextBlock.Visibility = Visibility.Hidden;
                 taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
 
-                TextSP.Children.Clear();
                 TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
                 Random random = new();
@@ -485,23 +497,16 @@ namespace TemporaTasks.UserControls
                         IsHitTestVisible = false
                     });
                 }
-
-                strikethroughLine.Visibility = Visibility.Hidden;
-
-                TaskFile.SaveData();
             }
-            else if (garbled)
+            else if (garbleMode == TempGarbleMode.TempGarbleOff || (garbleMode == TempGarbleMode.None && !garbled))
             {
-                garbled = false;
+                ToolTipService.SetIsEnabled(Background, false);
 
-                TextSP.Children.Clear();
-                TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
-                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
-
-                taskNameTextBlock.Visibility = Visibility.Visible;
                 strikethroughLine.Visibility = Visibility.Visible;
+                taskNameTextBlock.Visibility = Visibility.Visible;
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromTicks(0)));
 
-                TaskFile.SaveData();
+                TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
             }
         }
     }

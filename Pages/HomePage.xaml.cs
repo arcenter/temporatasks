@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
+using static TemporaTasks.UserControls.IndividualTask;
 
 namespace TemporaTasks.Pages
 {
@@ -55,9 +56,8 @@ namespace TemporaTasks.Pages
             TaskFile.OnSaveDone += SaveDone;
             
             if (TaskFile.TaskList.Count == 0)
-            {
                 NewTaskArrow.Visibility = Visibility.Visible;
-            }
+            
             else
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
@@ -163,6 +163,24 @@ namespace TemporaTasks.Pages
                 RunSearchTextBoxCloseAnimation(true);
                 return;
             }
+
+                if (Keyboard.IsKeyDown(Key.D1))
+                {
+                    SetTempGarble(IndividualTask.TempGarbleMode.TempGarbleOff);
+                    return;
+            }
+
+                else if (Keyboard.IsKeyDown(Key.D2))
+                {
+                    SetTempGarble(IndividualTask.TempGarbleMode.TempGarbleOn);
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.D3))
+                {
+                    SetTempGarble(IndividualTask.TempGarbleMode.None);
+                    return;
+                }
             }
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
@@ -436,7 +454,13 @@ namespace TemporaTasks.Pages
         {
             currentFocus = null;
             UnfocusTasks();
-            GenerateTaskStack();
+            foreach (object obj in TaskStack.Children)
+                if (obj is IndividualTask task)
+                {
+                    task.TempGarble(TaskFile.tempGarbleMode);
+                    task.DueDateTimeLabelUpdate();
+                }
+            GenerateTaskStack(false);
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -475,7 +499,7 @@ namespace TemporaTasks.Pages
 
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), ((((int)TaskFile.notificationMode) + 1) % 3).ToString());
+            TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), ((((int)TaskFile.notificationMode) + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3).ToString());
             UpdateNotificationMode();
             TaskFile.SaveData();
         }
@@ -922,6 +946,14 @@ namespace TemporaTasks.Pages
             int temp = TaskStack.Children.IndexOf(task);
             if (temp > -1) currentFocus = temp;
             FocusTask();
+        }
+
+        private void SetTempGarble(IndividualTask.TempGarbleMode tempGarbleMode)
+        {
+            TaskFile.tempGarbleMode = tempGarbleMode;
+            foreach (object obj in TaskStack.Children)
+                if (obj is IndividualTask task)
+                    task.TempGarble(tempGarbleMode);
         }
 
         private void EditIcon_MouseDown(object sender)

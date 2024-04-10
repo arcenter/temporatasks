@@ -34,7 +34,7 @@
 
             <Image Source="{StaticResource miniIcon}" Width="20" Height="20" VerticalAlignment="Top" Margin="0 60 0 0"/>
 
-            <StackPanel HorizontalAlignment="Center" Margin="20 110 20 20">
+            <DockPanel HorizontalAlignment="Center" Margin="20 110 20 30">
 
                 <StackPanel DockPanel.Dock="Top">
                     <Grid>
@@ -45,6 +45,7 @@
                         <Border x:Name="CompletedButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand"/>
                         <Image x:Name="CompletedIcon" Source="{StaticResource completedIcon}" MaxWidth="18" MaxHeight="18" Opacity="0.25" IsHitTestVisible="False" RenderTransformOrigin="0.5, 0.5"/>
                     </Grid>
+                </StackPanel>
 
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                     <Image x:Name="SaveIcon" Source="{StaticResource saveIcon}" Width="17" Height="17" Opacity="0" Visibility="Collapsed"/>

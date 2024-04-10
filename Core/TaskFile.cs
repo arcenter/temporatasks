@@ -31,8 +31,7 @@ namespace TemporaTasks.Core
         }
 
         public static NotificationMode notificationMode = NotificationMode.Normal;
-
-        // public static bool NotificationsOn = true;
+        public static IndividualTask.TempGarbleMode tempGarbleMode = IndividualTask.TempGarbleMode.None;
         
         public static void LoadData()
         {
@@ -100,11 +99,11 @@ namespace TemporaTasks.Core
         public static async void SaveData(MainWindow? mainWindow = null)
         {
             if (mainWindow == null)
-        {
-            if (saveLock) return;
-            OnSaveStart?.Invoke();
-            saveLock = true;
-            await Task.Delay(5000);
+            {
+                if (saveLock) return;
+                OnSaveStart?.Invoke();
+                saveLock = true;
+                await Task.Delay(5000);
                 if (!saveLock) return;
             }
 
