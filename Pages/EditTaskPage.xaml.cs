@@ -36,6 +36,8 @@ namespace TemporaTasks.Pages
                 foreach (String tag in task.TagList)
                     TagsStackAdd(tag);
 
+            if (task.taskPriority == IndividualTask.TaskPriority.High) checkMark.Opacity = 1;
+
             TaskNameTextbox.Focus();
         }
 
@@ -133,8 +135,11 @@ namespace TemporaTasks.Pages
             foreach (Tags tag in TagsStack.Children)
                 tagList.Add(tag.TagText);
 
+            IndividualTask.TaskPriority taskPriority = IndividualTask.TaskPriority.Normal;
+            if (checkMark.Opacity == 1) taskPriority = IndividualTask.TaskPriority.High;
+
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, task.IsGarbled(), task.taskPriority);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, task.IsGarbled(), taskPriority);
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }
@@ -181,6 +186,11 @@ namespace TemporaTasks.Pages
             {
                 if (TagsTextbox.Text.Length == 0 && TagsStack.Children.Count > 0) TagsStack.Children.RemoveAt(TagsStack.Children.Count - 1);
             }
+        }
+
+        private void HighPriority_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            checkMark.Opacity = (checkMark.Opacity + 1) % 2;
         }
     }
 }

@@ -107,6 +107,11 @@ namespace TemporaTasks.UserControls
         {
             TempGarble(TaskFile.tempGarbleMode);
             UpdateTaskCheckBoxAndBackground();
+            if (taskPriority == TaskPriority.High)
+            {
+                CheckBox.BorderBrush = checkMark.Stroke = strikethroughLine.Stroke = (SolidColorBrush)mainWindow.FindResource("HighPriority");
+                CheckBox.Opacity = checkMark.Opacity = 0.75;
+            }
             Cursor = Cursors.Hand;
         }
 
