@@ -42,7 +42,7 @@ namespace TemporaTasks
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!TaskFile.saveLock && e.Key == Key.Q && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) Close();
+            if (e.Key == Key.Q && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))) TaskFile.SaveData(this);
             else if (e.Key == Key.F && NoTextBoxHasFocus(this)) MaximizeButton_MouseDown(null, null);
         }
 
@@ -115,7 +115,11 @@ namespace TemporaTasks
 
         private void CloseButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift)) Close();
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                TaskFile.SaveData(this);
+                return;
+            }
             WindowHide();
         }
 
@@ -159,7 +163,7 @@ namespace TemporaTasks
 
         private void TrayIcon_TrayRightMouseUp(object sender, RoutedEventArgs e)
         {
-            Close();
+            TaskFile.SaveData(this);
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
