@@ -90,18 +90,11 @@ namespace TemporaTasks.Core
 
         public static bool saveLock = false;
 
-        public delegate void SaveDone();
-        public static event SaveDone OnSaveDone;
-
-        public delegate void SaveStart();
-        public static event SaveStart OnSaveStart;
-
         public static async void SaveData(MainWindow? mainWindow = null)
         {
             if (mainWindow == null)
             {
                 if (saveLock) return;
-                OnSaveStart?.Invoke();
                 saveLock = true;
                 await Task.Delay(5000);
                 if (!saveLock) return;
@@ -136,7 +129,6 @@ namespace TemporaTasks.Core
             if (mainWindow != null) mainWindow.Close();
 
             saveLock = false;
-            OnSaveDone?.Invoke();
         }
 
         private static string DateTimeToString(DateTime? dateTime)

@@ -52,8 +52,6 @@ namespace TemporaTasks.Pages
             mainWindow.KeyUp += Page_KeyUp;
             mainWindow.MouseDown += Window_MouseDown;
             mainWindow.IsWindowUnHidden += Window_Unhidden;
-            TaskFile.OnSaveStart += SaveStarted;
-            TaskFile.OnSaveDone += SaveDone;
             
             if (TaskFile.TaskList.Count == 0)
                 NewTaskArrow.Visibility = Visibility.Visible;
@@ -80,8 +78,6 @@ namespace TemporaTasks.Pages
             mainWindow.KeyUp -= Page_KeyUp;
             mainWindow.MouseDown -= Window_MouseDown;
             mainWindow.IsWindowUnHidden -= Window_Unhidden;
-            TaskFile.OnSaveStart -= SaveStarted;
-            TaskFile.OnSaveDone -= SaveDone;
             foreach (IndividualTask task in TaskFile.TaskList)
             {
                 task.StrokeOff();
@@ -974,19 +970,6 @@ namespace TemporaTasks.Pages
             lastTask.Add(task);
             TaskFile.TaskList.Remove(task);
             TaskFile.SaveData();
-        }
-
-        private void SaveStarted()
-        {
-            SaveIcon.Visibility = Visibility.Visible;
-            SaveIcon.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(250)));
-        }
-
-        private async void SaveDone()
-        {
-            SaveIcon.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(250)));
-            await Task.Delay(251);
-            SaveIcon.Visibility = Visibility.Collapsed;
         }
 
         private void TaskMouseEnter(object sender, MouseEventArgs e)
