@@ -21,7 +21,7 @@ namespace TemporaTasks.Core
         
         public static ArrayList TaskList;
 
-        public static int sortType = 1;
+        public static int sortType = 2;
 
         public enum NotificationMode
         {
