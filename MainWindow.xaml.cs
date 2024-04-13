@@ -126,22 +126,20 @@ namespace TemporaTasks
         public delegate void WindowUnHidden();
         public event WindowUnHidden IsWindowUnHidden;
 
-        public async void WindowHide(bool check = true)
+        public async void WindowHide(bool hide = true)
         {
-            if (check && Opacity == 1)
+            if (hide && Opacity != 0)
             {
-                // TrayIcon.Visibility = Visibility.Visible;
-                BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(100)));
-                await Task.Delay(125);
+                BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
+                await Task.Delay(201);
                 Hide();
+                BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
             }
-            else if (Opacity == 0)
+            else
             {
-                // TrayIcon.Visibility = Visibility.Hidden;
+                IsWindowUnHidden?.Invoke();
                 Show();
                 Activate();
-                BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(100)));
-                IsWindowUnHidden?.Invoke();
             }
         }
 
