@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,14 +41,79 @@ namespace TemporaTasks.Windows
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+            {
+                if (Keyboard.IsKeyDown(Key.N))
+                {
+                    TaskNameTextbox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.D))
+                {
+                    dateTextBox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.T))
+                {
+                    timeTextBox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.G))
+                {
+                    TagsTextbox.Focus();
+                    e.Handled = true;
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.P))
+                {
+                    HighPriority_MouseDown(null, null);
+                    e.Handled = true;
+                    return;
+                }
+
+                else
+                    foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
+                        L.Visibility = Visibility.Visible;
+            }
+
             if (e.Key == Key.Enter && !datePickerPopUp.IsOpen)
             {
+                if (TagsTextbox.IsFocused)
+                {
+                    if (TagsTextbox.Text.Length != 0)
+                    {
+                        if (TagsTextbox.Text.Trim() != "" && !TagsTextbox.Text.Contains(';'))
+                        {
+                            TagsStackAdd(TagsTextbox.Text);
+                            TagsTextbox.Clear();
+                            e.Handled = true;
+                        }
+                        return;
+                    }
+                }
                 AddButton_MouseDown(null, null);
             }
             else if (e.Key == Key.Escape)
             {
                 if (datePickerPopUp.IsOpen) datePickerPopUp.IsOpen = false;
                 else CloseWindow();
+            }
+        }
+
+        private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (!(Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
+            {
+                foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
+                    L.Visibility = Visibility.Collapsed;
+                e.Handled = true;
             }
         }
 
@@ -60,7 +126,7 @@ namespace TemporaTasks.Windows
         {
             Point mousePosition = e.GetPosition(sender as UIElement);
             ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+            tooltip.Placement = PlacementMode.Relative;
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
         }
@@ -111,8 +177,14 @@ namespace TemporaTasks.Windows
             if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
+            ArrayList? tagList = [];
+            foreach (Tags tag in TagsStack.Children)
+                tagList.Add(tag.TagText);
+
+            IndividualTask.TaskPriority taskPriority = (checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
+
             long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, null, null, false, IndividualTask.TaskPriority.Normal));
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, null, false, taskPriority));
             TaskFile.SaveData();
             ((MainWindow)Application.Current.MainWindow).FrameView.Navigate(new HomePage());
             CloseWindow();
@@ -134,9 +206,35 @@ namespace TemporaTasks.Windows
             if (temp != null) dateTextBox.Text = temp;
         }
 
+        private void TagsStackAdd(string value)
+        {
+            foreach (Tags tag in TagsStack.Children)
+                if (tag.TagText == value) return;
+            TagsStack.Children.Add(new Tags(value));
+        }
+
+        private void TagsTextbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space && TagsTextbox.Text.Trim() != "" && !TagsTextbox.Text.Contains(';'))
+            {
+                TagsStackAdd(TagsTextbox.Text);
+                TagsTextbox.Clear();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Back)
+            {
+                if (TagsTextbox.Text.Length == 0 && TagsStack.Children.Count > 0) TagsStack.Children.RemoveAt(TagsStack.Children.Count - 1);
+            }
+        }
+
+        private void HighPriority_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            checkMark.Opacity = (checkMark.Opacity + 1) % 2;
+        }
+
         private async void CloseWindow()
         {
-            BeginAnimation(Window.OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
+            BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
             await Task.Delay(250);
             Close();
         }
