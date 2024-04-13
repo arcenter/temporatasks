@@ -243,6 +243,17 @@ namespace TemporaTasks.Pages
                     NotifButton_MouseDown(null, null);
                     return;
 
+                case Key.Z:
+                    if (lastTask.Count == 0) return;
+                    IndividualTask task = lastTask.Last();
+                    TaskFile.TaskList.Add(task);
+                    TaskFile.SaveData();
+                    lastTask.Remove(task);
+                    GenerateTaskStack(false);
+                    currentFocus = TaskStack.Children.IndexOf(task);
+                    FocusTask();
+                    return;
+
                 case Key.Escape:
                     if (currentFocus.HasValue)
                     {
@@ -402,14 +413,6 @@ namespace TemporaTasks.Pages
                             task.DueDateTimeLabelUpdate();
                             task.NewDueDT();
                         }
-                        return;
-
-                    case Key.Z:
-                        lastTask.Last().StrokeOff();
-                        TaskFile.TaskList.Add(lastTask.Last());
-                        TaskFile.SaveData();
-                        lastTask.Remove(lastTask.Last());
-                        GenerateTaskStack();
                         return;
                 }
             }
