@@ -65,16 +65,7 @@
             </DockPanel>
 
         </Grid>
-
-        <Grid x:Name="MainGrid" Margin="50 0 50 0">
-
-            <Image x:Name="NewTaskArrow" Source="{StaticResource NewTaskArrow}" HorizontalAlignment="Right" VerticalAlignment="Top" MaxWidth="200" Margin="0 120 40 0" Visibility="Collapsed"/>
-
-            <DockPanel Margin="13 50 13 0" VerticalAlignment="Top">
-
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-
-                    <Grid Margin="0 0 20 0">
+                    <Grid Height="40" Margin="0 5 0 0">
                         <Border x:Name="NotifButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Cursor="Hand" Width="40" IsMouseDirectlyOverChanged="NotifButton_IsMouseDirectlyOverChanged" MouseDown="NotifButton_MouseDown">
                             <Border.ToolTip>
                                 <ToolTip>
@@ -93,6 +84,14 @@
                             </Grid>
                         </Grid>
                     </Grid>
+
+        <Grid x:Name="MainGrid" Margin="50 0 50 0">
+
+            <Image x:Name="NewTaskArrow" Source="{StaticResource NewTaskArrow}" HorizontalAlignment="Right" VerticalAlignment="Top" MaxWidth="200" Margin="0 120 40 0" Visibility="Collapsed"/>
+
+            <DockPanel Margin="13 50 13 0" VerticalAlignment="Top">
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
 
                     <Border x:Name="SearchBorder" Background="{StaticResource Secondary}" CornerRadius="5" Padding="5 0 5 0" IsMouseDirectlyOverChanged="SearchBorder_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="SearchBorder_MouseDown" Cursor="IBeam">
                         <Border.ToolTip>

@@ -58,6 +58,7 @@ namespace TemporaTasks.Pages
             
             else
             {
+                NewTaskArrow.Visibility = Visibility.Collapsed;
                 foreach (IndividualTask task in TaskFile.TaskList)
                 {
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
