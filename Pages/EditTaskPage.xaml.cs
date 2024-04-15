@@ -56,37 +56,37 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+            if (e.Key == Key.System)
             {
-                if (Keyboard.IsKeyDown(Key.N))
+                if (e.SystemKey == Key.N)
                 {
                     TaskNameTextbox.Focus();
                     e.Handled = true;
                     return;
                 }
 
-                else if (Keyboard.IsKeyDown(Key.D))
+                else if (e.SystemKey == Key.D)
                 {
                     dateTextBox.Focus();
                     e.Handled = true;
                     return;
                 }
 
-                else if (Keyboard.IsKeyDown(Key.T))
+                else if (e.SystemKey == Key.T)
                 {
                     timeTextBox.Focus();
                     e.Handled = true;
                     return;
                 }
 
-                else if (Keyboard.IsKeyDown(Key.G))
+                else if (e.SystemKey == Key.G)
                 {
                     TagsTextbox.Focus();
                     e.Handled = true; 
                     return;
                 }
 
-                else if (Keyboard.IsKeyDown(Key.P))
+                else if (e.SystemKey == Key.P)
                 {
                     HighPriority_MouseDown(null, null);
                     e.Handled = true;
