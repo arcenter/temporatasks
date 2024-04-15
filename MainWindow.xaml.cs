@@ -46,6 +46,15 @@ namespace TemporaTasks
             else if (e.Key == Key.F && NoTextBoxHasFocus(this)) MaximizeButton_MouseDown(null, null);
         }
 
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.System && e.SystemKey == Key.F4)
+            {
+                WindowHide();
+                e.Handled = true;
+            }
+        }
+
         private bool NoTextBoxHasFocus(DependencyObject parent)
         {
             foreach (var textBox in GetVisualChildren<TextBox>(parent))
