@@ -334,41 +334,35 @@ namespace TemporaTasks.UserControls
             DueDateTimeLabelUpdate();
         }
 
-        public void Increment_MouseDown(object sender, MouseButtonEventArgs e)
+        public void ChangeDueTime(object sender, MouseButtonEventArgs e)
         {
             string? name = (sender is Border border) ? border.Name : sender.ToString();
 
-            if (!DueDT.HasValue || name == "now")
+            if (name == "none")
+                DueDT = null;
+            else if (name == "now")
             {
                 DateTime currentDT = DateTime.Now;
                 DueDT = new DateTime(currentDT.Year, currentDT.Month, currentDT.Day, currentDT.Hour, DateTime.Now.Minute, 0);
             }
-            else if (name == "none")
-                DueDT = null;
             else
-                DueDT = DueDT.Value + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
+                DueDT = (DueDT ?? DateTime.Now) + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
                 {
-                    "plus1m" => TimeSpan.FromMinutes(1),
-                    "plus5m" => TimeSpan.FromMinutes(5),
+                    "plus1m"  => TimeSpan.FromMinutes(1),
+                    "plus5m"  => TimeSpan.FromMinutes(5),
                     "plus10m" => TimeSpan.FromMinutes(10),
                     "plus30m" => TimeSpan.FromMinutes(30),
-                    "plus1h" => TimeSpan.FromHours(1),
-                    "plus6h" => TimeSpan.FromHours(6),
-                    "plus1d" => TimeSpan.FromDays(1),
-                    "plus1w" => TimeSpan.FromDays(7),
+                    "plus1h"  => TimeSpan.FromHours(1),
+                    "plus6h"  => TimeSpan.FromHours(6),
+                    "plus12h" => TimeSpan.FromHours(12),
+                    "plus1d"  => TimeSpan.FromDays(1),
+                    "plus1w"  => TimeSpan.FromDays(7),
                     _ => TimeSpan.FromTicks(0),
                 };
 
             TaskFile.SaveData();
             DueDateTimeLabelUpdate();
             NewDueDT();
-        }
-
-        private void DueDateTimeLabel_MouseEnter(object sender, MouseEventArgs e)
-        {
-            incrementsPanel.Width = (IsCompleted) ? 0 : double.NaN;
-            Icons.UpdateLayout();
-            Icons.BeginAnimation(WidthProperty, new DoubleAnimation(Icons.ActualWidth, TimeSpan.FromMilliseconds(250)));
         }
 
         public new bool IsVisible = true;

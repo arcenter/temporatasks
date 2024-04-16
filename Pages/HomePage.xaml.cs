@@ -350,40 +350,44 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.D0:
-                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) task.Increment_MouseDown("none", null);
-                        else task.Increment_MouseDown("now", null);
+                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) task.ChangeDueTime("none", null);
+                        else task.ChangeDueTime("now", null);
                         return;
 
                     case Key.D1:
-                        task.Increment_MouseDown("plus1m", null);
+                        task.ChangeDueTime("plus1m", null);
                         return;
 
                     case Key.D2:
-                        task.Increment_MouseDown("plus10m", null);
+                        task.ChangeDueTime("plus10m", null);
                         return;
 
                     case Key.D3:
-                        task.Increment_MouseDown("plus30m", null);
+                        task.ChangeDueTime("plus30m", null);
                         return;
 
                     case Key.D4:
-                        task.Increment_MouseDown("plus1h", null);
+                        task.ChangeDueTime("plus1h", null);
                         return;
 
                     case Key.D5:
-                        task.Increment_MouseDown("plus5m", null);
+                        task.ChangeDueTime("plus5m", null);
                         return;
 
                     case Key.D6:
-                        task.Increment_MouseDown("plus6h", null);
+                        task.ChangeDueTime("plus6h", null);
                         return;
 
                     case Key.D7:
-                        task.Increment_MouseDown("plus1w", null);
+                        task.ChangeDueTime("plus1w", null);
                         return;
 
                     case Key.D8:
-                        task.Increment_MouseDown("plus1d", null);
+                        task.ChangeDueTime("plus12h", null);
+                        return;
+
+                    case Key.D9:
+                        task.ChangeDueTime("plus1d", null);
                         return;
 
                     case Key.G:
