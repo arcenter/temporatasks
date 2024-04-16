@@ -147,6 +147,20 @@ namespace TemporaTasks.UserControls
             if (e.ChangedButton == MouseButton.Left) ToggleCompletionStatus();
         }
 
+        private async void Background_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Right)
+            {
+                if (RightClickMenuPopup.Child != null)
+                {
+                    ((TaskRightClickMenu)RightClickMenuPopup.Child).PopupClose(100);
+                    await Task.Delay(200);
+                }
+                RightClickMenuPopup.Child = new TaskRightClickMenu(this, RightClickMenuPopup);
+                RightClickMenuPopup.IsOpen = true;
+            }
+        }
+
         private void Button_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
