@@ -1,0 +1,269 @@
+﻿<UserControl x:Class="TemporaTasks.UserControls.TaskRightClickMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TemporaTasks.UserControls"
+             mc:Ignorable="d" 
+             d:DesignWidth="200" d:Opacity="1"
+             Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded"
+             Opacity="0" Background="Transparent">
+
+    <Border Background="#383838" BorderBrush="{StaticResource Border}" BorderThickness="1" Padding="10" MinWidth="200" CornerRadius="10">
+
+        <StackPanel>
+
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Edit" Background="{StaticResource DarkBlue}" Opacity="0" Grid.ColumnSpan="3" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <local:ButtonToolTip ToolTipText="Edit Task" Button1Text="e" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
+                                    <local:ButtonToolTip ToolTipText="/" Button1Text="enter" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
+                                </StackPanel>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Image Source="{StaticResource pencilIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Label Content="Edit Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+            </Grid>
+
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Garble" Background="{StaticResource DarkBlue}" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <local:ButtonToolTip ToolTipText="Garble Task" Button1Text="g"/>
+                                </StackPanel>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Image x:Name="eyeIcon" Source="{StaticResource eyeOffIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Label Content="Garble Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+            </Grid>
+
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="ToggleHP" Background="{StaticResource DarkBlue}" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <local:ButtonToolTip ToolTipText="Toggle high priority" Button1Text="p"/>
+                                </StackPanel>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Image Source="{StaticResource completedIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Label Content="Toggle high priority" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+            </Grid>
+
+            <Grid Height="20">
+                <Rectangle Fill="{StaticResource Border}" Height="2" Margin="10 0"/>
+            </Grid>
+
+            <Grid Height="25">
+                <Label Content="Change due time" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="10" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="0" Opacity="0.5" IsHitTestVisible="False"/>
+            </Grid>
+
+            <Grid Margin="10 5 10 10" Width="150">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="1" Grid.Row="0">
+                    <Border x:Name="none" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Set due datetime to null" Button1Text="shift" CornerRadius="0" BorderPadding="0 5"/>
+                                        <local:ButtonToolTip ToolTipText="+" Button1Text="0" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="None" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="2" Grid.Row="0">
+                    <Border x:Name="now" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Set due datetime to current time" Button1Text="0"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="Now" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Border x:Name="plus1m" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 1 minute to due datetime" Button1Text="1"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+1m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <Border x:Name="plus5m" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 5 minutes to due datetime" Button1Text="5"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+5m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="2" Grid.Row="1">
+                    <Border x:Name="plus30m" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 30 minutes to due datetime" Button1Text="3"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+30m" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="2">
+                    <Border x:Name="plus1h" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 1 hour to due datetime" Button1Text="4"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+1h" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="2">
+                    <Border x:Name="plus6h" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 6 hours to due datetime" Button1Text="6"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+6h" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="2" Grid.Row="2">
+                    <Border x:Name="plus12h" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 12 hours to due datetime" Button1Text="8"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+12h" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="3">
+                    <Border x:Name="plus1d" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 1 day to due datetime" Button1Text="9"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+1d" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="3">
+                    <Border x:Name="plus7d" Background="{StaticResource DarkBlue}" Opacity="0" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="TimeChange_MouseDown" Cursor="Hand">
+                        <Border.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <local:ButtonToolTip ToolTipText="Add 7 days to due datetime" Button1Text="7"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                    <Label Content="+7d" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11" Foreground="{StaticResource Text}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+            </Grid>
+
+            <Grid Height="20">
+                <Rectangle Fill="{StaticResource Border}" Height="2" Margin="10 0"/>
+            </Grid>
+
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Delete" Background="#1a1a1a" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Delete_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <local:ButtonToolTip ToolTipText="Delete Task" Button1Text="d" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
+                                    <local:ButtonToolTip ToolTipText="/" Button1Text="del" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
+                                </StackPanel>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Image x:Name="DeleteIcon" Source="{StaticResource trashIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Label x:Name="DeleteLabel" Content="Delete Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+            </Grid>
+
+        </StackPanel>
+
+    </Border>
+
+</UserControl>
