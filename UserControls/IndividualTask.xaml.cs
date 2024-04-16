@@ -432,6 +432,8 @@ namespace TemporaTasks.UserControls
                         garbled = true;
 
                         strikethroughLine.Visibility = Visibility.Hidden;
+                    TextSP.Children.Clear();
+                    TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                         await Task.Delay(400);
@@ -488,9 +490,10 @@ namespace TemporaTasks.UserControls
 
         public void TempGarble(TempGarbleMode garbleMode)
         {
-            TextSP.Children.Clear();
             if (garbleMode == TempGarbleMode.TempGarbleOn || (garbleMode == TempGarbleMode.None && garbled))
             {
+                if (TextSP.Opacity == 1) return;
+
                 ToolTipService.SetIsEnabled(Background, true);
             
                 strikethroughLine.Visibility = Visibility.Hidden;
@@ -519,6 +522,7 @@ namespace TemporaTasks.UserControls
             }
             else if (garbleMode == TempGarbleMode.TempGarbleOff || (garbleMode == TempGarbleMode.None && !garbled))
             {
+                TextSP.Children.Clear();
                 ToolTipService.SetIsEnabled(Background, false);
 
                 strikethroughLine.Visibility = Visibility.Visible;
