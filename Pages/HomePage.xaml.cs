@@ -163,19 +163,19 @@ namespace TemporaTasks.Pages
 
                 if (Keyboard.IsKeyDown(Key.D1))
                 {
-                    SetTempGarble(IndividualTask.TempGarbleMode.TempGarbleOff);
+                    SetTempGarble(TempGarbleMode.TempGarbleOff);
                     return;
             }
 
                 else if (Keyboard.IsKeyDown(Key.D2))
                 {
-                    SetTempGarble(IndividualTask.TempGarbleMode.TempGarbleOn);
+                    SetTempGarble(TempGarbleMode.TempGarbleOn);
                     return;
                 }
 
                 else if (Keyboard.IsKeyDown(Key.D3))
                 {
-                    SetTempGarble(IndividualTask.TempGarbleMode.None);
+                    SetTempGarble(TempGarbleMode.None);
                     return;
                 }
             }
@@ -530,6 +530,36 @@ namespace TemporaTasks.Pages
                 if (notifLine.Opacity != 1) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
                 if (notifLineHP.Opacity != 0) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
             }
+        }
+
+        private async void EyeButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            EyeButton.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            EyeIcon.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
+
+            if (EyeButton.IsMouseOver)
+            {
+                EyeIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+                {
+                    DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                    EyeIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    EyeIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+
+                await Task.Delay(251);
+
+                {
+                    DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                    EyeIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    EyeIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+            }
+        }
+
+        private void EyeButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SetTempGarble((TempGarbleMode)Enum.Parse(typeof(TempGarbleMode), $"{(((int)TaskFile.tempGarbleMode)+((e.ChangedButton == MouseButton.Right)?-1:1))%3}"));
         }
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -958,9 +988,10 @@ namespace TemporaTasks.Pages
             FocusTask();
         }
 
-        private void SetTempGarble(IndividualTask.TempGarbleMode tempGarbleMode)
+        private void SetTempGarble(TempGarbleMode tempGarbleMode)
         {
             TaskFile.tempGarbleMode = tempGarbleMode;
+            EyeIcon.Source = (ImageSource)mainWindow.FindResource($"{tempGarbleMode}EyeIcon");
             foreach (object obj in TaskStack.Children)
                 if (obj is IndividualTask task)
                     task.TempGarble(tempGarbleMode);
