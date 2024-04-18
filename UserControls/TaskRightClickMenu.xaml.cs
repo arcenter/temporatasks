@@ -28,7 +28,6 @@ namespace TemporaTasks.UserControls
             InitializeComponent();
             this.popupObject = popupObject;
             this.task = task;
-            if (task.IsGarbled()) eyeIcon.Source = (ImageSource)Application.Current.MainWindow.FindResource("eyeIcon");
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -109,7 +108,6 @@ namespace TemporaTasks.UserControls
                     return;
 
                 case "Garble":
-                    eyeIcon.Source = (ImageSource)Application.Current.MainWindow.FindResource(task.IsGarbled() ? "eyeOffIcon" : "eyeIcon");
                     task.Garble(null, true);
                     return;
 

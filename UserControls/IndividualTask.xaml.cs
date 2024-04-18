@@ -410,16 +410,12 @@ namespace TemporaTasks.UserControls
             return garbled;
         }
 
-        public async void Garble(bool? mode = null, ScrollViewer? scrollViewer = null)
+        public async void Garble(bool? _garble = null, bool playAnimation = false)
         {
             // if mode = null, then toggle. so if garbled mode, make it ungarbled.
             mode ??= !garbled;
 
-            if (IsVisible && scrollViewer != null)
-            {
-                Rect bounds = TransformToAncestor(scrollViewer).TransformBounds(new Rect(0.0, 0.0, ActualWidth, ActualHeight));
-                Rect viewBounds = new(0.0, 0.0, scrollViewer.ViewportWidth, scrollViewer.ViewportHeight);
-                if (bounds.IntersectsWith(viewBounds))
+            if (IsVisible && playAnimation)
                 {
                     if (mode.Value && !garbled)
                     {

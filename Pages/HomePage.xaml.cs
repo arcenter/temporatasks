@@ -186,7 +186,12 @@ namespace TemporaTasks.Pages
             {
                 foreach (object obj in TaskStack.Children)
                     if (obj is IndividualTask task)
-                    task.Garble(null, TaskStackScroller);
+                        {
+                            GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
+                            bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
+                                           && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
+                            task.Garble(null, isVisible);
+                        }
                 return;
             }
             }
@@ -391,7 +396,7 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.G:
-                        task.Garble(null, TaskStackScroller);
+                        task.Garble(null, true);
                         return;
 
                     case Key.E:
