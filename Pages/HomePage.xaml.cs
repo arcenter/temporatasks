@@ -178,6 +178,17 @@ namespace TemporaTasks.Pages
                     SetTempGarble(TempGarbleMode.None);
                     return;
                 }
+
+                else if (Keyboard.IsKeyDown(Key.D5))
+                {
+                    foreach (object obj in TaskStack.Children)
+                        if (obj is IndividualTask task)
+                            if (task.DueDT.HasValue && task.DueDT.Value.Date == DateTime.Now.Date)
+                                task.ChangeDueTime("plus5m", null);
+                            else
+                                return;
+                    return;
+                }
             }
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
