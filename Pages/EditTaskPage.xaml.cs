@@ -18,15 +18,13 @@ namespace TemporaTasks.Pages
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         readonly IndividualTask task;
 
-        public DateTimePicker datePickerUserControl;
-
         public EditTaskPage(IndividualTask task)
         {
             InitializeComponent();
 
             this.task = task;
             TaskNameTextbox.Text = task.TaskName;
-            
+
             CreatedLabel.Content = $"Created {task.CreatedDT.Value:dddd, dd MMMM, yyyy} at {task.CreatedDT.Value:hh:mm:ss tt}";
             
             if (task.DueDT.HasValue)
@@ -36,7 +34,7 @@ namespace TemporaTasks.Pages
             }
 
             if (task.TagList != null)
-                foreach (String tag in task.TagList)
+                foreach (string tag in task.TagList)
                     TagsStackAdd(tag);
 
             if (task.taskPriority == IndividualTask.TaskPriority.High) checkMark.Opacity = 1;
@@ -84,7 +82,7 @@ namespace TemporaTasks.Pages
                 else if (e.SystemKey == Key.G)
                 {
                     TagsTextbox.Focus();
-                    e.Handled = true; 
+                    e.Handled = true;
                     return;
                 }
 
@@ -94,7 +92,7 @@ namespace TemporaTasks.Pages
                     e.Handled = true;
                     return;
                 }
-                
+
                 else
                     foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
                         L.Visibility = Visibility.Visible;
@@ -152,12 +150,11 @@ namespace TemporaTasks.Pages
 
         private void Calendar_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            datePickerUserControl = new DateTimePicker(dateTextBox.Text)
+            datePickerPopUp.Child = new DateTimePicker(dateTextBox.Text)
             {
                 textBox = dateTextBox,
                 popUp = datePickerPopUp
             };
-            datePickerPopUp.Child = datePickerUserControl;
             datePickerPopUp.IsOpen = true;
         }
 
@@ -193,8 +190,7 @@ namespace TemporaTasks.Pages
             foreach (Tags tag in TagsStack.Children)
                 tagList.Add(tag.TagText);
 
-            IndividualTask.TaskPriority taskPriority = IndividualTask.TaskPriority.Normal;
-            if (checkMark.Opacity == 1) taskPriority = IndividualTask.TaskPriority.High;
+            IndividualTask.TaskPriority taskPriority = (checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
             task.TaskTimer.Stop();
             TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, task.IsGarbled(), taskPriority);

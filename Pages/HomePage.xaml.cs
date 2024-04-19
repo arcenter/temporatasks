@@ -99,6 +99,8 @@ namespace TemporaTasks.Pages
             HomePagePage.Focus();
             SearchTextBox.Text = "";
             RunSearchTextBoxCloseAnimation();
+            
+            homePage.Focus();
             GenerateTaskStack();
         }
 
@@ -127,7 +129,7 @@ namespace TemporaTasks.Pages
             {
                 if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Escape)
                 {
-                    HomePagePage.Focus();
+                    homePage.Focus();
                     if (SearchTextBox.Text.Length == 0) RunSearchTextBoxCloseAnimation();
                     if (e.Key == Key.Enter || e.Key == Key.Tab)
                     {
@@ -228,7 +230,6 @@ namespace TemporaTasks.Pages
                     if (hoveredTask.IsMouseOver)
                     {
                         currentFocus = TaskStack.Children.IndexOf(hoveredTask);
-                        UnfocusTasks();
                         FocusTask();
                     }
                     return;
@@ -473,9 +474,10 @@ namespace TemporaTasks.Pages
         {
             if (!SearchTextBox.IsMouseDirectlyOver && !SearchBorder.IsMouseDirectlyOver)
             {
-                HomePagePage.Focus();
+                homePage.Focus();
                 if (SearchTextBox.Text.Length == 0) RunSearchTextBoxCloseAnimation();
             }
+            if (hoveredTask != null && (hoveredTask.IsMouseOver || (hoveredTask.RightClickMenuPopup != null && hoveredTask.RightClickMenuPopup.IsMouseOver))) return;
             currentFocus = null;
             UnfocusTasks();
         }
@@ -999,6 +1001,7 @@ namespace TemporaTasks.Pages
         {
             foreach (object obj in TaskStack.Children) if (obj is IndividualTask task) task.StrokeOff();
         }
+
         private void ToggleTaskCompletion(IndividualTask task)
         {
             task.ToggleCompletionStatus();

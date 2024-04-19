@@ -26,9 +26,9 @@ namespace TemporaTasks.UserControls
 
         public enum TempGarbleMode
         {
-            TempGarbleOff,
-            TempGarbleOn,
-            None
+            TempGarbleOff = 0,
+            TempGarbleOn = 1,
+            None = 2
         }
 
         public enum TaskPriority
@@ -81,37 +81,26 @@ namespace TemporaTasks.UserControls
             
             CreatedDT = _CreatedDT;
             DueDT = _DueDT;
-            CompletedDT = _CompletedDT;
             IsCompleted = _CompletedDT.HasValue;
+            CompletedDT = _CompletedDT;
 
             // RecurranceTimeSpan = _RecurranceTimeSpan;
             TagList = _TagList;
 
             garbled = _garbled;
             if (_taskPriority == TaskPriority.High)
-            {
                 taskPriority = _taskPriority;
-                CheckBox.BorderBrush = (SolidColorBrush)mainWindow.FindResource("HighPriority");
-            }
 
-            DueDateTimeLabelUpdate();
-            NewDueDT();
+            SetTimer();
 
             TemporaryRemainingTimer.Interval = TimeSpan.FromSeconds(1);
             TemporaryRemainingTimer.Tick += UpdateDateTimeLabelWithRemaining;
-
-            UpdateTaskCheckBoxAndBackground();
         }
 
         private void IndividualTask_Loaded(object sender, RoutedEventArgs e)
         {
             TempGarble(TaskFile.tempGarbleMode);
             UpdateTaskCheckBoxAndBackground();
-            if (taskPriority == TaskPriority.High)
-            {
-                CheckBox.BorderBrush = checkMark.Stroke = strikethroughLine.Stroke = (SolidColorBrush)mainWindow.FindResource("HighPriority");
-                CheckBox.Opacity = checkMark.Opacity = 0.75;
-            }
             Cursor = Cursors.Hand;
         }
 
@@ -123,6 +112,7 @@ namespace TemporaTasks.UserControls
                 UpdateDateTimeLabelWithRemaining(null, null);
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, TimeSpan.FromMilliseconds(250)));
+            Icons.BeginAnimation(WidthProperty, new DoubleAnimation(65, TimeSpan.FromMilliseconds(250)));
         }
 
         public void Background_MouseLeave(object sender, MouseEventArgs e)
@@ -176,7 +166,7 @@ namespace TemporaTasks.UserControls
 
         public void UpdateTaskCheckBoxAndBackground()
         {
-            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? 1 : 0, TimeSpan.FromMilliseconds(250)));
+            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? (taskPriority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
 
             double final = IsCompleted ? strikethroughLine.MaxWidth : 0;
@@ -190,7 +180,7 @@ namespace TemporaTasks.UserControls
             UpdateHP();
         }
 
-        private async void updateStrikethrough(double final)
+        private async void UpdateStrikethrough()
         {
             await Task.Delay(250);
 
@@ -206,7 +196,7 @@ namespace TemporaTasks.UserControls
         public delegate void EditIconClicked(object sender);
         public event EditIconClicked IsEditIconClicked;
 
-        private void EditIcon_MouseDown(object sender, MouseButtonEventArgs e)
+        public void EditIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
             IsEditIconClicked?.Invoke(this);
         }
@@ -214,7 +204,7 @@ namespace TemporaTasks.UserControls
         public delegate void TrashIconClicked(object sender);
         public event TrashIconClicked IsTrashIconClicked;
 
-        private void TrashIcon_MouseDown(object sender, MouseButtonEventArgs e)
+        public void TrashIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TaskTimer.Stop();
             IsTrashIconClicked?.Invoke(this);

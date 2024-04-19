@@ -18,6 +18,7 @@ namespace TemporaTasks
 {
     public partial class MainWindow : Window
     {
+        public HomePage homePage;
 
         public MainWindow()
         {
@@ -37,7 +38,8 @@ namespace TemporaTasks
                 TaskFile.saveFilePath = $"{path}data.json";
                 TaskFile.LoadData();
             }
-            FrameView.Navigate(new HomePage());
+            homePage = new();
+            FrameView.Navigate(homePage);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -156,10 +158,10 @@ namespace TemporaTasks
         public async void OnTaskDue(string title, string message, BalloonIcon symbol)
         {
             if (balloonCalledRecently) return;
-            WindowHide(false);
             TrayIcon.ShowBalloonTip(title, message, symbol);
             balloonCalledRecently = true;
             await Task.Delay(1000);
+            if (!IsActive) WindowHide(false);
             balloonCalledRecently = false;
         }
 
