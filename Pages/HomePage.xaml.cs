@@ -716,17 +716,22 @@ namespace TemporaTasks.Pages
             List<IndividualTask> tasks = [];
 
             if (currentViewCategory == ViewCategory.Completed)
+            {
                 foreach (IndividualTask task in TaskFile.TaskList)
-                {
                     if (task.IsCompleted) tasks.Add(task);
                 }
+
             else
+            {
                 foreach (IndividualTask task in TaskFile.TaskList)
                 {
                     if (task.IsCompleted) continue;
                     tasks.Add(task);
                 }
+            }
 
+
+            MatchCollection matches;
             Regex regex = new(SearchTextBox.Text.ToLower());
             switch (SortComboBox.SelectedIndex)
             {
@@ -739,6 +744,30 @@ namespace TemporaTasks.Pages
                         {
                             foreach (IndividualTask task in tasks)
                                 if (!task.DueDT.HasValue) noDueDate.Add(task);
+                        }
+                        else if ((matches = RegexTags().Matches(SearchTextBox.Text)).Count > 0)
+                        {
+                            foreach (IndividualTask task in tasks)
+                            {
+                                if (task.TagList != null)
+                                    foreach (string tag in task.TagList)
+                                    {
+                                        foreach (Match match in matches.Cast<Match>())
+                                        {
+                                            if (new Regex(match.Value[1..]).Match(tag).Success)
+                                            {
+                                                if (task.DueDT.HasValue)
+                                                {
+                                                    yesDueDate[task] = task.DueDT.Value;
+                                                    if (task.IsDue) dueTasks++;
+                                                }
+                                                else if (!noDueDate.Contains(task)) noDueDate.Add(task);
+                                                goto NextTask;
+                                            }
+                                        }
+                                    }
+                                NextTask:;
+                            }
                         }
                         else
                         {
@@ -849,6 +878,27 @@ namespace TemporaTasks.Pages
                             foreach (IndividualTask task in tasks)
                                 if (task.DueDT.HasValue) tasks.Remove(task);
                         }
+                        else if ((matches = RegexTags().Matches(SearchTextBox.Text)).Count > 0)
+                        {
+                            foreach (IndividualTask task in tasks)
+                            {
+                                if (task.TagList != null)
+                                    foreach (string tag in task.TagList)
+                                    {
+                                        foreach (Match match in matches.Cast<Match>())
+                                        {
+                                            Regex _regex = new(match.Value[1..]);
+                                            if (_regex.Match(tag).Success)
+                                            {
+                                                if (task.IsDue) dueTasks++;
+                                                goto NextTask;
+                                            }
+                                        }
+                                    }
+                                tasks.Remove(task);
+                                NextTask:;
+                            }
+                        }
                         else
                         {
                             foreach (IndividualTask task in tasks)
@@ -870,6 +920,26 @@ namespace TemporaTasks.Pages
 
                     foreach (IndividualTask task in tasks) TaskStack.Children.Add(task);
 
+                    break;
+            }
+
+            if (currentViewCategory == ViewCategory.Completed)
+            {
+                int counter = 0;
+                foreach (object obj in TaskStack.Children)
+                    if (obj is IndividualTask task)
+                    {
+                        if (counter++ == 10) break;
+                        task.UpdateLayoutAndStrikethrough();
+                    }
+
+            mainWindow.Cursor = Cursors.Arrow;
+
+        }
+
+        [GeneratedRegex(@"#\S+")]
+        public static partial Regex RegexTags();
+            }
                     break;
             }
         }
