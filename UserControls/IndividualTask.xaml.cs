@@ -407,15 +407,16 @@ namespace TemporaTasks.UserControls
 
         public async void Garble(bool? _garble = null, bool playAnimation = false)
         {
-            // if mode = null, then toggle. so if garbled mode, make it ungarbled.
-            mode ??= !garbled;
+            bool garble = _garble ?? !IsGarbled();
+
+            if (garble == garbled) return;
+            garbled = garble;
 
             if (IsVisible && playAnimation)
                 {
-                    if (mode.Value && !garbled)
+                ToolTipService.SetIsEnabled(Background, garble);
+                if (garble)
                     {
-                        garbled = true;
-
                         strikethroughLine.Visibility = Visibility.Hidden;
                     TextSP.Children.Clear();
                     TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
@@ -423,9 +424,6 @@ namespace TemporaTasks.UserControls
                         taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                         await Task.Delay(400);
                         taskNameTextBlock.Visibility = Visibility.Hidden;
-
-                        TextSP.Children.Clear();
-                        TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
                         Random random = new();
                         int limit = 3 + random.Next() % 2;
@@ -448,21 +446,16 @@ namespace TemporaTasks.UserControls
                             line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
                             await Task.Delay(300);
                         }
-
-                        TaskFile.SaveData();
                     }
-                    else if (garbled)
+                else
                     {
-                        garbled = false;
-
-                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
-                        taskNameTextBlock.Visibility = Visibility.Visible;
-
                         TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                         await Task.Delay(400);
                         TextSP.Children.Clear();
 
-                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(300)));
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                    taskNameTextBlock.Visibility = Visibility.Visible;
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
 
                         strikethroughLine.Visibility = Visibility.Visible;
                 }
