@@ -182,7 +182,12 @@ namespace TemporaTasks.UserControls
             double final = IsCompleted ? strikethroughLine.MaxWidth : 0;
             if (strikethroughLine.Width != final) updateStrikethrough(final);
 
-            DueDateTimeLabelUpdate();
+        public void ToggleHP()
+        {
+            Trace.WriteLine("Toggle");
+            taskPriority = (taskPriority == TaskPriority.Normal) ? TaskPriority.High : TaskPriority.Normal;
+            TaskFile.SaveData();
+            UpdateHP();
         }
 
         private async void updateStrikethrough(double final)

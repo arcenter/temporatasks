@@ -415,6 +415,10 @@ namespace TemporaTasks.Pages
                         mainWindow.FrameView.Navigate(new EditTaskPage(task));
                         return;
 
+                    case Key.P:
+                        task.ToggleHP();
+                        return;
+
                     case Key.D:
                     case Key.Delete:
                         TrashIcon_MouseDown(task);
