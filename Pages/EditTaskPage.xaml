@@ -176,6 +176,8 @@
 
                         </StackPanel>
 
+                        <Label x:Name="CreatedLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0 0 20 0" VerticalAlignment="Center" HorizontalAlignment="Right" DockPanel.Dock="Right" Opacity="0.5"/>
+
                     </DockPanel>
 
                 </StackPanel>

@@ -27,6 +27,8 @@ namespace TemporaTasks.Pages
             this.task = task;
             TaskNameTextbox.Text = task.TaskName;
             
+            CreatedLabel.Content = $"Created {task.CreatedDT.Value:dddd, dd MMMM, yyyy} at {task.CreatedDT.Value:hh:mm:ss tt}";
+            
             if (task.DueDT.HasValue)
             {
                 dateTextBox.Text = DTHelper.DateToString(task.DueDT.Value);
