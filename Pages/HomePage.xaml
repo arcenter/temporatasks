@@ -8,7 +8,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Home" Loaded="Page_Loaded" Unloaded="Page_Unloaded" Focusable="True">
-    
+
     <Page.Resources>
         <Style x:Key="DummyFocus" TargetType="{x:Type Control}">
             <Setter Property="Template">
@@ -20,7 +20,7 @@
             </Setter>
         </Style>
     </Page.Resources>
-    
+
     <Page.FocusVisualStyle>
         <Style/>
     </Page.FocusVisualStyle>
@@ -71,7 +71,7 @@
                             </Border.ToolTip>
                         </Border>
                         <Image x:Name="EyeIcon" Source="{StaticResource NoneEyeIcon}" Opacity="0.25" IsHitTestVisible="False" RenderTransformOrigin="0.5, 0.5" Width="15" Height="15"/>
-        </Grid>
+                    </Grid>
                     <Grid Height="40" Margin="0 5 0 0">
                         <Border x:Name="NotifButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Cursor="Hand" Width="40" IsMouseDirectlyOverChanged="NotifButton_IsMouseDirectlyOverChanged" MouseDown="NotifButton_MouseDown">
                             <Border.ToolTip>
@@ -97,90 +97,104 @@
 
         </Grid>
 
-        <Grid x:Name="MainGrid" Margin="50 0 50 0">
+        <Grid>
 
-            <Image x:Name="NewTaskArrow" Source="{StaticResource NewTaskArrow}" HorizontalAlignment="Right" VerticalAlignment="Top" MaxWidth="200" Margin="0 120 40 0" Visibility="Collapsed"/>
+            <Grid Margin="50 0 50 0">
 
-            <DockPanel Margin="13 50 13 0" VerticalAlignment="Top">
+                <Image x:Name="NewTaskArrow" Source="{StaticResource NewTaskArrow}" HorizontalAlignment="Right" VerticalAlignment="Top" MaxWidth="200" Margin="0 120 40 0" Visibility="Collapsed"/>
 
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <DockPanel Margin="13 50 13 0" VerticalAlignment="Top">
 
-                    <Border x:Name="SearchBorder" Background="{StaticResource Secondary}" CornerRadius="5" Padding="5 0 5 0" IsMouseDirectlyOverChanged="SearchBorder_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="SearchBorder_MouseDown" Cursor="IBeam">
-                        <Border.ToolTip>
-                            <ToolTip>
-                                <StackPanel Orientation="Horizontal">
-                                    <userControl:ButtonToolTip ToolTipText="Search Task" Button1Text="s" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
-                                    <userControl:ButtonToolTip ToolTipText="/" Button1Text="ctrl" CornerRadius="0" BorderPadding="0 5"/>
-                                    <userControl:ButtonToolTip ToolTipText="+" Button1Text="f" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
-                                </StackPanel>
-                            </ToolTip>
-                        </Border.ToolTip>
-                        <DockPanel>
-                            <Image Source="{StaticResource searchIcon}" Height="10" DockPanel.Dock="Right" Margin="10 0 10 0" IsHitTestVisible="False" x:Name="SearchIcon" RenderTransformOrigin="0.5,0.5"/>
-                            <TextBox x:Name="SearchTextBox" Width="0" Margin="0 5 0 5" TextChanged="SearchTextBox_TextChanged" IsTabStop="False"/>
-                        </DockPanel>
-                    </Border>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
 
-                    <Border Background="{StaticResource TitleBar}" CornerRadius="5" Margin="20 0 0 0">
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" Padding="15 0 0 0" Margin="0" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
-                                <ComboBoxItem Content="Name"/>
-                                <ComboBoxItem Content="Created"/>
-                                <ComboBoxItem Content="Due"/>
-                            </ComboBox>
-                            <userControl:IconButton x:Name="SortButton" SVGSource="{StaticResource burgerIcon}" Width="40" Height="40" MouseDown="ReverseButton_MouseDown" RenderTransformOrigin="0.5,0.5">
-                                <userControl:IconButton.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform ScaleY="-1"/>
-                                    </TransformGroup>
-                                </userControl:IconButton.RenderTransform>
-                                <userControl:IconButton.ToolTip>
-                                    <ToolTip>
-                                        <userControl:ButtonToolTip ToolTipText="Reverse the sort" Button1Text="r"/>
-                                    </ToolTip>
-                                </userControl:IconButton.ToolTip>
-                            </userControl:IconButton>
-                        </StackPanel>
-                    </Border>
+                        <Border x:Name="SearchBorder" Background="{StaticResource Secondary}" CornerRadius="5" Padding="5 0 5 0" IsMouseDirectlyOverChanged="SearchBorder_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="SearchBorder_MouseDown" Cursor="IBeam">
+                            <Border.ToolTip>
+                                <ToolTip>
+                                    <StackPanel Orientation="Horizontal">
+                                        <userControl:ButtonToolTip ToolTipText="Search Task" Button1Text="s" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
+                                        <userControl:ButtonToolTip ToolTipText="/" Button1Text="ctrl" CornerRadius="0" BorderPadding="0 5"/>
+                                        <userControl:ButtonToolTip ToolTipText="+" Button1Text="f" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
+                                    </StackPanel>
+                                </ToolTip>
+                            </Border.ToolTip>
+                            <DockPanel>
+                                <Image Source="{StaticResource searchIcon}" Height="10" DockPanel.Dock="Right" Margin="10 0 10 0" IsHitTestVisible="False" x:Name="SearchIcon" RenderTransformOrigin="0.5,0.5"/>
+                                <TextBox x:Name="SearchTextBox" Width="0" Margin="0 5 0 5" TextChanged="SearchTextBox_TextChanged" IsTabStop="False"/>
+                            </DockPanel>
+                        </Border>
 
-                    <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="Border_MouseMove" Margin="20 0 0 0" Cursor="Hand">
+                        <Border Background="{StaticResource TitleBar}" CornerRadius="5" Margin="20 0 0 0">
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" Padding="15 0 0 0" Margin="0" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
+                                    <ComboBoxItem Content="Name"/>
+                                    <ComboBoxItem Content="Created"/>
+                                    <ComboBoxItem Content="Due"/>
+                                </ComboBox>
+                                <userControl:IconButton x:Name="SortButton" SVGSource="{StaticResource burgerIcon}" Width="40" Height="40" MouseDown="ReverseButton_MouseDown" RenderTransformOrigin="0.5,0.5">
+                                    <userControl:IconButton.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleY="-1"/>
+                                        </TransformGroup>
+                                    </userControl:IconButton.RenderTransform>
+                                    <userControl:IconButton.ToolTip>
+                                        <ToolTip>
+                                            <userControl:ButtonToolTip ToolTipText="Reverse the sort" Button1Text="r"/>
+                                        </ToolTip>
+                                    </userControl:IconButton.ToolTip>
+                                </userControl:IconButton>
+                            </StackPanel>
+                        </Border>
 
-                        <Border.Background>
-                            <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
-                        </Border.Background>
+                        <Border x:Name="AddButton" HorizontalAlignment="Right" CornerRadius="5" IsMouseDirectlyOverChanged="AddButton_IsMouseDirectlyOverChanged" MouseDown="AddButton_MouseDown" MouseMove="Border_MouseMove" Margin="20 0 0 0" Cursor="Hand">
 
-                        <Border.ToolTip>
-                            <ToolTip>
-                                <ToolTip.Content>
-                                    <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="n"/>
-                                </ToolTip.Content>
-                            </ToolTip>
-                        </Border.ToolTip>
+                            <Border.Background>
+                                <SolidColorBrush Opacity="0.5" Color="{Binding Color, Source={StaticResource DarkBlue}}"/>
+                            </Border.Background>
 
-                        <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
+                            <Border.ToolTip>
+                                <ToolTip>
+                                    <ToolTip.Content>
+                                        <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="n"/>
+                                    </ToolTip.Content>
+                                </ToolTip>
+                            </Border.ToolTip>
 
-                    </Border>
+                            <Label Content="Add Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0" Margin="20 0 20 0" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center"/>
 
-                </StackPanel>
+                        </Border>
 
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    </StackPanel>
 
-                    <Label FocusVisualStyle="{DynamicResource DummyFocus}" x:Name="label" Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Bold" Foreground="{StaticResource Text}" FontSize="28" DockPanel.Dock="Left" Padding="0" VerticalContentAlignment="Stretch"/>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
 
-                    <Label x:Name="DueTaskCount" FontFamily="Courier New" Foreground="{StaticResource PastDue}" FontSize="18" Padding="0" Margin="20 0 0 5" VerticalContentAlignment="Bottom" Opacity="0.8"/>
+                        <Label FocusVisualStyle="{DynamicResource DummyFocus}" x:Name="label" Content="Home" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Bold" Foreground="{StaticResource Text}" FontSize="28" DockPanel.Dock="Left" Padding="0" VerticalContentAlignment="Stretch"/>
 
-                    <Label x:Name="TaskCount" FontFamily="Courier New" Foreground="{StaticResource Text}" FontSize="18" Padding="0" Margin="0 0 0 5" VerticalContentAlignment="Bottom" Opacity="0.4"/>
+                        <Label x:Name="DueTaskCount" FontFamily="Courier New" Foreground="{StaticResource PastDue}" FontSize="18" Padding="0" Margin="20 0 0 5" VerticalContentAlignment="Bottom" Opacity="0.8"/>
 
-                </StackPanel>
+                        <Label x:Name="TaskCount" FontFamily="Courier New" Foreground="{StaticResource Text}" FontSize="18" Padding="0" Margin="0 0 0 5" VerticalContentAlignment="Bottom" Opacity="0.4"/>
 
-            </DockPanel>
+                    </StackPanel>
 
-            <ScrollViewer x:Name="TaskStackScroller" Style="{StaticResource CustomScrollViewerStyle}" HorizontalScrollBarVisibility="Disabled" Margin="0 110 -17 0" Focusable="False" PreviewMouseWheel="TaskStackScroller_PreviewMouseWheel">
-                <StackPanel>
-                    <StackPanel x:Name="TaskStack"/>
-                    <Rectangle Height="50"/>
-                </StackPanel>
-            </ScrollViewer>
+                </DockPanel>
+
+                <ScrollViewer x:Name="TaskStackScroller" Style="{StaticResource CustomScrollViewerStyle}" HorizontalScrollBarVisibility="Disabled" Margin="0 110 -17 0" Focusable="False" PreviewMouseWheel="TaskStackScroller_PreviewMouseWheel">
+                    <StackPanel>
+                        <StackPanel x:Name="TaskStack"/>
+                        <Rectangle Height="50"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+
+            <Grid x:Name="StatusGrid" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="35">
+                <Border Background="#252525" BorderBrush="{StaticResource Accent}" BorderThickness="1 1 0 0" CornerRadius="5 0 0 0">
+                    <StackPanel Orientation="Horizontal" Margin="12 0" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Content="Task"                FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiLight" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="0"/>
+                        <Label x:Name="NextTaskDueNameLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"   Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.9" Padding="5 0 5 0"/>
+                        <Label x:Name="NextTaskDueTimeLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiLight" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
 
         </Grid>
 

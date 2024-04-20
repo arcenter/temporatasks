@@ -704,6 +704,8 @@ namespace TemporaTasks.Pages
         {
             if (TaskStack == null) return;
 
+            mainWindow.Cursor = Cursors.Wait;
+
             TaskStack.Children.Clear();
             if (scrollToTop) TaskStackScroller.ScrollToVerticalOffset(0);
 
@@ -932,6 +934,9 @@ namespace TemporaTasks.Pages
                         if (counter++ == 10) break;
                         task.UpdateLayoutAndStrikethrough();
                     }
+            }
+
+            else UpdateNextDueTask();
 
             mainWindow.Cursor = Cursors.Arrow;
 
@@ -939,8 +944,99 @@ namespace TemporaTasks.Pages
 
         [GeneratedRegex(@"#\S+")]
         public static partial Regex RegexTags();
+
+        private string GetRelativeTaskDueTime(IndividualTask task)
+        {
+            if (!task.DueDT.HasValue) return "";
+
+            TimeSpan remainingTime = task.DueDT.Value - DateTime.Now;
+            
+            if (remainingTime <= TimeSpan.FromTicks(0) && !task.IsCompleted) return "is past due";
+
+            if (remainingTime > TimeSpan.FromMinutes(1))
+            {
+                double inTime;
+                string timeUnit;
+
+                if (remainingTime < TimeSpan.FromHours(1))
+                {
+                    inTime = remainingTime.TotalMinutes;
+                    timeUnit = "minute";
+                }
+                else if (remainingTime < TimeSpan.FromDays(1))
+                {
+                    inTime = remainingTime.TotalHours;
+                    timeUnit = "hour";
+                }
+                else if (remainingTime < TimeSpan.FromDays(7))
+                {
+                    inTime = remainingTime.TotalDays;
+                    timeUnit = "day";
+                }
+                else if (remainingTime < TimeSpan.FromDays(30))
+                {
+                    inTime = (remainingTime.TotalDays / 7);
+                    timeUnit = "week";
             }
+                else if (remainingTime < TimeSpan.FromDays(365))
+                {
+                    inTime = (remainingTime.TotalDays / 30);
+                    timeUnit = "month";
+                }
+                else
+                {
+                    inTime = (remainingTime.TotalDays / 365);
+                    timeUnit = "year";
+                }
+
+                inTime = Math.Round(inTime, 0);
+                return "is due in " + ((inTime > 1) ? $"~{inTime} {timeUnit}s" : $"a{(timeUnit == "hour" ? "n" : "")} {timeUnit}");
+            }
+
+            else return $"is due in {(int)remainingTime.TotalSeconds} seconds";
+        }
+
+        private void UpdateNextDueTask()
+        {
+            if (TaskFile.TaskList.Count == 0) return;
+
+            IndividualTask? nextDueTask = null;
+
+            if (TaskFile.sortType == 2)
+            {
+                if (reverseSort)
+                {
+                    for (int i = TaskStack.Children.Count-1; i >= 0; i--)
+                        if (TaskStack.Children[i] is IndividualTask task && !task.IsCompleted && task.DueDT.HasValue)
+                        {
+                            nextDueTask = task;
+                            break;
+                        }
+                }
+                else
+                {
+                    foreach (object obj in TaskStack.Children)
+                        if (obj is IndividualTask task && !task.IsCompleted)
+                        {
+                            if (task.DueDT.HasValue) nextDueTask = task;
                     break;
+            }
+        }
+            }
+            else
+            {
+                for (int i = TaskFile.TaskList.Count - 1; i >= 0; i--)
+                    if (TaskFile.TaskList[i] is IndividualTask task && !task.IsCompleted && task.DueDT.HasValue)
+                        if (nextDueTask == null) nextDueTask = task;
+                        else if (task.DueDT < nextDueTask.DueDT) nextDueTask = task;
+            }
+
+            if (nextDueTask == null) StatusGrid.Visibility = Visibility.Collapsed;
+            else
+            {
+                StatusGrid.Visibility = Visibility.Visible;
+                NextTaskDueNameLabel.Content = ((nextDueTask.IsGarbled() && TaskFile.tempGarbleMode != TempGarbleMode.TempGarbleOff) || TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOn) ? "Garbled Task" : nextDueTask.TaskName;
+                NextTaskDueTimeLabel.Content = GetRelativeTaskDueTime(nextDueTask);
             }
         }
 
@@ -1088,6 +1184,7 @@ namespace TemporaTasks.Pages
             foreach (object obj in TaskStack.Children)
                 if (obj is IndividualTask task)
                     task.TempGarble(tempGarbleMode);
+            UpdateNextDueTask();
         }
 
         private void EditIcon_MouseDown(object sender)
