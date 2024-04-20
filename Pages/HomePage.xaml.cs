@@ -64,6 +64,7 @@ namespace TemporaTasks.Pages
                     task.IsTrashIconClicked += TrashIcon_MouseDown;
                     task.IsEditIconClicked += EditIcon_MouseDown;
                     task.MouseEnter += TaskMouseEnter;
+                    task.MouseDown += TaskMouseDown;
                 }
 
                 GenerateTaskStack(false);
@@ -503,6 +504,13 @@ namespace TemporaTasks.Pages
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
         }
+
+        private void TaskMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currentFocus = TaskStack.Children.IndexOf(((IndividualTask)sender));
+            FocusTask();
+        }
+
 
         private async void NotifButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -1196,7 +1204,9 @@ namespace TemporaTasks.Pages
         {
             IndividualTask task = (IndividualTask)sender;
             task.TaskTimer.Stop();
+            task.StrokeOff();
             lastTask.Add(task);
+            TaskStack.Children.Remove(task);
             TaskFile.TaskList.Remove(task);
             TaskFile.SaveData();
         }
