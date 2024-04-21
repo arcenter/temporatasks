@@ -9,7 +9,7 @@
              Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded"
              Opacity="0" Background="Transparent">
 
-    <Border Background="#383838" BorderBrush="{StaticResource Border}" BorderThickness="1" Padding="10" MinWidth="200" CornerRadius="10">
+    <Border Background="#383838" BorderThickness="0" Padding="10" MinWidth="200" CornerRadius="10">
 
         <StackPanel>
 
