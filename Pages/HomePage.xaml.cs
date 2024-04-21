@@ -95,9 +95,12 @@ namespace TemporaTasks.Pages
         {
             currentViewCategory = viewCategory;
             label.Content = currentViewCategory.ToString();
+            foreach (Image icon in new[] {HomeIcon, CompletedIcon})
+                icon.BeginAnimation(OpacityProperty, new DoubleAnimation(($"{viewCategory}Icon" == icon.Name) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
+
             currentFocus = null;
             UnfocusTasks();
-            HomePagePage.Focus();
+            
             SearchTextBox.Text = "";
             RunSearchTextBoxCloseAnimation();
             
