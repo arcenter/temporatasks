@@ -246,7 +246,7 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Border x:Name="Delete" Background="#1a1a1a" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Delete_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                <Border x:Name="Delete" Background="{StaticResource Background}" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Delete_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
