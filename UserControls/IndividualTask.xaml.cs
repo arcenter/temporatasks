@@ -168,9 +168,10 @@ namespace TemporaTasks.UserControls
         {
             checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? (taskPriority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
+            UpdateStrikethrough();
 
-            double final = IsCompleted ? strikethroughLine.MaxWidth : 0;
-            if (strikethroughLine.Width != final) updateStrikethrough(final);
+        private void UpdateHP()
+        {
 
         public void ToggleHP()
         {
@@ -184,13 +185,29 @@ namespace TemporaTasks.UserControls
         {
             await Task.Delay(250);
 
-            var animation = new DoubleAnimation(IsCompleted ? 0 : strikethroughLine.MaxWidth, final, TimeSpan.FromMilliseconds(500));
+            DoubleAnimation animation;
+
+            if (IsCompleted && strikethroughLine.Width != strikethroughLine.MaxWidth)
+                animation = new DoubleAnimation(0, strikethroughLine.MaxWidth, TimeSpan.FromMilliseconds(500));
+
+            else if (!IsCompleted && strikethroughLine.Width != 0)
+                animation = new DoubleAnimation(strikethroughLine.MaxWidth, 0, TimeSpan.FromMilliseconds(500));
+
+            else return;
+
             Storyboard.SetTarget(animation, strikethroughLine);
             Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
 
             Storyboard storyboard = new();
             storyboard.Children.Add(animation);
             storyboard.Begin();
+        }
+
+        public void UpdateLayoutAndStrikethrough()
+        {
+            taskNameTextBlock.UpdateLayout();
+            strikethroughLine.UpdateLayout();
+            UpdateStrikethrough();
         }
 
         public delegate void EditIconClicked(object sender);
