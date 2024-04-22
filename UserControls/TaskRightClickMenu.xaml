@@ -50,8 +50,8 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image x:Name="eyeIcon" Source="{StaticResource eyeOffIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
-                <Label Content="Garble Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+                <Image Source="{StaticResource TempGarbleOnEyeIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Label Content="Toggle Task Garble" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
             <Grid Height="30">
