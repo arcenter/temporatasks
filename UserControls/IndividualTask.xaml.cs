@@ -168,10 +168,27 @@ namespace TemporaTasks.UserControls
         {
             checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? (taskPriority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
+            UpdateHP();
             UpdateStrikethrough();
 
         private void UpdateHP()
         {
+            Trace.WriteLine($"[{counter++}] Update");
+            if (taskPriority == TaskPriority.High)
+            {
+                CheckBox.BorderBrush = checkMark.Stroke = strikethroughLine.Stroke = (SolidColorBrush)mainWindow.FindResource("HighPriority");
+                CheckBox.Opacity = checkMark.Opacity = 0.75;
+                strikethroughLine.Opacity = 0.75;
+            }
+            else
+            {
+                CheckBox.BorderBrush = (SolidColorBrush)mainWindow.FindResource("CheckBox");
+                checkMark.Stroke = (SolidColorBrush)mainWindow.FindResource("Blue");
+                strikethroughLine.Stroke = (SolidColorBrush)mainWindow.FindResource("DarkBlue");
+                CheckBox.Opacity = strikethroughLine.Opacity = 1;
+                checkMark.Opacity = IsCompleted ? 1 : 0;
+            }
+        }
 
         public void ToggleHP()
         {
