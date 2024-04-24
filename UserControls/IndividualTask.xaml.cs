@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Configuration;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -75,10 +76,10 @@ namespace TemporaTasks.UserControls
             InitializeComponent();
 
             TaskUID = _TaskUID;
-
+            
             taskNameTextBlock.Text = TaskName = _TaskName;
             TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
-            
+
             CreatedDT = _CreatedDT;
             DueDT = _DueDT;
             IsCompleted = _CompletedDT.HasValue;
@@ -170,6 +171,8 @@ namespace TemporaTasks.UserControls
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
             UpdateHP();
             UpdateStrikethrough();
+            DueDateTimeLabelUpdate();
+        }
 
         private void UpdateHP()
         {
@@ -340,6 +343,12 @@ namespace TemporaTasks.UserControls
 
         public void NewDueDT()
         {
+            SetTimer();
+            DueDateTimeLabelUpdate();
+        }
+
+        private void SetTimer()
+        {
             TaskTimer.Stop();
             if (DueDT.HasValue && !IsCompleted)
             {
@@ -352,7 +361,7 @@ namespace TemporaTasks.UserControls
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
                         if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal)
-                        mainWindow.OnTaskDue("Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                            mainWindow.OnTaskDue("Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         else if (TaskFile.notificationMode == TaskFile.NotificationMode.High && taskPriority == TaskPriority.High)
                             mainWindow.OnTaskDue("⚠ Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         TaskTimer.Interval = TimeSpan.FromMinutes(5);
@@ -360,7 +369,6 @@ namespace TemporaTasks.UserControls
                     TaskTimer.Start();
                 }
             }
-            DueDateTimeLabelUpdate();
         }
 
         public void ChangeDueTime(object sender, MouseButtonEventArgs e)
@@ -447,58 +455,58 @@ namespace TemporaTasks.UserControls
             garbled = garble;
 
             if (IsVisible && playAnimation)
-                {
+            {
                 ToolTipService.SetIsEnabled(Background, garble);
                 if (garble)
-                    {
-                        strikethroughLine.Visibility = Visibility.Hidden;
+                {
+                    strikethroughLine.Visibility = Visibility.Hidden;
                     TextSP.Children.Clear();
                     TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
-                        taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                        await Task.Delay(400);
-                        taskNameTextBlock.Visibility = Visibility.Hidden;
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    await Task.Delay(400);
+                    taskNameTextBlock.Visibility = Visibility.Hidden;
 
-                        Random random = new();
-                        int limit = 3 + random.Next() % 2;
+                    Random random = new();
+                    int limit = 3 + random.Next() % 2;
 
-                        for (int i = 0; i < limit; i++)
-                        {
-                            Line line = new()
-                            {
-                                X1 = 0,
-                                X2 = 0,
-                                Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
-                                StrokeThickness = 4,
-                                StrokeStartLineCap = PenLineCap.Round,
-                                StrokeEndLineCap = PenLineCap.Round,
-                                Margin = new Thickness(0, 0, 10, 0),
-                                IsHitTestVisible = false
-                            };
-
-                            TextSP.Children.Add(line);
-                            line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
-                            await Task.Delay(300);
-                        }
-                    }
-                else
+                    for (int i = 0; i < limit; i++)
                     {
-                        TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                        await Task.Delay(400);
-                        TextSP.Children.Clear();
+                        Line line = new()
+                        {
+                            X1 = 0,
+                            X2 = 0,
+                            Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
+                            StrokeThickness = 4,
+                            StrokeStartLineCap = PenLineCap.Round,
+                            StrokeEndLineCap = PenLineCap.Round,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            IsHitTestVisible = false
+                        };
+
+                        TextSP.Children.Add(line);
+                        line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
+                        await Task.Delay(300);
+                    }
+                }
+                else
+                {
+                    TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    await Task.Delay(400);
+                    TextSP.Children.Clear();
 
                     taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
                     taskNameTextBlock.Visibility = Visibility.Visible;
                     taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
 
-                        strikethroughLine.Visibility = Visibility.Visible;
+                    strikethroughLine.Visibility = Visibility.Visible;
                 }
             }
 
             else TempGarble(garble ? TempGarbleMode.TempGarbleOn : TempGarbleMode.TempGarbleOff);
 
-                        TaskFile.SaveData();
-                    }
+            TaskFile.SaveData();
+        }
 
         public void TempGarble(TempGarbleMode garbleMode)
         {
@@ -507,7 +515,7 @@ namespace TemporaTasks.UserControls
                 if (TextSP.Opacity == 1) return;
 
                 ToolTipService.SetIsEnabled(Background, true);
-            
+
                 strikethroughLine.Visibility = Visibility.Hidden;
                 taskNameTextBlock.Visibility = Visibility.Hidden;
                 taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
