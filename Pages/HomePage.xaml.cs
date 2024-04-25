@@ -490,12 +490,10 @@ namespace TemporaTasks.Pages
         {
             currentFocus = null;
             UnfocusTasks();
+            SetTempGarble(TempGarbleMode.None);
             foreach (object obj in TaskStack.Children)
                 if (obj is IndividualTask task)
-                {
-                    task.TempGarble(TaskFile.tempGarbleMode);
                     task.DueDateTimeLabelUpdate();
-                }
             GenerateTaskStack(false);
         }
 
