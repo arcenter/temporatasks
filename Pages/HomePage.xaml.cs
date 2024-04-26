@@ -167,7 +167,13 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-                if (Keyboard.IsKeyDown(Key.D1))
+                if (Keyboard.IsKeyDown(Key.OemTilde))
+                {
+                    EyeButton_MouseDown(null, null);
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.D1))
                 {
                     SetTempGarble(TempGarbleMode.TempGarbleOff);
                     return;
@@ -540,7 +546,7 @@ namespace TemporaTasks.Pages
 
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            int _ = ((((int)TaskFile.notificationMode) + ((e.ChangedButton == MouseButton.Right || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3);
+            int _ = ((((int)TaskFile.notificationMode) + (((e != null && e.ChangedButton == MouseButton.Right) || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3);
             if (_ == -1) _ = 2;
             TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), _.ToString());
             UpdateNotificationMode();
@@ -592,7 +598,7 @@ namespace TemporaTasks.Pages
 
         private void EyeButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            int _ = (((int)TaskFile.tempGarbleMode) + ((e.ChangedButton == MouseButton.Right || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3;
+            int _ = (((int)TaskFile.tempGarbleMode) + (((e != null && e.ChangedButton == MouseButton.Right) || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3;
             if (_ == -1) _ = 2;
             SetTempGarble((TempGarbleMode)Enum.Parse(typeof(TempGarbleMode), _.ToString()));
         }
