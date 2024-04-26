@@ -28,6 +28,8 @@ namespace TemporaTasks.UserControls
             InitializeComponent();
             this.popupObject = popupObject;
             this.task = task;
+
+            if (!task.IsLinkAvailable()) OpenLinkGrid.Visibility = Visibility.Collapsed;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -113,6 +115,11 @@ namespace TemporaTasks.UserControls
 
                 case "ToggleHP":
                     task.ToggleHP();
+                    return;
+
+                case "OpenLink":
+                    task.LinkOpen();
+                    PopupClose();
                     return;
 
                 case "Delete":

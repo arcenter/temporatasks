@@ -74,6 +74,26 @@
                 <Label Content="Toggle high priority" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
+            <Grid x:Name="OpenLinkGrid" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="OpenLink" Background="{StaticResource DarkBlue}" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <local:ButtonToolTip ToolTipText="Open link in task" Button1Text="l"/>
+                                </StackPanel>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Image Source="{StaticResource internetIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Label Content="Open link in task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+            </Grid>
+
             <Grid Height="20">
                 <Rectangle Fill="{StaticResource Border}" Height="2" Margin="10 0"/>
             </Grid>

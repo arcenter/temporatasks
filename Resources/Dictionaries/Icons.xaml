@@ -269,4 +269,71 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <!--https://www.svgrepo.com/svg/447845/website-click-->
+
+    <DrawingImage x:Key="internetIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V64 H64 V0 H0 Z">
+                <GeometryDrawing Geometry="F1 M64,64z M0,0z M39.93,55.72A24.86,24.86,0,1,1,56.86,32.15A37.24,37.24,0,0,1,56.13,38.15">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="F1 M64,64z M0,0z M37.86,51.1A47,47,0,0,1,32,56.7">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="F1 M64,64z M0,0z M32,7A34.14,34.14,0,0,1,43.57,30A34.07,34.07,0,0,1,43.66,34.85">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="F1 M64,64z M0,0z M32,7A34.09,34.09,0,0,0,20.31,32.46C20.31,48.66,27.59,53.46,31.97,56.7">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <LineGeometry StartPoint="10.37,19.9" EndPoint="53.75,19.9" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <LineGeometry StartPoint="32,6.99" EndPoint="32,56.7" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <LineGeometry StartPoint="11.05,45.48" EndPoint="37.04,45.48" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <LineGeometry StartPoint="7.14,32.46" EndPoint="56.86,31.85" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="F1 M64,64z M0,0z M53.57,57L58,52.56 50,44.56 54.55,41.65A0.38,0.38,0,0,0,54.43,40.95L39.14,37.37A0.39,0.39,0,0,0,38.68,37.83L42,53.41A0.39,0.39,0,0,0,42.71,53.54L45.57,49z">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="3" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+
 </ResourceDictionary>
