@@ -540,7 +540,9 @@ namespace TemporaTasks.Pages
 
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), ((((int)TaskFile.notificationMode) + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3).ToString());
+            int _ = ((((int)TaskFile.notificationMode) + ((e.ChangedButton == MouseButton.Right || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3);
+            if (_ == -1) _ = 2;
+            TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), _.ToString());
             UpdateNotificationMode();
             TaskFile.SaveData();
         }
@@ -590,7 +592,9 @@ namespace TemporaTasks.Pages
 
         private void EyeButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            SetTempGarble((TempGarbleMode)Enum.Parse(typeof(TempGarbleMode), $"{(((int)TaskFile.tempGarbleMode)+((e.ChangedButton == MouseButton.Right)?-1:1))%3}"));
+            int _ = (((int)TaskFile.tempGarbleMode) + ((e.ChangedButton == MouseButton.Right || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3;
+            if (_ == -1) _ = 2;
+            SetTempGarble((TempGarbleMode)Enum.Parse(typeof(TempGarbleMode), _.ToString()));
         }
 
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
