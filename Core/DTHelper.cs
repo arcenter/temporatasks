@@ -306,19 +306,19 @@ namespace TemporaTasks.Core
 
         // Time Regex ----------------------------------------------------------------------
 
-        [GeneratedRegex("^\\d{1,2}:\\d{1,2} ?[AaPp]?[Mm]?$")]
+        [GeneratedRegex("^\\d{1,2}:\\d{1,2}( ?[AaPp][Mm]?)?$")]
         public static partial Regex RegexTimeHH_MM();
         
-        [GeneratedRegex("^\\d{1,2} ?[AaPp]?[Mm]?$")]
+        [GeneratedRegex("^\\d{1,2}( ?[AaPp][Mm]?)?]?$")]
         public static partial Regex RegexTimeHH();
         
-        [GeneratedRegex("^\\d{3,4} ?[AaPp]?[Mm]?$")]
+        [GeneratedRegex("^\\d{3,4}( ?[AaPp][Mm]?)?$")]
         public static partial Regex RegexTimeHHMM();
 
         [GeneratedRegex("^\\d{1,3}h$")]
         public static partial Regex RegexAddHour();
 
-        [GeneratedRegex("^\\d{1,3}(M|[Mm]in)$")]
+        [GeneratedRegex("^\\d{1,3}m$")]
         public static partial Regex RegexAddMinute();
 
         [GeneratedRegex("^\\d{1,3}s$")]
