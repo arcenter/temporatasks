@@ -22,7 +22,6 @@ namespace TemporaTasks.UserControls
 
         public ArrayList? TagList { get; set; }
 
-        private bool completed = false;
         private bool garbled = false;
 
         public enum TempGarbleMode
@@ -42,16 +41,9 @@ namespace TemporaTasks.UserControls
 
         public bool IsCompleted
         {
-            get
-            {
-                return completed;
+            get { return CompletedDT.HasValue; }
+            set { CompletedDT = value ? DateTime.Now : null; }
             }
-            set
-            {
-                completed = value;
-                CompletedDT = value ? DateTime.Now : null;
-            }
-        }
 
         public Nullable<DateTime> CreatedDT;
         public Nullable<DateTime> DueDT;
