@@ -41,21 +41,21 @@ namespace TemporaTasks.Core
 
                     if ((match = RegexAddYear().Match(date)).Success)
                     {
-                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(365.25 * int.Parse(match.Value[..^1]));
+                        DateTime newDate = DateTime.Now.AddYears(int.Parse(match.Value[..^1]));
                         year = newDate.Year;
                         month = newDate.Month;
                         day = newDate.Day;
                     }
                     else if ((match = RegexAddMonth().Match(date)).Success)
                     {
-                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(30.5 * int.Parse(match.Value[..^1]));
+                        DateTime newDate = DateTime.Now.AddMonths(int.Parse(match.Value[..^1]));
                         year = newDate.Year;
                         month = newDate.Month;
                         day = newDate.Day;
                     }
                     else if ((match = RegexAddDay().Match(date)).Success)
                     {
-                        DateTime newDate = DateTime.Now + TimeSpan.FromDays(int.Parse(match.Value[..^1]));
+                        DateTime newDate = DateTime.Now.AddDays(int.Parse(match.Value[..^1]));
                         year = newDate.Year;
                         month = newDate.Month;
                         day = newDate.Day;
@@ -97,29 +97,23 @@ namespace TemporaTasks.Core
                 if (RegexTimeHH_MM().Match(time).Success)
                 {
                     MatchCollection matches = new Regex("\\d{1,2}").Matches(time);
-                    hour = int.Parse(matches[0].Value);// + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
+                    hour = int.Parse(matches[0].Value);
                     minute = int.Parse(matches[1].Value);
-                    if (!new Regex("[Aa]").Match(time).Success)
-                        if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex(" ?[Pp][Mm]?$").Match(time).Success))
-                            if (hour < 12) hour += 12;
+                    if (IsTimePM(time, year, month, day, hour, minute)) hour += 12;
                 }
 
                 else if (RegexTimeHHMM().Match(time).Success)
-                {   
+                {
                     string timeString = new Regex("\\d{3,4}").Match(time).Value.PadLeft(4, '0');
                     minute = int.Parse(timeString[2..]);
                     hour = int.Parse(timeString[..2]);
-                    if (!new Regex("[Aa]").Match(time).Success)
-                        if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex("[Pp][Mm]?$").Match(time).Success))
-                            if (hour < 12) hour += 12;
+                    if (IsTimePM(time, year, month, day, hour, minute)) hour += 12;
                 }
 
                 else if (RegexTimeHH().Match(time).Success)
                 {
-                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value) + (new Regex(" ?[Pp][Mm]?$").Match(time).Success ? 12 : 0);
-                    if (!new Regex("[Aa]").Match(time).Success)
-                        if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex("[Pp][Mm]?$").Match(time).Success))
-                            if (hour < 12) hour += 12;
+                    hour = int.Parse(new Regex("\\d{1,2}").Match(time).Value);
+                    if (IsTimePM(time, year, month, day, hour, minute)) hour += 12;
                 }
 
                 else if ((match = RegexAddHour().Match(time)).Success)
@@ -143,6 +137,16 @@ namespace TemporaTasks.Core
             }
 
             return new DateTime(year, month, day, hour, minute, 0);
+        }
+
+        private static bool IsTimePM(string time, int year, int month, int day, int hour, int minute)
+        {
+            return (hour < 12 && (time.ToLower().Contains('p') || (!time.ToLower().Contains('a') && Over5Minutes(new DateTime(year, month, day, hour, minute, 0)))));
+        }
+
+        private static bool Over5Minutes(DateTime dateTime)
+        {
+            return DateTime.Now > (dateTime - TimeSpan.FromMinutes(5));
         }
 
         public static Nullable<TimeSpan> RecurranceStringToDateTime(string timespan)
