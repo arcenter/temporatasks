@@ -92,6 +92,8 @@ namespace TemporaTasks.Core
 
             if (time.Length != 0)
             {
+                Match match;
+
                 if (RegexTimeHH_MM().Match(time).Success)
                 {
                     MatchCollection matches = new Regex("\\d{1,2}").Matches(time);
@@ -118,6 +120,20 @@ namespace TemporaTasks.Core
                     if (!new Regex("[Aa]").Match(time).Success)
                         if ((DateTime.Now > (new DateTime(year, month, day, hour, minute, 0) - TimeSpan.FromMinutes(5)) || new Regex("[Pp][Mm]?$").Match(time).Success))
                             if (hour < 12) hour += 12;
+                }
+
+                else if ((match = RegexAddHour().Match(time)).Success)
+                {
+                    DateTime newDate = DateTime.Now.AddHours(int.Parse(match.Value[..^1]));
+                    hour = newDate.Hour;
+                    minute = newDate.Minute;
+                }
+
+                else if ((match = RegexAddMinute().Match(time)).Success)
+                {
+                    DateTime newDate = DateTime.Now.AddMinutes(int.Parse(match.Value[..^1]));
+                    hour = newDate.Hour;
+                    minute = newDate.Minute;
                 }
 
                 else
