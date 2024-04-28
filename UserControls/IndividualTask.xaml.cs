@@ -250,36 +250,27 @@ namespace TemporaTasks.UserControls
         public void DueDateTimeLabelUpdate()
         {
             if (IsCompleted && CompletedDT.HasValue)
-            {
-                string dateString = (CompletedDT.Value.Date - DateTime.Now.Date).Days switch
-                {
-                    0 => "",
-                    -1 => "yesterday ",
-                    1 => "tomorrow ",
-                    _ => CompletedDT.Value.ToString("dd\\/MM ")
-                };
-                DueDateTimeLabel.Content = $"Done {dateString}{CompletedDT.Value:hh:mm tt}";
-            }
+                DueDateTimeLabel.Content = $"Done {DateDifference(CompletedDT.Value)}{CompletedDT.Value:hh:mm tt}";
 
             else if (DueDT.HasValue)
-            {
-                string dateString = (DueDT.Value.Date - DateTime.Now.Date).Days switch
-                {
-                    0 => "",
-                    -1 => "yesterday ",
-                    1 => "tomorrow ",
-                    _ => DueDT.Value.ToString("dd\\/MM ")
-                };
-                DueDateTimeLabel.Content = $"Due {dateString}{DueDT.Value:hh:mm tt}";
-            }
+                DueDateTimeLabel.Content = $"Due {DateDifference(DueDT.Value)}{DueDT.Value:hh:mm tt}";
 
             else
-            {
                 DueDateTimeLabel.Content = "";
-            }
 
             DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
             DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : (IsDue ? 1 : 0.5), TimeSpan.FromMilliseconds(250)));
+            }
+
+        private string DateDifference(DateTime dateTime)
+            {
+            return (dateTime.Year != DateTime.Now.Year) ? dateTime.ToString("dd\\/MM\\/yyyy ") : (dateTime.Date - DateTime.Now.Date).Days switch
+                {
+                    0 => "",
+                    -1 => "yesterday ",
+                    1 => "tomorrow ",
+                _ => dateTime.ToString("dd\\/MM ")
+                };
         }
 
         private void UpdateDateTimeLabelWithRemaining(object sender, EventArgs e)
@@ -428,6 +419,11 @@ namespace TemporaTasks.UserControls
             Storyboard storyboard = new();
             storyboard.Children.Add(animation);
             storyboard.Begin();
+        }
+
+        public bool IsLinkAvailable()
+        {
+            return LinkRegex().Match(TaskName).Success;
         }
 
         public void LinkOpen()
