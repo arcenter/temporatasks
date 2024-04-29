@@ -79,7 +79,7 @@
             <Border x:Name="CloseButton" Grid.Column="4" IsMouseDirectlyOverChanged="CloseButton_IsMouseDirectlyOverChanged" MouseDown="CloseButton_MouseDown" MouseMove="Border_MouseMove">
                 <Border.ToolTip>
                     <ToolTip>
-                        <userControl:ButtonToolTip ToolTipText="Exit" Button1Text="esc"/>
+                        <userControl:ButtonToolTip T1="Exit" B1="esc"/>
                     </ToolTip>
                 </Border.ToolTip>
                 <Border.Background>

@@ -41,7 +41,7 @@
                         <Border x:Name="HomeButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand">
                             <Border.ToolTip>
                                 <ToolTip>
-                                    <userControl:ButtonToolTip ToolTipText="Switch to Home View" Button1Text="h"/>
+                                    <userControl:ButtonToolTip T1="Switch to Home View" B1="h"/>
                                 </ToolTip>
                             </Border.ToolTip>
                         </Border>
@@ -51,7 +51,7 @@
                         <Border x:Name="CompletedButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand">
                             <Border.ToolTip>
                                 <ToolTip>
-                                    <userControl:ButtonToolTip ToolTipText="Switch to Completed View" Button1Text="c"/>
+                                    <userControl:ButtonToolTip T1="Switch to Completed View" B1="c"/>
                                 </ToolTip>
                             </Border.ToolTip>
                         </Border>
@@ -65,7 +65,7 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <ToolTip.Content>
-                                        <userControl:ButtonToolTip ToolTipText="Toggle between mute states" Button1Text="m"/>
+                                        <userControl:ButtonToolTip T1="Toggle between mute states" B1="m"/>
                                     </ToolTip.Content>
                                 </ToolTip>
                             </Border.ToolTip>
@@ -77,7 +77,7 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <ToolTip.Content>
-                                        <userControl:ButtonToolTip ToolTipText="Toggle between mute states" Button1Text="m"/>
+                                        <userControl:ButtonToolTip T1="Toggle between mute states" B1="m"/>
                                     </ToolTip.Content>
                                 </ToolTip>
                             </Border.ToolTip>
@@ -111,9 +111,8 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <StackPanel Orientation="Horizontal">
-                                        <userControl:ButtonToolTip ToolTipText="Search Task" Button1Text="s" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5"/>
-                                        <userControl:ButtonToolTip ToolTipText="/" Button1Text="ctrl" CornerRadius="0" BorderPadding="0 5"/>
-                                        <userControl:ButtonToolTip ToolTipText="+" Button1Text="f" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
+                                        <userControl:ButtonToolTip T1="Search Task" B1="s" T2="/"/>
+                                        <userControl:ButtonToolTip T1="/" B1="ctrl" T2="+" B2="f"/>
                                     </StackPanel>
                                 </ToolTip>
                             </Border.ToolTip>
@@ -138,7 +137,7 @@
                                     </userControl:IconButton.RenderTransform>
                                     <userControl:IconButton.ToolTip>
                                         <ToolTip>
-                                            <userControl:ButtonToolTip ToolTipText="Reverse the sort" Button1Text="r"/>
+                                            <userControl:ButtonToolTip T1="Reverse the sort" B1="r"/>
                                         </ToolTip>
                                     </userControl:IconButton.ToolTip>
                                 </userControl:IconButton>
@@ -154,7 +153,7 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <ToolTip.Content>
-                                        <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="n"/>
+                                        <userControl:ButtonToolTip T1="Add Task" B1="n"/>
                                     </ToolTip.Content>
                                 </ToolTip>
                             </Border.ToolTip>

@@ -22,10 +22,7 @@
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <local:ButtonToolTip ToolTipText="Edit Task" Button1Text="e" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
-                                    <local:ButtonToolTip ToolTipText="/" Button1Text="enter" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
-                                </StackPanel>
+                                <local:ButtonToolTip T1="Edit Task" B1="e" T2="/" B2="enter"/>
                             </ToolTip.Content>
                         </ToolTip>
                     </Border.ToolTip>
@@ -43,12 +40,7 @@
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Copy Task Title" Button1Text="ctrl" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
-                                        <local:ButtonToolTip ToolTipText="+" Button1Text="c" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
-                                    </StackPanel>
-                                </StackPanel>
+                                <local:ButtonToolTip T1="Copy Task Title" B1="ctrl" T2="+" B2="c"/>
                             </ToolTip.Content>
                         </ToolTip>
                     </Border.ToolTip>
@@ -66,9 +58,7 @@
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <local:ButtonToolTip ToolTipText="Garble Task" Button1Text="g"/>
-                                </StackPanel>
+                                <local:ButtonToolTip T1="Garble Task" B1="g"/>
                             </ToolTip.Content>
                         </ToolTip>
                     </Border.ToolTip>
@@ -86,9 +76,7 @@
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <local:ButtonToolTip ToolTipText="Toggle high priority" Button1Text="p"/>
-                                </StackPanel>
+                                <local:ButtonToolTip T1="Toggle high priority" B1="p"/>
                             </ToolTip.Content>
                         </ToolTip>
                     </Border.ToolTip>
@@ -106,9 +94,7 @@
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <local:ButtonToolTip ToolTipText="Open link in task" Button1Text="l"/>
-                                </StackPanel>
+                                <local:ButtonToolTip T1="Open link in task" B1="l"/>
                             </ToolTip.Content>
                         </ToolTip>
                     </Border.ToolTip>
@@ -142,10 +128,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Set due datetime to null" Button1Text="shift" CornerRadius="0" BorderPadding="0 5"/>
-                                        <local:ButtonToolTip ToolTipText="+" Button1Text="0" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Set due datetime to null" B1="shift" T2="+" B2="0"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -157,9 +140,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Set due datetime to current time" Button1Text="0"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Set due datetime to current time" B1="0"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -171,9 +152,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 1 minute to due datetime" Button1Text="1"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 1 minute to due datetime" B1="1"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -185,9 +164,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 5 minutes to due datetime" Button1Text="5"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 5 minutes to due datetime" B1="5"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -199,9 +176,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 30 minutes to due datetime" Button1Text="3"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 30 minutes to due datetime" B1="3"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -213,9 +188,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 1 hour to due datetime" Button1Text="4"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 1 hour to due datetime" B1="4"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -227,9 +200,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 6 hours to due datetime" Button1Text="6"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 6 hours to due datetime" B1="6"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -241,9 +212,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 12 hours to due datetime" Button1Text="8"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 12 hours to due datetime" B1="8"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -255,9 +224,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 1 day to due datetime" Button1Text="9"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 1 day to due datetime" B1="9"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -269,9 +236,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Add 7 days to due datetime" Button1Text="7"/>
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Add 7 days to due datetime" B1="7"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -293,10 +258,7 @@
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <local:ButtonToolTip ToolTipText="Delete Task" Button1Text="d" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
-                                    <local:ButtonToolTip ToolTipText="/" Button1Text="del" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
-                                </StackPanel>
+                                    <local:ButtonToolTip T1="Delete Task" B1="d" T2="/" B2="del"/>
                             </ToolTip.Content>
                         </ToolTip>
                     </Border.ToolTip>

@@ -101,7 +101,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <userControl:ButtonToolTip ToolTipText="Cancel" Button1Text="esc"/>
+                                    <userControl:ButtonToolTip T1="Cancel" B1="esc"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>
@@ -119,7 +119,7 @@
                         <Border.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <userControl:ButtonToolTip ToolTipText="Add Task" Button1Text="enter"/>
+                                    <userControl:ButtonToolTip T1="Add Task" B1="enter"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </Border.ToolTip>

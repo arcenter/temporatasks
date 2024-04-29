@@ -19,37 +19,43 @@ namespace TemporaTasks.UserControls
 {
     public partial class ButtonToolTip : UserControl
     {
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("ToolTipText", typeof(string), typeof(ButtonToolTip), new PropertyMetadata(""));
-        public string ToolTipText
+        public static readonly DependencyProperty T1Property = DependencyProperty.Register("T1", typeof(string), typeof(ButtonToolTip), new PropertyMetadata(""));
+        public string T1
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get { return (string)GetValue(T1Property); }
+            set { SetValue(T1Property, value); }
         }
 
-        public static readonly DependencyProperty Button1Property = DependencyProperty.Register("Button1Text", typeof(string), typeof(ButtonToolTip), new PropertyMetadata(""));
-        public string Button1Text
+        public static readonly DependencyProperty B1Property = DependencyProperty.Register("B1", typeof(string), typeof(ButtonToolTip), new PropertyMetadata(""));
+        public string B1
         {
-            get { return (string)GetValue(Button1Property); }
-            set { SetValue(Button1Property, value); }
+            get { return (string)GetValue(B1Property); }
+            set { SetValue(B1Property, value); }
         }
 
-        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register("CornerRadius", typeof(string), typeof(ButtonToolTip), new PropertyMetadata("4"));
-        public string CornerRadius
+        public static readonly DependencyProperty T2Property = DependencyProperty.Register("T2", typeof(string), typeof(ButtonToolTip), new PropertyMetadata(""));
+        public string T2
         {
-            get { return (string)GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
+            get { return (string)GetValue(T2Property); }
+            set { SetValue(T2Property, value); }
         }
 
-        public static readonly DependencyProperty BorderPaddingProperty = DependencyProperty.Register("BorderPadding", typeof(string), typeof(ButtonToolTip), new PropertyMetadata("5"));
-        public string BorderPadding
+        public static readonly DependencyProperty B2Property = DependencyProperty.Register("B2", typeof(string), typeof(ButtonToolTip), new PropertyMetadata(""));
+        public string B2
         {
-            get { return (string)GetValue(BorderPaddingProperty); }
-            set { SetValue(BorderPaddingProperty, value); }
+            get { return (string)GetValue(B2Property); }
+            set { SetValue(B2Property, value); }
         }
 
         public ButtonToolTip()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (T2 == "") T2Label.Visibility = Visibility.Collapsed;
+            if (B2 == "") Button2Background.Visibility = Visibility.Collapsed;
         }
     }
 }

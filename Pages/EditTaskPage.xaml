@@ -147,7 +147,7 @@
                                 <Border.ToolTip>
                                     <ToolTip>
                                         <ToolTip.Content>
-                                            <userControl:ButtonToolTip ToolTipText="Cancel changes" Button1Text="esc"/>
+                                            <userControl:ButtonToolTip T1="Cancel changes" B1="esc"/>
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </Border.ToolTip>
@@ -165,7 +165,7 @@
                                 <Border.ToolTip>
                                     <ToolTip>
                                         <ToolTip.Content>
-                                            <userControl:ButtonToolTip ToolTipText="Confirm changes" Button1Text="enter"/>
+                                            <userControl:ButtonToolTip T1="Confirm changes" B1="enter"/>
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </Border.ToolTip>

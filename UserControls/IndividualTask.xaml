@@ -41,15 +41,11 @@
                 <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsHitTestVisible="False" Padding="13 0 0 0"/>
 
                 <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="Transparent" Margin="13 0 0 0">
-
                     <local:IconButton x:Name="EditIcon" SVGSource="{StaticResource pencilIcon}" Width="30" Height="30" MouseDown="EditIcon_MouseDown">
                         <local:IconButton.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Edit Task" Button1Text="e" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
-                                        <local:ButtonToolTip ToolTipText="/" Button1Text="enter" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Edit Task" B1="e" T2="/" B2="enter"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </local:IconButton.ToolTip>
@@ -59,10 +55,7 @@
                         <local:IconButton.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <local:ButtonToolTip ToolTipText="Delete Task" Button1Text="d" CornerRadius="2 0 0 2" BorderPadding="5 5 0 5" />
-                                        <local:ButtonToolTip ToolTipText="/" Button1Text="del" CornerRadius="0 2 2 0" BorderPadding="2 5 5 5" />
-                                    </StackPanel>
+                                    <local:ButtonToolTip T1="Delete Task" B1="d" T2="/" B2="del"/>
                                 </ToolTip.Content>
                             </ToolTip>
                         </local:IconButton.ToolTip>
