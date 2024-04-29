@@ -43,7 +43,7 @@ namespace TemporaTasks.UserControls
         {
             get { return CompletedDT.HasValue; }
             set { CompletedDT = value ? DateTime.Now : null; }
-            }
+        }
 
         public Nullable<DateTime> CreatedDT;
         public Nullable<DateTime> DueDT;
@@ -168,7 +168,6 @@ namespace TemporaTasks.UserControls
 
         private void UpdateHP()
         {
-            Trace.WriteLine($"[{counter++}] Update");
             if (taskPriority == TaskPriority.High)
             {
                 CheckBox.BorderBrush = checkMark.Stroke = strikethroughLine.Stroke = (SolidColorBrush)mainWindow.FindResource("HighPriority");
@@ -252,17 +251,17 @@ namespace TemporaTasks.UserControls
 
             DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
             DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : (IsDue ? 1 : 0.5), TimeSpan.FromMilliseconds(250)));
-            }
+        }
 
         private string DateDifference(DateTime dateTime)
-            {
+        {
             return (dateTime.Year != DateTime.Now.Year) ? dateTime.ToString("dd\\/MM\\/yyyy ") : (dateTime.Date - DateTime.Now.Date).Days switch
-                {
-                    0 => "",
-                    -1 => "yesterday ",
-                    1 => "tomorrow ",
+            {
+                0 => "",
+                -1 => "yesterday ",
+                1 => "tomorrow ",
                 _ => dateTime.ToString("dd\\/MM ")
-                };
+            };
         }
 
         private void UpdateDateTimeLabelWithRemaining(object sender, EventArgs e)

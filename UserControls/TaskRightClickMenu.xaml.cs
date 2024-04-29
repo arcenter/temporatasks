@@ -109,6 +109,11 @@ namespace TemporaTasks.UserControls
                     task.EditIcon_MouseDown(null, null);
                     return;
 
+                case "CopyTT":
+                    Clipboard.SetText(task.TaskName);
+                    PopupClose();
+                    return;
+
                 case "Garble":
                     task.Garble(null, true);
                     return;
