@@ -9,7 +9,7 @@
              Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded"
              Opacity="0" Background="Transparent">
 
-    <Border Background="#383838" BorderThickness="0" Padding="10" MinWidth="200" CornerRadius="10">
+    <Border Background="#383838" BorderThickness="0" Padding="5" MinWidth="200" CornerRadius="7.5">
 
         <StackPanel>
 
@@ -27,7 +27,7 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image Source="{StaticResource pencilIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Image Source="{StaticResource pencilIcon}" Width="12.5" IsHitTestVisible="False"/>
                 <Label Content="Edit Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
@@ -45,7 +45,7 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image Source="{StaticResource copyIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Image Source="{StaticResource copyIcon}" Width="12.5" IsHitTestVisible="False"/>
                 <Label Content="Copy Task Title" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
@@ -63,7 +63,7 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image Source="{StaticResource TempGarbleOnEyeIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Image Source="{StaticResource TempGarbleOnEyeIcon}" Width="12.5" IsHitTestVisible="False"/>
                 <Label Content="Toggle Task Garble" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
@@ -81,7 +81,7 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image Source="{StaticResource completedIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Image Source="{StaticResource completedIcon}" Width="12.5" IsHitTestVisible="False"/>
                 <Label Content="Toggle high priority" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
@@ -99,7 +99,7 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image Source="{StaticResource internetIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Image Source="{StaticResource internetIcon}" Width="12.5" IsHitTestVisible="False"/>
                 <Label Content="Open link in task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
@@ -263,7 +263,7 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Image x:Name="DeleteIcon" Source="{StaticResource trashIcon}" Width="10" Height="10" IsHitTestVisible="False"/>
+                <Image x:Name="DeleteIcon" Source="{StaticResource trashIcon}" Width="12.5" IsHitTestVisible="False"/>
                 <Label x:Name="DeleteLabel" Content="Delete Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
             </Grid>
 
