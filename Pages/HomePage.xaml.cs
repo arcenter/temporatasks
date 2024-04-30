@@ -719,9 +719,12 @@ namespace TemporaTasks.Pages
             catch { }
         }
 
-        private void GenerateTaskStack(bool scrollToTop = true)
+        private bool generateLock = false;
+
+        private async void GenerateTaskStack(bool scrollToTop = true)
         {
-            if (TaskStack == null) return;
+            if (generateLock || TaskStack == null) return;
+            generateLock = true;
 
             mainWindow.Cursor = Cursors.Wait;
 
@@ -958,6 +961,9 @@ namespace TemporaTasks.Pages
             else UpdateNextDueTask();
 
             mainWindow.Cursor = Cursors.Arrow;
+
+            await Task.Delay(250);
+            generateLock = false;
 
         }
 
