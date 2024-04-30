@@ -29,6 +29,8 @@
 
         <Grid x:Name="CategoriesGrid" DockPanel.Dock="Left">
 
+            <Popup x:Name="RightClickMenuPopup" Placement="Left" PlacementTarget="{Binding ElementName=NotifButton}" HorizontalOffset="10" AllowsTransparency="True"/>
+
             <Border Background="{StaticResource Secondary}" Opacity="0.25"/>
             <Line Y2="{Binding ActualHeight, ElementName=CategoriesGrid}" StrokeThickness="2" Stroke="{StaticResource Accent}" HorizontalAlignment="Right"/>
 
@@ -73,7 +75,7 @@
                         <Image x:Name="EyeIcon" Source="{StaticResource NoneEyeIcon}" Opacity="0.25" IsHitTestVisible="False" RenderTransformOrigin="0.5, 0.5" Width="15" Height="15"/>
                     </Grid>
                     <Grid Height="40" Margin="0 5 0 0">
-                        <Border x:Name="NotifButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Cursor="Hand" Width="40" IsMouseDirectlyOverChanged="NotifButton_IsMouseDirectlyOverChanged" MouseDown="NotifButton_MouseDown">
+                        <Border x:Name="NotifButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Cursor="Hand" Width="40" IsMouseDirectlyOverChanged="NotifButton_IsMouseDirectlyOverChanged" MouseDown="NotifButton_MouseDown" MouseUp="NotifButton_MouseUp">
                             <Border.ToolTip>
                                 <ToolTip>
                                     <ToolTip.Content>

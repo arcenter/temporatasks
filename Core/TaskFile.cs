@@ -33,6 +33,8 @@ namespace TemporaTasks.Core
         public static NotificationMode notificationMode = NotificationMode.Normal;
         public static IndividualTask.TempGarbleMode tempGarbleMode = IndividualTask.TempGarbleMode.None;
         
+        public static DispatcherTimer NotificationModeTimer = new();
+
         public static void LoadData()
         {
             ArrayList _TasksList = [];
