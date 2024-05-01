@@ -995,57 +995,6 @@ namespace TemporaTasks.Pages
         [GeneratedRegex(@"#\S+")]
         public static partial Regex RegexTags();
 
-        private string GetRelativeTaskDueTime(IndividualTask task)
-        {
-            if (!task.DueDT.HasValue) return "";
-
-            TimeSpan remainingTime = task.DueDT.Value - DateTime.Now;
-            
-            if (remainingTime <= TimeSpan.FromTicks(0) && !task.IsCompleted) return "is past due";
-
-            if (remainingTime > TimeSpan.FromMinutes(1))
-            {
-                double inTime;
-                string timeUnit;
-
-                if (remainingTime < TimeSpan.FromHours(1))
-                {
-                    inTime = remainingTime.TotalMinutes;
-                    timeUnit = "minute";
-                }
-                else if (remainingTime < TimeSpan.FromDays(1))
-                {
-                    inTime = remainingTime.TotalHours;
-                    timeUnit = "hour";
-                }
-                else if (remainingTime < TimeSpan.FromDays(7))
-                {
-                    inTime = remainingTime.TotalDays;
-                    timeUnit = "day";
-                }
-                else if (remainingTime < TimeSpan.FromDays(30))
-                {
-                    inTime = (remainingTime.TotalDays / 7);
-                    timeUnit = "week";
-            }
-                else if (remainingTime < TimeSpan.FromDays(365))
-                {
-                    inTime = (remainingTime.TotalDays / 30);
-                    timeUnit = "month";
-                }
-                else
-                {
-                    inTime = (remainingTime.TotalDays / 365);
-                    timeUnit = "year";
-                }
-
-                inTime = Math.Round(inTime, 0);
-                return "is due in " + ((inTime > 1) ? $"~{inTime} {timeUnit}s" : $"a{(timeUnit == "hour" ? "n" : "")} {timeUnit}");
-            }
-
-            else return $"is due in {(int)remainingTime.TotalSeconds} seconds";
-        }
-
         private void UpdateNextDueTask()
         {
             if (TaskFile.TaskList.Count == 0) return;
@@ -1086,7 +1035,7 @@ namespace TemporaTasks.Pages
             {
                 StatusGrid.Visibility = Visibility.Visible;
                 NextTaskDueNameLabel.Content = ((nextDueTask.IsGarbled() && TaskFile.tempGarbleMode != TempGarbleMode.TempGarbleOff) || TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOn) ? "Garbled Task" : nextDueTask.TaskName;
-                NextTaskDueTimeLabel.Content = GetRelativeTaskDueTime(nextDueTask);
+                NextTaskDueTimeLabel.Content = DTHelper.GetRelativeTaskDueTime(nextDueTask);
             }
         }
 

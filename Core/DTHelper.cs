@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using TemporaTasks.UserControls;
 
 namespace TemporaTasks.Core
 {
@@ -359,6 +361,61 @@ namespace TemporaTasks.Core
         public static partial Regex RegexHours();
 
         // ---------------------------------------------------------------------------------
+
+        public static string GetRelativeTaskDueTime(IndividualTask task)
+        {
+            if (!task.DueDT.HasValue) return "";
+
+            TimeSpan remainingTime = task.DueDT.Value - DateTime.Now;
+
+            if (remainingTime <= TimeSpan.FromTicks(0) && !task.IsCompleted) return "is past due";
+            return "is due in " + GetRemainingDueTime(remainingTime);
+        }
+
+        public static string GetRemainingDueTime(TimeSpan timeSpan)
+        {
+            if (timeSpan > TimeSpan.FromMinutes(1))
+            {
+                double inTime;
+                string timeUnit;
+
+                if (timeSpan < TimeSpan.FromHours(1))
+                {
+                    inTime = timeSpan.TotalMinutes;
+                    timeUnit = "minute";
+                }
+                else if (timeSpan < TimeSpan.FromDays(1))
+                {
+                    inTime = timeSpan.TotalHours;
+                    timeUnit = "hour";
+                }
+                else if (timeSpan < TimeSpan.FromDays(7))
+                {
+                    inTime = timeSpan.TotalDays;
+                    timeUnit = "day";
+                }
+                else if (timeSpan < TimeSpan.FromDays(30))
+                {
+                    inTime = (timeSpan.TotalDays / 7);
+                    timeUnit = "week";
+                }
+                else if (timeSpan < TimeSpan.FromDays(365))
+                {
+                    inTime = (timeSpan.TotalDays / 30);
+                    timeUnit = "month";
+                }
+                else
+                {
+                    inTime = (timeSpan.TotalDays / 365);
+                    timeUnit = "year";
+                }
+
+                inTime = Math.Round(inTime, 0);
+                return ((inTime > 1) ? $"~{inTime} {timeUnit}s" : $"a{(timeUnit == "hour" ? "n" : "")} {timeUnit}");
+            }
+
+            return $"{(int)timeSpan.TotalSeconds} seconds";
+        }
     }
 
     [Serializable]

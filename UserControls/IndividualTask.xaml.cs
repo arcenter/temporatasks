@@ -268,49 +268,20 @@ namespace TemporaTasks.UserControls
         {
             if (!DueDT.HasValue) return;
             TimeSpan remainingTime = DueDT.Value - DateTime.Now;
+            if (remainingTime <= TimeSpan.FromMinutes(1))
+            {
             if (remainingTime <= TimeSpan.FromTicks(0))
             {
                 if (!IsCompleted) DueDateTimeLabel.Content = "Past due";
                 TemporaryRemainingTimer.Stop();
             }
-            else if (remainingTime > TimeSpan.FromMinutes(1))
-            {
-                double inTime;
-                if (remainingTime < TimeSpan.FromHours(1))
-                {
-                    inTime = remainingTime.TotalMinutes;
-                    DueDateTimeLabel.Content = "minute";
-                } else if (remainingTime < TimeSpan.FromDays(1))
-                {
-                    inTime = remainingTime.TotalHours;
-                    DueDateTimeLabel.Content = "hour";
+                else DueDateTimeLabel.Content = $"In {(int)remainingTime.TotalSeconds} seconds";
                 }
-                else if (remainingTime < TimeSpan.FromDays(7))
+            else
                 {
-                    inTime = remainingTime.TotalDays;
-                    DueDateTimeLabel.Content = "day";
-                }
-                else if (remainingTime < TimeSpan.FromDays(30))
-                {
-                    inTime = (remainingTime.TotalDays / 7);
-                    DueDateTimeLabel.Content = "week";
-                }
-                else if (remainingTime < TimeSpan.FromDays(365))
-                {
-                    inTime = (remainingTime.TotalDays / 30);
-                    DueDateTimeLabel.Content = "month";
-                } else
-                {
-                    inTime = (remainingTime.TotalDays / 365);
-                    DueDateTimeLabel.Content = "year";
-                }
-
-                inTime = Math.Round(inTime, 0);
-                if (inTime > 1) DueDateTimeLabel.Content = $"In ~{inTime} {DueDateTimeLabel.Content}s";
-                else DueDateTimeLabel.Content = "In a" + ((string)DueDateTimeLabel.Content == "hour" ? "n " : " ") + DueDateTimeLabel.Content;
+                DueDateTimeLabel.Content = DTHelper.GetRemainingDueTime(remainingTime);
                 TemporaryRemainingTimer.Stop();
             }
-            else DueDateTimeLabel.Content = $"In {(int)remainingTime.TotalSeconds} seconds";
         }
 
         public void StrokeOn()
