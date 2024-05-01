@@ -552,8 +552,11 @@ namespace TemporaTasks.Pages
 
         private void NotifButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            int _ = ((((int)TaskFile.notificationMode) + (((e != null && e.ChangedButton == MouseButton.Right) || Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? -1 : 1)) % 3);
-            if (_ == -1) _ = 2;
+            if (e == null || e.ChangedButton == MouseButton.Left)
+            {
+                int _ = (int)TaskFile.notificationMode + 1;
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) _ -= 2;
+                if ((_ %= 3) == -1) _ = 2;
             TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), _.ToString());
             UpdateNotificationMode();
             TaskFile.SaveData();
