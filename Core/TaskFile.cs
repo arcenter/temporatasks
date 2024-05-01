@@ -70,12 +70,15 @@ namespace TemporaTasks.Core
                         ArrayList? tagList = null;
                         if (data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
 
+                        ArrayList? attachments = null;
+                        // if (data[taskUID]["attachments"] != "") attachments = new ArrayList(data[taskUID]["attachments"].Split(';'));
+
                         bool garbled = false;
                         if (data[taskUID]["garbled"] != "0") garbled = true;
 
                         IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority);
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, attachments);
                         _TasksList.Add(taskObj);
                     }
                     catch { }
@@ -120,6 +123,7 @@ namespace TemporaTasks.Core
                 temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
+                temp2["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
                 temp[task.TaskUID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize(temp);

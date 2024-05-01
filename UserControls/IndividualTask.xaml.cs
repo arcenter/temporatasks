@@ -22,6 +22,8 @@ namespace TemporaTasks.UserControls
 
         public ArrayList? TagList { get; set; }
 
+        public ArrayList? Attachments { get; set; }
+
         private bool garbled = false;
 
         public enum TempGarbleMode
@@ -63,7 +65,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, string _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority)
+        public IndividualTask(long _TaskUID, string _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
         {
             InitializeComponent();
 
@@ -79,6 +81,7 @@ namespace TemporaTasks.UserControls
 
             // RecurranceTimeSpan = _RecurranceTimeSpan;
             TagList = _TagList;
+            Attachments = _Attachments;
 
             garbled = _garbled;
             if (_taskPriority == TaskPriority.High)
@@ -270,15 +273,15 @@ namespace TemporaTasks.UserControls
             TimeSpan remainingTime = DueDT.Value - DateTime.Now;
             if (remainingTime <= TimeSpan.FromMinutes(1))
             {
-            if (remainingTime <= TimeSpan.FromTicks(0))
-            {
-                if (!IsCompleted) DueDateTimeLabel.Content = "Past due";
-                TemporaryRemainingTimer.Stop();
-            }
-                else DueDateTimeLabel.Content = $"In {(int)remainingTime.TotalSeconds} seconds";
-                }
-            else
+                if (remainingTime <= TimeSpan.FromTicks(0))
                 {
+                    if (!IsCompleted) DueDateTimeLabel.Content = "Past due";
+                    TemporaryRemainingTimer.Stop();
+                }
+                else DueDateTimeLabel.Content = $"In {(int)remainingTime.TotalSeconds} seconds";
+            }
+            else
+            {
                 DueDateTimeLabel.Content = DTHelper.GetRemainingDueTime(remainingTime);
                 TemporaryRemainingTimer.Stop();
             }
