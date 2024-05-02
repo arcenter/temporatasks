@@ -26,6 +26,12 @@ namespace TemporaTasks.UserControls
         {
             InitializeComponent();
             this.popupObject = popupObject;
+            if (TaskFile.NotificationModeTimer.IsEnabled)
+            {
+                ButtonPanel.Visibility = Visibility.Collapsed;
+                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerStart - DateTime.Now);
+                t30mLabel.Padding = new Thickness(10, 0, 10, 0);
+        }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
