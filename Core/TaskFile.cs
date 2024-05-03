@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using TemporaTasks.UserControls;
 
 namespace TemporaTasks.Core
@@ -32,8 +33,9 @@ namespace TemporaTasks.Core
 
         public static NotificationMode notificationMode = NotificationMode.Normal;
         public static IndividualTask.TempGarbleMode tempGarbleMode = IndividualTask.TempGarbleMode.None;
-        
+
         public static DispatcherTimer NotificationModeTimer = new();
+        public static DateTime NotificationModeTimerStart;
 
         public static void LoadData()
         {
@@ -69,7 +71,7 @@ namespace TemporaTasks.Core
 
                         ArrayList? tagList = null;
                         if (data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
-
+                        
                         ArrayList? attachments = null;
                         // if (data[taskUID]["attachments"] != "") attachments = new ArrayList(data[taskUID]["attachments"].Split(';'));
 

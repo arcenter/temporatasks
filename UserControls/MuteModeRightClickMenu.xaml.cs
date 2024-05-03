@@ -31,7 +31,7 @@ namespace TemporaTasks.UserControls
                 ButtonPanel.Visibility = Visibility.Collapsed;
                 t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerStart - DateTime.Now);
                 t30mLabel.Padding = new Thickness(10, 0, 10, 0);
-        }
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -75,37 +75,45 @@ namespace TemporaTasks.UserControls
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskFile.NotificationModeTimer.Stop();
+            if (TaskFile.NotificationModeTimer.IsEnabled)
+                ResetNotificationMode.Invoke(null, null);
 
-            switch (((Border)sender).Name)
+            else
             {
-                case "t30m":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromMinutes(30);
-                    break;
+                switch (((Border)sender).Name)
+                {
+                    case "t30m":
+                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromMinutes(30);
+                        break;
 
-                case "t1h":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(1);
-                    break;
+                    case "t1h":
+                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(1);
+                        break;
 
-                case "t6h":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(6);
-                    break;
+                    case "t6h":
+                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(6);
+                        break;
 
-                case "t1d":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(1);
-                    break;
+                    case "t1d":
+                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(1);
+                        break;
 
-                case "t1w":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(7);
-                    break;
+                    case "t1w":
+                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(7);
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+
+                TaskFile.NotificationModeTimerStart = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
+                TaskFile.NotificationModeTimer.Start();
             }
 
-            TaskFile.NotificationModeTimer.Start();
             PopupClose();
         }
 
+        public delegate void ResetNotificationModeEvent(object sender, EventArgs e);
+        public event ResetNotificationModeEvent ResetNotificationMode;
     }
 }

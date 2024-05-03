@@ -10,7 +10,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
-using static TemporaTasks.Core.TaskFile;
 using static TemporaTasks.UserControls.IndividualTask;
 
 namespace TemporaTasks.Pages
@@ -44,11 +43,7 @@ namespace TemporaTasks.Pages
             InitializeComponent();
             UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
             UpdateTaskTimersTimer.Start();
-            NotificationModeTimer.Tick += (s, e) =>
-            {
-                notificationMode = NotificationMode.Normal;
-                UpdateNotificationMode();
-            };
+            TaskFile.NotificationModeTimer.Tick += ResetNotificationTimer;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -574,6 +569,7 @@ namespace TemporaTasks.Pages
                 }
                 RightClickMenuPopup.Child = new MuteModeRightClickMenu(RightClickMenuPopup);
                 RightClickMenuPopup.IsOpen = true;
+                ((MuteModeRightClickMenu)RightClickMenuPopup.Child).ResetNotificationMode += ResetNotificationTimer;
             }
         }
 
@@ -1070,6 +1066,13 @@ namespace TemporaTasks.Pages
                     }
                 }
             }
+        }
+
+        public void ResetNotificationTimer(object sender, EventArgs e)
+        {
+            TaskFile.notificationMode = TaskFile.NotificationMode.Normal;
+            UpdateNotificationMode();
+            TaskFile.NotificationModeTimer.Stop();
         }
 
         private void UpdateTaskTimers(object sender, EventArgs e)
