@@ -20,7 +20,7 @@ namespace TemporaTasks.Pages
         public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromSeconds(100) };
 
         int? currentFocus = null;
-        
+
         bool reverseSort = false;
         bool garbleMode = false;
         Dictionary<string, ArrayList> days = [];
@@ -53,10 +53,10 @@ namespace TemporaTasks.Pages
             mainWindow.KeyUp += Page_KeyUp;
             mainWindow.MouseDown += Window_MouseDown;
             mainWindow.IsWindowUnHidden += Window_Unhidden;
-            
+
             if (TaskFile.TaskList.Count == 0)
                 NewTaskArrow.Visibility = Visibility.Visible;
-            
+
             else
             {
                 NewTaskArrow.Visibility = Visibility.Collapsed;
@@ -160,13 +160,13 @@ namespace TemporaTasks.Pages
             }
 
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                {
+            {
                 if (Keyboard.IsKeyDown(Key.F))
-                    {
-                SearchTextBox.Focus();
-                RunSearchTextBoxCloseAnimation(true);
-                return;
-            }
+                {
+                    SearchTextBox.Focus();
+                    RunSearchTextBoxCloseAnimation(true);
+                    return;
+                }
 
                 if (Keyboard.IsKeyDown(Key.OemTilde))
                 {
@@ -178,7 +178,7 @@ namespace TemporaTasks.Pages
                 {
                     SetTempGarble(TempGarbleMode.TempGarbleOff);
                     return;
-            }
+                }
 
                 else if (Keyboard.IsKeyDown(Key.D2))
                 {
@@ -207,17 +207,17 @@ namespace TemporaTasks.Pages
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
             {
                 if (Keyboard.IsKeyDown(Key.G))
-            {
-                foreach (object obj in TaskStack.Children)
-                    if (obj is IndividualTask task)
+                {
+                    foreach (object obj in TaskStack.Children)
+                        if (obj is IndividualTask task)
                         {
                             GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
                             bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
                                            && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
                             task.Garble(null, isVisible);
                         }
-                return;
-            }
+                    return;
+                }
             }
 
             switch (e.Key)
@@ -231,7 +231,7 @@ namespace TemporaTasks.Pages
                     currentFocus = 0;
                     PreviousTaskFocus();
                     return;
-                
+
                 case Key.K:
                     SearchTextBox.Text = "$n";
                     RunSearchTextBoxCloseAnimation(true);
@@ -346,16 +346,16 @@ namespace TemporaTasks.Pages
                             }
                         } while (TaskStack.Children[currentFocus.Value] is not SectionDivider);
                         Section_MouseDown(TaskStack.Children[currentFocus.Value], null);
-                        
+
                         currentFocus = null;
 
-                                return;
-                }
+                        return;
+                    }
                     else if (Keyboard.IsKeyDown(Key.C))
                     {
                         Clipboard.SetText(task.TaskName);
                         return;
-                }
+                    }
 
                 }
 
@@ -552,10 +552,10 @@ namespace TemporaTasks.Pages
                 int _ = (int)TaskFile.notificationMode + 1;
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) _ -= 2;
                 if ((_ %= 3) == -1) _ = 2;
-            TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), _.ToString());
-            UpdateNotificationMode();
-            TaskFile.SaveData();
-        }
+                TaskFile.notificationMode = (TaskFile.NotificationMode)Enum.Parse(typeof(TaskFile.NotificationMode), _.ToString());
+                UpdateNotificationMode();
+                TaskFile.SaveData();
+            }
         }
 
         private async void NotifButton_MouseUp(object sender, MouseButtonEventArgs e)
@@ -764,7 +764,7 @@ namespace TemporaTasks.Pages
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                     if (task.IsCompleted) tasks.Add(task);
-                }
+            }
 
             else
             {
@@ -775,6 +775,14 @@ namespace TemporaTasks.Pages
                 }
             }
 
+            if (SearchTextBox.Text.Equals("$p", StringComparison.CurrentCultureIgnoreCase))
+            {
+                List<IndividualTask> tempTasks = [];
+                foreach (IndividualTask task in tasks)
+                    if (task.taskPriority == TaskPriority.High) tempTasks.Add(task);
+                // SearchTextBox.Text = SearchTextBox.Text.Replace("$p", "").Trim();
+                tasks = tempTasks;
+            }
 
             MatchCollection matches;
             Regex regex = new(SearchTextBox.Text.ToLower());
@@ -783,7 +791,7 @@ namespace TemporaTasks.Pages
                 case 1:
                 case 2:
 
-                    if (SearchTextBox.Text.Length != 0)
+                    if (SearchTextBox.Text.Length != 0 && !SearchTextBox.Text.Equals("$p", StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (SearchTextBox.Text.Equals("$n", StringComparison.CurrentCultureIgnoreCase))
                         {
@@ -1014,9 +1022,9 @@ namespace TemporaTasks.Pages
                         if (obj is IndividualTask task && !task.IsCompleted)
                         {
                             if (task.DueDT.HasValue) nextDueTask = task;
-                    break;
-            }
-        }
+                            break;
+                        }
+                }
             }
             else
             {
