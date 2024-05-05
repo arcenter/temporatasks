@@ -282,7 +282,7 @@ namespace TemporaTasks.UserControls
             }
             else
             {
-                DueDateTimeLabel.Content = DTHelper.GetRemainingDueTime(remainingTime);
+                DueDateTimeLabel.Content = $"In {DTHelper.GetRemainingDueTime(remainingTime)}";
                 TemporaryRemainingTimer.Stop();
             }
         }
