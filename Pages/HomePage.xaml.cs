@@ -772,13 +772,10 @@ namespace TemporaTasks.Pages
                 }
             }
 
-            if (SearchTextBox.Text.Equals("$p", StringComparison.CurrentCultureIgnoreCase))
+            if (SearchTextBox.Text.Contains("$p", StringComparison.CurrentCultureIgnoreCase))
             {
-                List<IndividualTask> tempTasks = [];
                 foreach (IndividualTask task in tasks)
-                    if (task.taskPriority == TaskPriority.High) tempTasks.Add(task);
-                // SearchTextBox.Text = SearchTextBox.Text.Replace("$p", "").Trim();
-                tasks = tempTasks;
+                    if (task.taskPriority == TaskPriority.Normal) tasks.Remove(task);
             }
 
             MatchCollection matches;
