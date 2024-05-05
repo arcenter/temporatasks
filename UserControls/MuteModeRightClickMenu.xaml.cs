@@ -26,12 +26,6 @@ namespace TemporaTasks.UserControls
         {
             InitializeComponent();
             this.popupObject = popupObject;
-            if (TaskFile.NotificationModeTimer.IsEnabled)
-            {
-                ButtonPanel.Visibility = Visibility.Collapsed;
-                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerStart - DateTime.Now);
-                t30mLabel.Padding = new Thickness(10, 0, 10, 0);
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -39,6 +33,20 @@ namespace TemporaTasks.UserControls
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.MouseDown += PopupMouseDown;
             mainWindow.KeyDown += PopupKeyDown;
+
+            if (TaskFile.NotificationModeTimer.IsEnabled)
+            {
+                ButtonPanel.Visibility = Visibility.Collapsed;
+                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerStart - DateTime.Now);
+                t30mLabel.Padding = new Thickness(10, 0, 10, 0);
+            }
+            else
+            {
+                ButtonPanel.Visibility = Visibility.Visible;
+                t30mLabel.Content = "30m";
+                t30mLabel.Padding = new Thickness(0);
+            }
+
             BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
         }
 

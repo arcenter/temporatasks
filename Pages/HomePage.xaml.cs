@@ -29,6 +29,7 @@ namespace TemporaTasks.Pages
         List<IndividualTask> lastTask = [];
 
         IndividualTask hoveredTask;
+        MuteModeRightClickMenu muteModeRightClickMenu;
 
         private enum ViewCategory
         {
@@ -44,6 +45,7 @@ namespace TemporaTasks.Pages
             UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
             UpdateTaskTimersTimer.Start();
             TaskFile.NotificationModeTimer.Tick += ResetNotificationTimer;
+            muteModeRightClickMenu = new(RightClickMenuPopup);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -558,18 +560,13 @@ namespace TemporaTasks.Pages
             }
         }
 
-        private async void NotifButton_MouseUp(object sender, MouseButtonEventArgs e)
+        private void NotifButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Right)
             {
-                if (RightClickMenuPopup.Child != null)
-                {
-                    ((MuteModeRightClickMenu)RightClickMenuPopup.Child).PopupClose(100);
-                    await Task.Delay(200);
-                }
-                RightClickMenuPopup.Child = new MuteModeRightClickMenu(RightClickMenuPopup);
+                RightClickMenuPopup.Child = muteModeRightClickMenu;
                 RightClickMenuPopup.IsOpen = true;
-                ((MuteModeRightClickMenu)RightClickMenuPopup.Child).ResetNotificationMode += ResetNotificationTimer;
+                muteModeRightClickMenu.ResetNotificationMode += ResetNotificationTimer;
             }
         }
 
