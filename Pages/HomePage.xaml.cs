@@ -206,6 +206,12 @@ namespace TemporaTasks.Pages
                                 return;
                     return;
                 }
+
+                else if (Keyboard.IsKeyDown(Key.M))
+                {
+                    OpenMuteModeRightClickMenuPopup();
+                    return;
+            }
             }
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
@@ -360,7 +366,6 @@ namespace TemporaTasks.Pages
                         Clipboard.SetText(task.TaskName);
                         return;
                     }
-
                 }
 
                 switch (e.Key)
@@ -564,13 +569,15 @@ namespace TemporaTasks.Pages
 
         private void NotifButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Right)
+            if (e.ChangedButton == MouseButton.Right) OpenMuteModeRightClickMenuPopup();
+        }
+                
+        private void OpenMuteModeRightClickMenuPopup()
             {
                 RightClickMenuPopup.Child = muteModeRightClickMenu;
                 RightClickMenuPopup.IsOpen = true;
                 muteModeRightClickMenu.UpdateNotificationMode += UpdateNotificationTimer;
             }
-        }
 
         private void UpdateNotificationMode()
         {
