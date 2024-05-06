@@ -132,6 +132,8 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
+            if (RightClickMenuPopup.IsOpen) return;
+
             if (SearchTextBox.IsFocused)
             {
                 if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Escape)
@@ -478,7 +480,7 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyUp(object sender, KeyEventArgs e)
         {
-            if (SearchTextBox.IsFocused || Keyboard.IsKeyDown(Key.LWin)) return;
+            if (SearchTextBox.IsFocused || Keyboard.IsKeyDown(Key.LWin) || RightClickMenuPopup.IsOpen) return;
             if (e.Key == Key.S || e.Key == Key.OemQuestion)
                 SearchTextBox.Focus();
         }
