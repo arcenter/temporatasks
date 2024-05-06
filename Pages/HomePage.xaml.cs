@@ -44,7 +44,7 @@ namespace TemporaTasks.Pages
             InitializeComponent();
             UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
             UpdateTaskTimersTimer.Start();
-            TaskFile.NotificationModeTimer.Tick += ResetNotificationTimer;
+            TaskFile.NotificationModeTimer.Tick += (s, e) => UpdateNotificationTimer(TaskFile.NotificationMode.Normal);
             muteModeRightClickMenu = new(RightClickMenuPopup);
         }
 
@@ -568,7 +568,7 @@ namespace TemporaTasks.Pages
             {
                 RightClickMenuPopup.Child = muteModeRightClickMenu;
                 RightClickMenuPopup.IsOpen = true;
-                muteModeRightClickMenu.ResetNotificationMode += ResetNotificationTimer;
+                muteModeRightClickMenu.UpdateNotificationMode += UpdateNotificationTimer;
             }
         }
 
@@ -1072,9 +1072,9 @@ namespace TemporaTasks.Pages
             }
         }
 
-        public void ResetNotificationTimer(object sender, EventArgs e)
+        public void UpdateNotificationTimer(TaskFile.NotificationMode notificationMode)
         {
-            TaskFile.notificationMode = TaskFile.NotificationMode.Normal;
+            TaskFile.notificationMode = notificationMode;
             UpdateNotificationMode();
             TaskFile.NotificationModeTimer.Stop();
         }

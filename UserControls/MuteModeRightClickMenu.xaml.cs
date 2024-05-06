@@ -109,7 +109,7 @@ namespace TemporaTasks.UserControls
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (TaskFile.NotificationModeTimer.IsEnabled)
-                ResetNotificationMode.Invoke(null, null);
+                UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Normal);
 
             else
             {
@@ -139,6 +139,8 @@ namespace TemporaTasks.UserControls
                         break;
                 }
 
+                UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Muted);
+
                 TaskFile.NotificationModeTimerStart = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
                 TaskFile.NotificationModeTimer.Start();
             }
@@ -146,7 +148,7 @@ namespace TemporaTasks.UserControls
             PopupClose();
         }
 
-        public delegate void ResetNotificationModeEvent(object sender, EventArgs e);
-        public event ResetNotificationModeEvent ResetNotificationMode;
+        public delegate void ResetNotificationModeEvent(TaskFile.NotificationMode notificationMode);
+        public event ResetNotificationModeEvent UpdateNotificationMode;
     }
 }
