@@ -65,32 +65,15 @@ namespace TemporaTasks.UserControls
 
         private void PopupKeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key.ToString())
+            Border_MouseDown(e.Key.ToString() switch
             {
-                case "D3":
-                    Border_MouseDown("t30m", null);
-                    return;
-
-                case "D4":
-                    Border_MouseDown("t1h", null);
-                    return;
-
-                case "D6":
-                    Border_MouseDown("t6h", null);
-                    return;
-
-                case "D9":
-                    Border_MouseDown("t1d", null);
-                    return;
-                    -
-                case "D7":
-                    Border_MouseDown("t1w", null);
-                    return;
-
-                default:
-                    PopupClose();
-                    return;
-            }
+                "D3" => "t30m",
+                "D4" => "t1h",
+                "D6" => "t6h",
+                "D9" => "t1d",
+                "D7" => "t1w",
+                _ => ""
+            }, null);
         }
 
         public async void PopupClose(int delay = 200)
@@ -136,7 +119,8 @@ namespace TemporaTasks.UserControls
                         break;
 
                     default:
-                        break;
+                        PopupClose();
+                        return;
                 }
 
                 UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Muted);
