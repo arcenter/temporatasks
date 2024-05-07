@@ -9,7 +9,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using TemporaTasks.UserControls;
 
@@ -20,7 +22,7 @@ namespace TemporaTasks.Core
         public static string saveFilePath;
         public static string backupPath;
         
-        public static ArrayList TaskList;
+        public static ArrayList TaskList = [];
 
         public static int sortType = 2;
 
@@ -37,11 +39,13 @@ namespace TemporaTasks.Core
         public static DispatcherTimer NotificationModeTimer = new();
         public static DateTime NotificationModeTimerStart;
 
-        public static void LoadData()
+        public async static void LoadData()
         {
-            ArrayList _TasksList = [];
             if (File.Exists(saveFilePath))
             {
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                mainWindow.Cursor = Cursors.Wait;
+
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
 
                 if (data.Keys.Contains("settings"))
@@ -53,6 +57,8 @@ namespace TemporaTasks.Core
                     notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
                 }
 
+                // double increment = 1/data.Count;
+                // double scale = 0;
                 foreach (string taskUID in data.Keys)
                 {
                     try
@@ -81,12 +87,16 @@ namespace TemporaTasks.Core
                         IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
 
                         IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, attachments);
-                        _TasksList.Add(taskObj);
+                        TaskList.Add(taskObj);
                     }
                     catch { }
+                    await Task.Delay(1);
+                    // mainWindow.LoadBar.RenderTransform = new ScaleTransform(scale += increment, 1);
                 }
+
+                mainWindow.Cursor = Cursors.Arrow;
+                mainWindow.LoadPage();
             }
-            TaskList = _TasksList;
         }
 
         private static DateTime? StringToDateTime(Dictionary<string, Dictionary<string, string>> data, string taskUID, string field)

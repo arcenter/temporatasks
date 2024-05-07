@@ -211,7 +211,7 @@ namespace TemporaTasks.Pages
                 {
                     OpenMuteModeRightClickMenuPopup();
                     return;
-            }
+                }
             }
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
@@ -573,11 +573,11 @@ namespace TemporaTasks.Pages
         }
                 
         private void OpenMuteModeRightClickMenuPopup()
-            {
-                RightClickMenuPopup.Child = muteModeRightClickMenu;
-                RightClickMenuPopup.IsOpen = true;
-                muteModeRightClickMenu.UpdateNotificationMode += UpdateNotificationTimer;
-            }
+        {
+            RightClickMenuPopup.Child = muteModeRightClickMenu;
+            RightClickMenuPopup.IsOpen = true;
+            muteModeRightClickMenu.UpdateNotificationMode += UpdateNotificationTimer;
+        }
 
         private void UpdateNotificationMode()
         {
@@ -765,7 +765,7 @@ namespace TemporaTasks.Pages
             int dueTasks = 0;
 
             List<IndividualTask> tasks = [];
-
+            
             if (currentViewCategory == ViewCategory.Completed)
             {
                 foreach (IndividualTask task in TaskFile.TaskList)

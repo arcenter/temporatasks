@@ -38,6 +38,10 @@ namespace TemporaTasks
                 TaskFile.saveFilePath = $"{path}data.json";
                 TaskFile.LoadData();
             }
+        }
+
+        public void LoadPage()
+        {
             homePage = new();
             FrameView.Navigate(homePage);
         }

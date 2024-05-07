@@ -44,6 +44,17 @@
             <Image Source="{StaticResource homePageBackground}" VerticalAlignment="Bottom" Grid.Column="1"/>
         </Grid>
 
+        <!--<Grid x:Name="LoadBarGrid" Width="300" Grid.Row="1" Height="7">
+            <Rectangle Fill="{StaticResource DarkerBlue}"/>
+            <Rectangle x:Name="LoadBar" Fill="{StaticResource Blue}" RenderTransformOrigin="0,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="0"/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Grid>-->
+
         <Frame x:Name="FrameView" NavigationUIVisibility="Hidden" DockPanel.Dock="Right" Focusable="False" IsTabStop="False" Grid.Row="1"/>
 
         <Border x:Name="TitleBar" Background="{StaticResource TitleBar}" MouseDown="TitleBar_MouseDown"/>
