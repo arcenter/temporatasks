@@ -643,7 +643,7 @@ namespace TemporaTasks.Pages
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            GenerateTaskStack();
+            GenerateTaskStack(force: true);
         }
 
         private async void RunSearchTextBoxCloseAnimation(bool open = false)
@@ -680,7 +680,7 @@ namespace TemporaTasks.Pages
         {
             TaskFile.sortType = SortComboBox.SelectedIndex;
             TaskFile.SaveData();
-            GenerateTaskStack();
+            GenerateTaskStack(force: true);
         }
 
         private void ReverseButton_MouseDown(object sender, MouseButtonEventArgs e)
@@ -699,7 +699,7 @@ namespace TemporaTasks.Pages
             SortButton.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = -(temp) };
             SortButton.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
 
-            GenerateTaskStack();
+            GenerateTaskStack(force: true);
         }
 
         private void CategoryButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -748,9 +748,9 @@ namespace TemporaTasks.Pages
 
         private bool generateLock = false;
 
-        private async void GenerateTaskStack(bool scrollToTop = true)
+        private async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
         {
-            if (generateLock || TaskStack == null) return;
+            if ((generateLock && !force) || TaskStack == null) return;
             generateLock = true;
 
             mainWindow.Cursor = Cursors.Wait;
