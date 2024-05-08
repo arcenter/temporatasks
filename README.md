@@ -1,4 +1,4 @@
-<img alt="TemporaTasks Title Image" src="https://github.com/arcenter/temporatasks/assets/101260108/5cb82b3a-1818-415e-9ccf-bf455ec5ceb0">
+<img alt="TemporaTasks Title Image" src="https://github.com/arcenter/temporatasks/assets/101260108/d6b3dbb1-ea5a-4557-99ea-ab3ff3cddfb4">
 
 ---
 
@@ -9,7 +9,7 @@
 
 TemporaTasks is a simple, minimalistic, open-source task manager, build for swift & efficient task management in Windows 10. Crafted with a commitment to user-friendly navigation and optimized for keyboard accessibility, this project originated from a personal need for a highly efficient open-source task manager on the Windows 10 platform.
 
-<img alt="TemporaTasks Screenshots" src="https://github.com/arcenter/temporatasks/assets/101260108/eed679de-df41-4463-8563-934673182a2b">
+<img alt="TemporaTasks Screenshots" src="https://github.com/arcenter/temporatasks/assets/101260108/4188220b-4006-4c3a-b895-f175822649f6">
 
 ## Features
 
