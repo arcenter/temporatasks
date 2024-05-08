@@ -68,6 +68,7 @@ namespace TemporaTasks.UserControls
             if (e.Key == Key.Escape)
             {
                 PopupClose();
+
                 return;
             }
             Border_MouseDown(e.Key.ToString() switch
