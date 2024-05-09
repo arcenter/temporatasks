@@ -28,7 +28,7 @@ namespace TemporaTasks.Pages
         DateTime? dateClipboard = null;
         List<IndividualTask> lastTask = [];
 
-        IndividualTask hoveredTask;
+        IndividualTask hoveredTask = null;
         MuteModeRightClickMenu muteModeRightClickMenu;
 
         private enum ViewCategory
@@ -758,15 +758,11 @@ namespace TemporaTasks.Pages
             TaskStack.Children.Clear();
             if (scrollToTop) TaskStackScroller.ScrollToVerticalOffset(0);
 
-            Dictionary<IndividualTask, object> yesDueDate = [], sortedDict = [];
-            ArrayList noDueDate = [];
-
-            int tasksInHour = 0;
-
             days.Clear();
-            int dueTasks = 0;
 
             List<IndividualTask> tasks = [];
+            
+            int tasksInHour = 0;
             
             if (currentViewCategory == ViewCategory.Completed)
             {
@@ -782,118 +778,106 @@ namespace TemporaTasks.Pages
                     tasks.Add(task);
                     if (task.DueDT.HasValue && task.DueDT.Value - DateTime.Now < TimeSpan.FromHours(1)) tasksInHour++;
                 }
+                TasksInHourLabel.Content = tasksInHour;
             }
 
-            TasksInHourLabel.Content = tasksInHour;
-
-            if (SearchTextBox.Text.Contains("$p", StringComparison.CurrentCultureIgnoreCase))
+            if (SearchTextBox.Text.Length != 0)
             {
-                foreach (IndividualTask task in tasks)
-                    if (task.taskPriority == TaskPriority.Normal) tasks.Remove(task);
+                string searchTerm = SearchTextBox.Text.ToLower();
+
+                if (searchTerm.Contains("$n"))
+            {
+                    for (int i = tasks.Count-1; i >= 0; i--)
+                        if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
+                    searchTerm = searchTerm.Replace("$n", "").Trim();
             }
 
-            MatchCollection matches;
-            Regex regex = new(SearchTextBox.Text.ToLower());
-            switch (SortComboBox.SelectedIndex)
+                if (searchTerm.Contains("$p"))
             {
-                case 1:
-                case 2:
+                    for (int i = tasks.Count-1; i >= 0; i--)
+                        if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
+                    searchTerm = searchTerm.Replace("$p", "").Trim();
+                }
 
-                    if (SearchTextBox.Text.Length != 0 && !SearchTextBox.Text.Equals("$p", StringComparison.CurrentCultureIgnoreCase))
+                if (searchTerm.Contains('#'))
                     {
-                        if (SearchTextBox.Text.Equals("$n", StringComparison.CurrentCultureIgnoreCase))
+                    MatchCollection matches = RegexTags().Matches(SearchTextBox.Text);
+                    if (matches.Count != 0)
                         {
-                            foreach (IndividualTask task in tasks)
-                                if (!task.DueDT.HasValue) noDueDate.Add(task);
-                        }
-                        else if ((matches = RegexTags().Matches(SearchTextBox.Text)).Count > 0)
+                        for (int i = tasks.Count-1; i >= 0; i--)
                         {
-                            foreach (IndividualTask task in tasks)
-                            {
-                                if (task.TagList != null)
-                                    foreach (string tag in task.TagList)
-                                    {
+                            if (tasks[i].TagList != null)
+                                foreach (string tag in tasks[i].TagList)
                                         foreach (Match match in matches.Cast<Match>())
-                                        {
                                             if (new Regex(match.Value[1..]).Match(tag).Success)
-                                            {
-                                                if (task.DueDT.HasValue)
-                                                {
-                                                    yesDueDate[task] = task.DueDT.Value;
-                                                    if (task.IsDue) dueTasks++;
-                                                }
-                                                else if (!noDueDate.Contains(task)) noDueDate.Add(task);
                                                 goto NextTask;
-                                            }
-                                        }
-                                    }
+                                        else
+                                            tasks.Remove(tasks[i]);
                                 NextTask:;
                             }
+                        foreach (Match match in matches)
+                            searchTerm = searchTerm.Replace($"#{match.Value}", "").Trim();
+                        searchTerm = searchTerm.Trim();
                         }
-                        else
+                }
+
+                Regex regex = new(searchTerm);
+                for (int i = tasks.Count-1; i >= 0; i--)
                         {
-                            if (SortComboBox.SelectedIndex == 1)
-                            {
-                                foreach (IndividualTask task in tasks)
-                                    if (regex.Match(task.TaskName.ToLower()).Success)
-                                    {
-                                        yesDueDate[task] = task.CreatedDT.Value;
-                                        if (task.IsDue) dueTasks++;
+                    if (regex.Match(tasks[i].TaskName.ToLower()).Success) continue;
+                    tasks.Remove(tasks[i]);
                                     }
                             }
 
+            Dictionary<IndividualTask, object> yesDate = [], sortedDict = [];
+            ArrayList noDate = [];
+            int dueTasks = 0;
+
+            if (SortComboBox.SelectedIndex == 0)
+            {
+                if (reverseSort)
+                    tasks = [.. tasks.OrderByDescending(pair => pair.TaskName)];
                             else
+                    tasks = [.. tasks.OrderBy(pair => pair.TaskName)];
+
+                TaskCount.Content = $"{tasks.Count}t";
                                 foreach (IndividualTask task in tasks)
-                                    if (regex.Match(task.TaskName.ToLower()).Success)
                                     {
-                                        if (task.DueDT.HasValue)
-                                        {
-                                            yesDueDate[task] = task.DueDT.Value;
+                    TaskStack.Children.Add(task);
                                             if (task.IsDue) dueTasks++;
                                         }
-                                        else noDueDate.Add(task);
+
+                goto Finally;
                                     }
-                        }
-                    }
-                    else
-                    {
-                        if (SortComboBox.SelectedIndex == 1)
-                        {
+
+            else if (SortComboBox.SelectedIndex == 1)
                             foreach (IndividualTask task in tasks)
+                    if (task.CreatedDT.HasValue)
                             {
-                                yesDueDate[task] = task.CreatedDT.Value;
+                        yesDate[task] = task.CreatedDT.Value;
                                 if (task.IsDue) dueTasks++;
                             }
-                        }
+                    else noDate.Add(task);
 
-                        else
+            else if (SortComboBox.SelectedIndex == 2)
                             foreach (IndividualTask task in tasks)
-                            {
                                 if (task.DueDT.HasValue)
                                 {
-                                    yesDueDate[task] = task.DueDT.Value;
+                        yesDate[task] = task.DueDT.Value;
                                     if (task.IsDue) dueTasks++;
                                 }
-                                else noDueDate.Add(task);
-                            }
-                    }
-
-                    DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
-                    TaskCount.Content = $"{yesDueDate.Count + noDueDate.Count}t";
+                    else noDate.Add(task);
 
                     if (reverseSort)
                     {
-                        sortedDict = yesDueDate.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        noDueDate.Reverse();
+                sortedDict = yesDate.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                noDate.Reverse();
                     }
-                    else
-                    {
-                        sortedDict = yesDueDate.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    }
+            else sortedDict = yesDate.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
                     foreach (IndividualTask task in sortedDict.Keys)
                     {
-                        DateTime date = (SortComboBox.SelectedIndex == 1) ? task.CreatedDT.Value : task.DueDT.Value;
+                DateTime date = (DateTime)sortedDict[task];
                         string dateString = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy");
 
                         if (!days.ContainsKey(dateString))
@@ -911,77 +895,32 @@ namespace TemporaTasks.Pages
                         days[dateString].Add(task);
                     }
 
-                    if (noDueDate.Count > 0)
+            if (noDate.Count > 0)
                     {
                         days["No date"] = [];
 
-                        SectionDivider sectionDivider = new("No date");
+                SectionDivider sectionDivider = new($"No date ({noDate.Count})");
                         if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
                         sectionDivider.MouseDown += Section_MouseDown;
 
                         TaskStack.Children.Add(sectionDivider);
 
-                        foreach (IndividualTask task in noDueDate)
+                foreach (IndividualTask task in noDate)
                         {
                             TaskStack.Children.Add(task);
                             days["No date"].Add(task);
                         }
                     }
 
-                    break;
+            TaskCount.Content = $"{yesDate.Count + noDate.Count}t";
 
-                default:
+            Finally:
 
-                    if (SearchTextBox.Text.Length != 0)
-                    {
-                        if (SearchTextBox.Text.Equals("$n", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            foreach (IndividualTask task in tasks)
-                                if (task.DueDT.HasValue) tasks.Remove(task);
-                        }
-                        else if ((matches = RegexTags().Matches(SearchTextBox.Text)).Count > 0)
-                        {
-                            foreach (IndividualTask task in tasks)
-                            {
-                                if (task.TagList != null)
-                                    foreach (string tag in task.TagList)
-                                    {
-                                        foreach (Match match in matches.Cast<Match>())
-                                        {
-                                            Regex _regex = new(match.Value[1..]);
-                                            if (_regex.Match(tag).Success)
-                                            {
-                                                if (task.IsDue) dueTasks++;
-                                                goto NextTask;
-                                            }
-                                        }
-                                    }
-                                tasks.Remove(task);
-                                NextTask:;
-                            }
-                        }
+            if (dueTasks == 0) DueTaskCount.Visibility = Visibility.Collapsed;
                         else
                         {
-                            foreach (IndividualTask task in tasks)
-                            {
-                                if (regex.Match(task.TaskName.ToLower()).Success)
-                                {
-                                    if (task.IsDue) dueTasks++;
-                                    continue;
-                                }
-                                tasks.Remove(task);
-                            }
-                        }
-                    }
-
-                    if (reverseSort)
-                        tasks = [.. tasks.OrderByDescending(pair => pair.TaskName)];
-                    else
-                        tasks = [.. tasks.OrderBy(pair => pair.TaskName)];
-
-                    foreach (IndividualTask task in tasks) TaskStack.Children.Add(task);
-
-                    break;
+                DueTaskCount.Visibility = Visibility.Visible;
+                DueTaskCount.Content = $"{dueTasks}d.";
             }
 
             if (currentViewCategory == ViewCategory.Completed)
