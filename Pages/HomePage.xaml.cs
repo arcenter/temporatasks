@@ -761,6 +761,8 @@ namespace TemporaTasks.Pages
             Dictionary<IndividualTask, object> yesDueDate = [], sortedDict = [];
             ArrayList noDueDate = [];
 
+            int tasksInHour = 0;
+
             days.Clear();
             int dueTasks = 0;
 
@@ -778,8 +780,11 @@ namespace TemporaTasks.Pages
                 {
                     if (task.IsCompleted) continue;
                     tasks.Add(task);
+                    if (task.DueDT.HasValue && task.DueDT.Value - DateTime.Now < TimeSpan.FromHours(1)) tasksInHour++;
                 }
             }
+
+            TasksInHourLabel.Content = tasksInHour;
 
             if (SearchTextBox.Text.Contains("$p", StringComparison.CurrentCultureIgnoreCase))
             {
