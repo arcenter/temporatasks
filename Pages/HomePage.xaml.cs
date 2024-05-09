@@ -39,6 +39,7 @@ namespace TemporaTasks.Pages
 
         ViewCategory currentViewCategory = ViewCategory.Home;
 
+        List<IndividualTask> displayedTasks = [];
         public HomePage()
         {
             InitializeComponent();
@@ -218,8 +219,7 @@ namespace TemporaTasks.Pages
             {
                 if (Keyboard.IsKeyDown(Key.G))
                 {
-                    foreach (object obj in TaskStack.Children)
-                        if (obj is IndividualTask task)
+                    foreach (IndividualTask task in displayedTasks)
                         {
                             GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
                             bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
@@ -507,9 +507,7 @@ namespace TemporaTasks.Pages
             currentFocus = null;
             UnfocusTasks();
             if (TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOff) SetTempGarble(TempGarbleMode.None);
-            foreach (object obj in TaskStack.Children)
-                if (obj is IndividualTask task)
-                    task.DueDateTimeLabelUpdate();
+            foreach (IndividualTask task in displayedTasks) task.DueDateTimeLabelUpdate();
             GenerateTaskStack(false);
         }
 
@@ -936,6 +934,8 @@ namespace TemporaTasks.Pages
 
             else UpdateNextDueTask();
 
+            displayedTasks = tasks;
+
             mainWindow.Cursor = Cursors.Arrow;
 
             await Task.Delay(250);
@@ -956,17 +956,17 @@ namespace TemporaTasks.Pages
             {
                 if (reverseSort)
                 {
-                    for (int i = TaskStack.Children.Count-1; i >= 0; i--)
-                        if (TaskStack.Children[i] is IndividualTask task && !task.IsCompleted && task.DueDT.HasValue)
+                    for (int i = displayedTasks.Count-1; i >= 0; i--)
+                        if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
                         {
-                            nextDueTask = task;
+                            nextDueTask = displayedTasks[i];
                             break;
                         }
                 }
                 else
                 {
-                    foreach (object obj in TaskStack.Children)
-                        if (obj is IndividualTask task && !task.IsCompleted)
+                    foreach (IndividualTask task in displayedTasks)
+                        if (!task.IsCompleted)
                         {
                             if (task.DueDT.HasValue) nextDueTask = task;
                             break;
@@ -975,10 +975,10 @@ namespace TemporaTasks.Pages
             }
             else
             {
-                for (int i = TaskFile.TaskList.Count - 1; i >= 0; i--)
-                    if (TaskFile.TaskList[i] is IndividualTask task && !task.IsCompleted && task.DueDT.HasValue)
-                        if (nextDueTask == null) nextDueTask = task;
-                        else if (task.DueDT < nextDueTask.DueDT) nextDueTask = task;
+                for (int i = displayedTasks.Count - 1; i >= 0; i--)
+                    if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
+                        if (nextDueTask == null) nextDueTask = displayedTasks[i];
+                        else if (displayedTasks[i].DueDT < nextDueTask.DueDT) nextDueTask = displayedTasks[i];
             }
 
             if (nextDueTask == null) StatusGrid.Visibility = Visibility.Collapsed;
@@ -1138,8 +1138,7 @@ namespace TemporaTasks.Pages
         {
             TaskFile.tempGarbleMode = tempGarbleMode;
             EyeIcon.Source = (ImageSource)mainWindow.FindResource($"{tempGarbleMode}EyeIcon");
-            foreach (object obj in TaskStack.Children)
-                if (obj is IndividualTask task)
+            foreach (IndividualTask task in displayedTasks)
                     task.TempGarble(tempGarbleMode);
             UpdateNextDueTask();
         }
