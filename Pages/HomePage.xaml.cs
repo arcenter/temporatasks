@@ -22,7 +22,6 @@ namespace TemporaTasks.Pages
         int? currentFocus = null;
 
         bool reverseSort = false;
-        bool garbleMode = false;
         Dictionary<string, ArrayList> days = [];
 
         DateTime? dateClipboard = null;
@@ -197,16 +196,15 @@ namespace TemporaTasks.Pages
                     return;
                 }
 
-                else if (Keyboard.IsKeyDown(Key.D5))
-                {
-                    foreach (object obj in TaskStack.Children)
-                        if (obj is IndividualTask task)
-                            if (task.DueDT.HasValue && task.DueDT.Value.Date == DateTime.Now.Date)
-                                task.ChangeDueTime("plus5m", null);
-                            else
-                                return;
-                    return;
-                }
+                //else if (Keyboard.IsKeyDown(Key.D5))
+                //{
+                //    foreach (IndividualTask task in displayedTasks)
+                //        if (task.DueDT.HasValue && task.DueDT.Value.Date == DateTime.Now.Date)
+                //            task.ChangeDueTime("plus5m", null);
+                //        else
+                //            return;
+                //    return;
+                //}
 
                 else if (Keyboard.IsKeyDown(Key.M))
                 {
@@ -922,15 +920,8 @@ namespace TemporaTasks.Pages
             }
 
             if (currentViewCategory == ViewCategory.Completed)
-            {
-                int counter = 0;
-                foreach (object obj in TaskStack.Children)
-                    if (obj is IndividualTask task)
-                    {
-                        if (counter++ == 10) break;
-                        task.UpdateLayoutAndStrikethrough();
-                    }
-            }
+                for (int i = 0; i <= Math.Min(10, tasks.Count); i++)
+                    tasks[i].UpdateLayoutAndStrikethrough();
 
             else UpdateNextDueTask();
 
@@ -940,7 +931,6 @@ namespace TemporaTasks.Pages
 
             await Task.Delay(250);
             generateLock = false;
-
         }
 
         [GeneratedRegex(@"#\S+")]
@@ -1104,12 +1094,8 @@ namespace TemporaTasks.Pages
 
                 double verticalOffset = TaskStackScroller.VerticalOffset;
 
-                // DueTaskCount.Content = task.TransformToVisual(TaskStack.Children[0]).Transform(new Point(0, 0)).Y.ToString();
-
                 task.BringIntoView();
                 await Task.Delay(1);
-
-                // TaskCount.Content = TaskStackScroller.VerticalOffset.ToString();
 
                 if (verticalOffset < TaskStackScroller.VerticalOffset)
                     TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + 50);
