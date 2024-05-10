@@ -797,17 +797,16 @@ namespace TemporaTasks.Pages
 
                 if (searchTerm.Contains('#'))
                     {
-                    MatchCollection matches = RegexTags().Matches(SearchTextBox.Text);
+                    MatchCollection matches = RegexTags().Matches(searchTerm);
                     if (matches.Count != 0)
                         {
                         for (int i = tasks.Count-1; i >= 0; i--)
                         {
                             if (tasks[i].TagList != null)
                                 foreach (string tag in tasks[i].TagList)
-                                        foreach (Match match in matches.Cast<Match>())
+                                    foreach (Match match in matches)
                                             if (new Regex(match.Value[1..]).Match(tag).Success)
                                                 goto NextTask;
-                                        else
                                             tasks.Remove(tasks[i]);
                                 NextTask:;
                             }
