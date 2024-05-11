@@ -190,12 +190,12 @@
             <Grid x:Name="StatusGrid" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="35">
                 <Border Background="#252525" BorderBrush="{StaticResource Accent}" BorderThickness="1 1 0 0" CornerRadius="5 0 0 0">
                     <StackPanel Orientation="Horizontal" Margin="12 0" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label x:Name="TasksInHourLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.9" Padding="2.5 0"/>
+                        <Label Content=" tasks in next hour" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiLight" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="0"/>
+                        <Label Content="|" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiBold" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="5 0"/>
                         <Label Content="Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiLight" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="0"/>
                         <Label x:Name="NextTaskDueNameLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular"   Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.9" Padding="5 0"/>
                         <Label x:Name="NextTaskDueTimeLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiLight" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="0"/>
-                        <Label Content="|" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiBold" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="5 0"/>
-                        <Label x:Name="TasksInHourLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.9" Padding="2.5 0"/>
-                        <Label Content=" tasks in next hour" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope SemiLight" Foreground="{StaticResource Text}" FontSize="11" VerticalContentAlignment="Center" Opacity="0.75" Padding="0"/>
                     </StackPanel>
                 </Border>
             </Grid>
