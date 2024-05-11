@@ -743,11 +743,12 @@ namespace TemporaTasks.Pages
         }
 
         private bool generateLock = false;
-
         private async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
         {
             if ((generateLock && !force) || TaskStack == null) return;
             generateLock = true;
+
+            await Task.Delay(250);
 
             mainWindow.Cursor = Cursors.Wait;
 
@@ -803,29 +804,34 @@ namespace TemporaTasks.Pages
                         for (int i = tasks.Count-1; i >= 0; i--)
                         {
                             if (tasks[i].TagList != null)
+                            {
                                 foreach (string tag in tasks[i].TagList)
                                     foreach (Match match in matches)
-                                            if (new Regex(match.Value[1..]).Match(tag).Success)
+                                        if (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
                                                 goto NextTask;
                                             tasks.Remove(tasks[i]);
+                            } else tasks.Remove(tasks[i]);
                                 NextTask:;
                             }
                         foreach (Match match in matches)
-                            searchTerm = searchTerm.Replace($"#{match.Value}", "").Trim();
+                            searchTerm = searchTerm.Replace($"{match.Value}", "").Trim();
                         searchTerm = searchTerm.Trim();
                         }
                 }
 
+                if (searchTerm.Length > 0)
+                {
                 Regex regex = new(searchTerm);
-                for (int i = tasks.Count-1; i >= 0; i--)
+                    for (int i = tasks.Count - 1; i >= 0; i--)
                         {
                     if (regex.Match(tasks[i].TaskName.ToLower()).Success) continue;
                     tasks.Remove(tasks[i]);
                                     }
                             }
+            }
 
             Dictionary<IndividualTask, object> yesDate = [], sortedDict = [];
-            ArrayList noDate = [];
+            List<IndividualTask> noDate = [];
             int dueTasks = 0;
 
             if (SortComboBox.SelectedIndex == 0)
@@ -870,6 +876,9 @@ namespace TemporaTasks.Pages
                     }
             else sortedDict = yesDate.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
+            tasks = [.. sortedDict.Keys];
+            tasks.AddRange(noDate);
+
                     foreach (IndividualTask task in sortedDict.Keys)
                     {
                 DateTime date = (DateTime)sortedDict[task];
@@ -907,16 +916,13 @@ namespace TemporaTasks.Pages
                         }
                     }
 
-            TaskCount.Content = $"{yesDate.Count + noDate.Count}t";
+            TaskCount.Content = $"{tasks.Count}t";
 
             Finally:
 
-            if (dueTasks == 0) DueTaskCount.Visibility = Visibility.Collapsed;
-                        else
-                        {
-                DueTaskCount.Visibility = Visibility.Visible;
-                DueTaskCount.Content = $"{dueTasks}d.";
-            }
+            DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
+
+            displayedTasks = tasks;
 
             if (currentViewCategory == ViewCategory.Completed)
                 for (int i = 0; i <= Math.Min(10, tasks.Count); i++)
@@ -924,11 +930,8 @@ namespace TemporaTasks.Pages
 
             else UpdateNextDueTask();
 
-            displayedTasks = tasks;
-
             mainWindow.Cursor = Cursors.Arrow;
 
-            await Task.Delay(250);
             generateLock = false;
         }
 
@@ -954,10 +957,10 @@ namespace TemporaTasks.Pages
                 }
                 else
                 {
-                    foreach (IndividualTask task in displayedTasks)
-                        if (!task.IsCompleted)
+                    for (int i = 0; i < displayedTasks.Count; i++)
+                        if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
                         {
-                            if (task.DueDT.HasValue) nextDueTask = task;
+                            nextDueTask = displayedTasks[i];
                             break;
                         }
                 }
