@@ -581,6 +581,7 @@ namespace TemporaTasks.Pages
             {
                 if (notifLine.Opacity != 0) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                 if (notifLineHP.Opacity != 0) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                TaskFile.NotificationModeTimer.Stop();
             }
             else if (TaskFile.notificationMode == TaskFile.NotificationMode.High)
             {
