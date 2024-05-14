@@ -25,6 +25,7 @@
             </Border>
 
             <StackPanel x:Name="ButtonPanel" Orientation="Horizontal">
+
                 <Border x:Name="t1h" Width="30" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseDown="Border_MouseDown" Cursor="Hand" CornerRadius="5">
                     <Border.Background>
                         <SolidColorBrush Color="{Binding Color, Source={StaticResource DarkBlue}}" Opacity="0"/>
@@ -52,6 +53,7 @@
                     </Border.Background>
                     <Label Content="1w" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0" IsHitTestVisible="False"/>
                 </Border>
+
             </StackPanel>
 
         </StackPanel>

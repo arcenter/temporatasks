@@ -822,6 +822,8 @@ namespace TemporaTasks.Pages
 
                 if (searchTerm.Length > 0)
                 {
+                    try
+                    {
                 Regex regex = new(searchTerm);
                     for (int i = tasks.Count - 1; i >= 0; i--)
                         {
@@ -829,6 +831,8 @@ namespace TemporaTasks.Pages
                     tasks.Remove(tasks[i]);
                                     }
                             }
+                    catch { }
+            }
             }
 
             Dictionary<IndividualTask, object> yesDate = [], sortedDict = [];
