@@ -982,7 +982,7 @@ namespace TemporaTasks.Pages
             else
             {
                 StatusGrid.Visibility = Visibility.Visible;
-                NextTaskDueNameLabel.Content = ((nextDueTask.IsGarbled() && TaskFile.tempGarbleMode != TempGarbleMode.TempGarbleOff) || TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOn) ? "Garbled Task" : nextDueTask.TaskName;
+                NextTaskDueNameLabel.Content = ((nextDueTask.IsGarbled() && TaskFile.tempGarbleMode != TempGarbleMode.TempGarbleOff) || TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOn) ? "Garbled Task" : (nextDueTask.TaskName[..20].Trim() + ((nextDueTask.TaskName.Length > 20) ? "..." : ""));
                 NextTaskDueTimeLabel.Content = DTHelper.GetRelativeTaskDueTime(nextDueTask);
             }
         }
