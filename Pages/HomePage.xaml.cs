@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -98,7 +96,7 @@ namespace TemporaTasks.Pages
         {
             currentViewCategory = viewCategory;
             label.Content = currentViewCategory.ToString();
-            foreach (Image icon in new[] {HomeIcon, CompletedIcon})
+            foreach (Image icon in new[] { HomeIcon, CompletedIcon })
                 icon.BeginAnimation(OpacityProperty, new DoubleAnimation(($"{viewCategory}Icon" == icon.Name) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
 
             currentFocus = null;
@@ -785,14 +783,14 @@ namespace TemporaTasks.Pages
 
                 if (searchTerm.Contains("$n"))
             {
-                    for (int i = tasks.Count-1; i >= 0; i--)
+                    for (int i = tasks.Count - 1; i >= 0; i--)
                         if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
                     searchTerm = searchTerm.Replace("$n", "").Trim();
             }
 
                 if (searchTerm.Contains("$p"))
             {
-                    for (int i = tasks.Count-1; i >= 0; i--)
+                    for (int i = tasks.Count - 1; i >= 0; i--)
                         if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
                     searchTerm = searchTerm.Replace("$p", "").Trim();
                 }
@@ -802,7 +800,7 @@ namespace TemporaTasks.Pages
                     MatchCollection matches = RegexTags().Matches(searchTerm);
                     if (matches.Count != 0)
                         {
-                        for (int i = tasks.Count-1; i >= 0; i--)
+                        for (int i = tasks.Count - 1; i >= 0; i--)
                         {
                             if (tasks[i].TagList != null)
                             {
@@ -811,7 +809,8 @@ namespace TemporaTasks.Pages
                                         if (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
                                                 goto NextTask;
                                             tasks.Remove(tasks[i]);
-                            } else tasks.Remove(tasks[i]);
+                            }
+                            else tasks.Remove(tasks[i]);
                                 NextTask:;
                             }
                         foreach (Match match in matches)
@@ -953,7 +952,7 @@ namespace TemporaTasks.Pages
             {
                 if (reverseSort)
                 {
-                    for (int i = displayedTasks.Count-1; i >= 0; i--)
+                    for (int i = displayedTasks.Count - 1; i >= 0; i--)
                         if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
                         {
                             nextDueTask = displayedTasks[i];
