@@ -173,8 +173,8 @@ namespace TemporaTasks.Windows
                 return;
             }
 
-            if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
-            if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
+            //if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
+            //if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
             ArrayList? tagList = [];
@@ -195,16 +195,16 @@ namespace TemporaTasks.Windows
             ((TextBox)sender).SelectAll();
         }
 
-        private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string? temp;
+        //private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    string? temp;
 
-            temp = DTHelper.RegexRelativeTimeMatch(TaskNameTextbox.Text);
-            if (temp != null) timeTextBox.Text = temp;
+        //    temp = DTHelper.RegexRelativeTimeMatch(TaskNameTextbox.Text);
+        //    if (temp != null) timeTextBox.Text = temp;
 
-            temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
-            if (temp != null) dateTextBox.Text = temp;
-        }
+        //    temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
+        //    if (temp != null) dateTextBox.Text = temp;
+        //}
 
         private void TagsStackAdd(string value)
         {

@@ -182,8 +182,8 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
-            if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
+            //if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
+            //if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
 
             ArrayList? tagList = [];
@@ -203,20 +203,20 @@ namespace TemporaTasks.Pages
             ((TextBox)sender).SelectAll();
         }
 
-        private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string? temp;
+        //private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    string? temp;
 
-            temp = DTHelper.RegexRelativeTimeMatch(TaskNameTextbox.Text);
-            if (temp != null) timeTextBox.Text = temp;
+        //    temp = DTHelper.RegexRelativeTimeMatch(TaskNameTextbox.Text);
+        //    if (temp != null) timeTextBox.Text = temp;
 
-            temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
-            if (temp != null) dateTextBox.Text = temp;
+        //    temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
+        //    if (temp != null) dateTextBox.Text = temp;
 
             // Error - '#something #thing' comes as a whole
             //Match match = TagIdentifier().Match(TaskNameTextbox.Text);
             //if (match.Success) TagsStackAdd(match.Value[2..^1]);
-        }
+        //}
 
         //[GeneratedRegex(" #.{1,} ")]
         //private static partial Regex TagIdentifier();

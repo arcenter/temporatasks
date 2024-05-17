@@ -176,108 +176,108 @@ namespace TemporaTasks.Core
             return null;
         }
 
-        public static string? matchedTime;
-        public static string? matchedDate;
+        //public static string? matchedTime;
+        //public static string? matchedDate;
 
-        public static string? RegexRelativeTimeMatch(string str)
-        {
-            Match match;
+        //public static string? RegexRelativeTimeMatch(string str)
+        //{
+        //    Match match;
 
-            match = RegexAMinute().Match(str);
-            if (match.Success)
-            {
-                matchedTime = match.Value;
-                return TimeToString(DateTime.Now.AddMinutes(1));
-            }
+        //    match = RegexAMinute().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedTime = match.Value;
+        //        return TimeToString(DateTime.Now.AddMinutes(1));
+        //    }
 
-            match = RegexMinutes().Match(str);
-            if (match.Success)
-            {
-                matchedTime = match.Value;
-                return TimeToString(DateTime.Now.AddMinutes(int.Parse(RegexDigits().Match(match.Value).Value)));
-            }
+        //    match = RegexMinutes().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedTime = match.Value;
+        //        return TimeToString(DateTime.Now.AddMinutes(int.Parse(RegexDigits().Match(match.Value).Value)));
+        //    }
 
-            match = RegexAnHour().Match(str);
-            if (match.Success)
-            {
-                matchedTime = match.Value; 
-                return TimeToString(DateTime.Now.AddHours(1));
-            }
+        //    match = RegexAnHour().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedTime = match.Value; 
+        //        return TimeToString(DateTime.Now.AddHours(1));
+        //    }
 
-            match = RegexHours().Match(str);
-            if (match.Success)
-            {
-                matchedTime = match.Value;
-                return TimeToString(DateTime.Now.AddHours(int.Parse(RegexDigits().Match(match.Value).Value)));
-            }
+        //    match = RegexHours().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedTime = match.Value;
+        //        return TimeToString(DateTime.Now.AddHours(int.Parse(RegexDigits().Match(match.Value).Value)));
+        //    }
 
-            matchedTime = null;
-            return null;
-        }
+        //    matchedTime = null;
+        //    return null;
+        //}
 
-        public static string? RegexRelativeDateMatch(string str)
-        {
-            Match match;
+        //public static string? RegexRelativeDateMatch(string str)
+        //{
+        //    Match match;
 
-            match = new Regex("(?i)today").Match(str);
-            if (match.Success)
-            {
-                matchedDate = match.Value;
-                return DateToString(DateTime.Now);
-            }
+        //    match = new Regex("(?i)today").Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedDate = match.Value;
+        //        return DateToString(DateTime.Now);
+        //    }
 
-            match = new Regex("(?i)day after tomorrow").Match(str);
-            if (match.Success)
-            {
-                matchedDate = match.Value;
-                return DateToString(DateTime.Now.AddDays(2));
-            }
+        //    match = new Regex("(?i)day after tomorrow").Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedDate = match.Value;
+        //        return DateToString(DateTime.Now.AddDays(2));
+        //    }
 
-            match = new Regex("(?i)tomorrow").Match(str);
-            if (match.Success)
-            {
-                matchedDate = match.Value;
-                return DateToString(DateTime.Now.AddDays(1));
-            }
+        //    match = new Regex("(?i)tomorrow").Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedDate = match.Value;
+        //        return DateToString(DateTime.Now.AddDays(1));
+        //    }
 
-            match = RegexDayOfWeek().Match(str);
-            if (match.Success)
-            {
-                matchedDate = match.Value;
-                int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
-                int selectedDayOfWeek = match.Value[3..5] switch
-                {
-                    "su" => 0,
-                    "mo" => 1,
-                    "tu" => 2,
-                    "we" => 3,
-                    "th" => 4,
-                    "fr" => 5,
-                    "sa" => 6,
-                    _ => 0
-                };
-                if (selectedDayOfWeek <= currentDayOfWeek) selectedDayOfWeek += 7 - currentDayOfWeek;
-                else selectedDayOfWeek -= currentDayOfWeek;
-                return DateToString(DateTime.Now.AddDays(selectedDayOfWeek));
-            }
+        //    match = RegexDayOfWeek().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedDate = match.Value;
+        //        int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
+        //        int selectedDayOfWeek = match.Value[3..5] switch
+        //        {
+        //            "su" => 0,
+        //            "mo" => 1,
+        //            "tu" => 2,
+        //            "we" => 3,
+        //            "th" => 4,
+        //            "fr" => 5,
+        //            "sa" => 6,
+        //            _ => 0
+        //        };
+        //        if (selectedDayOfWeek <= currentDayOfWeek) selectedDayOfWeek += 7 - currentDayOfWeek;
+        //        else selectedDayOfWeek -= currentDayOfWeek;
+        //        return DateToString(DateTime.Now.AddDays(selectedDayOfWeek));
+        //    }
 
-            match = RegexDays().Match(str);
-            if (match.Success)
-            {
-                matchedDate = match.Value;
-                return DateToString(DateTime.Now.AddDays(int.Parse(RegexDigits().Match(match.Value).Value)));
-            }
+        //    match = RegexDays().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedDate = match.Value;
+        //        return DateToString(DateTime.Now.AddDays(int.Parse(RegexDigits().Match(match.Value).Value)));
+        //    }
 
-            match = RegexMonths().Match(str);
-            if (match.Success)
-            {
-                matchedDate = match.Value;
-                return DateToString(DateTime.Now.AddMonths(int.Parse(RegexDigits().Match(match.Value).Value)));
-            }
+        //    match = RegexMonths().Match(str);
+        //    if (match.Success)
+        //    {
+        //        matchedDate = match.Value;
+        //        return DateToString(DateTime.Now.AddMonths(int.Parse(RegexDigits().Match(match.Value).Value)));
+        //    }
 
-            matchedDate = null;
-            return null;
-        }
+        //    matchedDate = null;
+        //    return null;
+        //}
 
         public static string GetDaySuffix(int day)
         {
@@ -317,14 +317,14 @@ namespace TemporaTasks.Core
 
         // >>> Calendar
 
-        [GeneratedRegex(@"(?i)on (su|mo|tu|we|th|fr|sa).*(day)?")]
-        public static partial Regex RegexDayOfWeek();
+        //[GeneratedRegex(@"(?i)on (su|mo|tu|we|th|fr|sa).*(day)?")]
+        //public static partial Regex RegexDayOfWeek();
 
-        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?days?")]
-        public static partial Regex RegexDays();
+        //[GeneratedRegex(@"(?i)(in|after) \d{1,2} ?days?")]
+        //public static partial Regex RegexDays();
 
-        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?months?")]
-        public static partial Regex RegexMonths();
+        //[GeneratedRegex(@"(?i)(in|after) \d{1,2} ?months?")]
+        //public static partial Regex RegexMonths();
 
         // Time Regex ----------------------------------------------------------------------
 
@@ -348,17 +348,17 @@ namespace TemporaTasks.Core
 
         // >>> Calendar
 
-        [GeneratedRegex(@"(?i)in a min(ute)?")]
-        public static partial Regex RegexAMinute();
+        //[GeneratedRegex(@"(?i)in a min(ute)?")]
+        //public static partial Regex RegexAMinute();
 
-        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?mins?")]
-        public static partial Regex RegexMinutes();
+        //[GeneratedRegex(@"(?i)(in|after) \d{1,2} ?mins?")]
+        //public static partial Regex RegexMinutes();
 
-        [GeneratedRegex(@"(?i)in an hour")]
-        public static partial Regex RegexAnHour();
+        //[GeneratedRegex(@"(?i)in an hour")]
+        //public static partial Regex RegexAnHour();
 
-        [GeneratedRegex(@"(?i)(in|after) \d{1,2} ?hours?")]
-        public static partial Regex RegexHours();
+        //[GeneratedRegex(@"(?i)(in|after) \d{1,2} ?hours?")]
+        //public static partial Regex RegexHours();
 
         // ---------------------------------------------------------------------------------
 
