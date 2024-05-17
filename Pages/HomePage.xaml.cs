@@ -1155,5 +1155,15 @@ namespace TemporaTasks.Pages
         {
             hoveredTask = (IndividualTask)sender;
         }
+
+        public void WindowIsResizing(bool value)
+        {
+            if (value)
+                foreach (IndividualTask task in displayedTasks)
+                    task.Visibility = Visibility.Collapsed;
+            else
+                foreach (IndividualTask task in displayedTasks)
+                    task.Visibility = Visibility.Visible;
+        }
     }
 }

@@ -236,6 +236,7 @@ namespace TemporaTasks
             {
                 this.Cursor = Cursors.Arrow;
                 FrameView.IsHitTestVisible = true;
+                homePage.WindowIsResizing(false);
             }
         }
 
@@ -244,6 +245,7 @@ namespace TemporaTasks
             if (WindowState == WindowState.Maximized) return;
 
             FrameView.IsHitTestVisible = false;
+            homePage.WindowIsResizing(true);
             var clickedShape = sender as Shape;
 
             switch (clickedShape.Name)
