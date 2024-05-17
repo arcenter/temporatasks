@@ -201,11 +201,13 @@ namespace TemporaTasks.UserControls
 
             DoubleAnimation animation;
 
+            int duration = (int)(4*strikethroughLine.MaxWidth);
+
             if (IsCompleted && strikethroughLine.Width != strikethroughLine.MaxWidth)
-                animation = new DoubleAnimation(0, strikethroughLine.MaxWidth, TimeSpan.FromMilliseconds(500));
+                animation = new DoubleAnimation(0, strikethroughLine.MaxWidth, TimeSpan.FromMilliseconds(duration));
 
             else if (!IsCompleted && strikethroughLine.Width != 0)
-                animation = new DoubleAnimation(strikethroughLine.MaxWidth, 0, TimeSpan.FromMilliseconds(500));
+                animation = new DoubleAnimation(strikethroughLine.MaxWidth, 0, TimeSpan.FromMilliseconds(duration));
 
             else return;
 
