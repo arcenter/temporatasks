@@ -62,6 +62,42 @@ namespace TemporaTasks.Core
                         month = newDate.Month;
                         day = newDate.Day;
                     }
+                    else if ((match = new Regex("^(su|m|tu|w|th|f|sa).*y?$").Match(date)).Success)
+                    {
+                        int? selectedDayOfWeek = null;
+                        
+                        switch (match.Value[..1])
+                        {
+                            case "s":
+                                switch (match.Value[1..2])
+                                {
+                                    case "u": selectedDayOfWeek = 0; break;
+                                    case "a": selectedDayOfWeek = 6; break;
+                                }
+                                break;
+                            case "m": selectedDayOfWeek = 1; break;
+                            case "t":
+                                switch (match.Value[1..2])
+                                {
+                                    case "u": selectedDayOfWeek = 2; break;
+                                    case "h": selectedDayOfWeek = 4; break;
+                                }
+                                break;
+                            case "w": selectedDayOfWeek = 3; break;
+                            case "f": selectedDayOfWeek = 5; break;
+                        }
+
+                        if (selectedDayOfWeek != null)
+                        {
+                            int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
+                            if (selectedDayOfWeek <= currentDayOfWeek) selectedDayOfWeek += 7 - currentDayOfWeek;
+                            else selectedDayOfWeek -= currentDayOfWeek;
+                            DateTime tempDT = DateTime.Now.AddDays(selectedDayOfWeek.Value);
+                            year = tempDT.Year;
+                            month = tempDT.Month;
+                            day = tempDT.Day;
+                        } else throw new IncorrectDateException();
+                    }
                     else
                     {
                         splits = date.Split('-');
