@@ -638,7 +638,7 @@ namespace TemporaTasks.Pages
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            GenerateTaskStack(force: true);
+            GenerateTaskStack(force: !SearchTextBox.Text.Contains("$t"));
         }
 
         private async void RunSearchTextBoxCloseAnimation(bool open = false)
@@ -755,6 +755,8 @@ namespace TemporaTasks.Pages
             if (scrollToTop) TaskStackScroller.ScrollToVerticalOffset(0);
 
             days.Clear();
+            SearchBorder.BorderBrush = null;
+            SearchBorder.BorderThickness = new Thickness(0);
 
             List<IndividualTask> tasks = [];
             
@@ -793,6 +795,32 @@ namespace TemporaTasks.Pages
                     for (int i = tasks.Count - 1; i >= 0; i--)
                         if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
                     searchTerm = searchTerm.Replace("$p", "").Trim();
+                }
+
+                {
+                    Match match;
+                    if ((match = new Regex("\\$tb? ([^ ]+) ?").Match(searchTerm)).Success)
+                    {
+                        if (DateTime.TryParse(match.Value[3..].Trim(), out DateTime compareDT))
+                        {
+                            if (match.Value[2] == 'b')
+                            {
+                                for (int i = tasks.Count - 1; i >= 0; i--)
+                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value > compareDT) tasks.Remove(tasks[i]);
+                            }
+                            else
+                            {
+                                for (int i = tasks.Count - 1; i >= 0; i--)
+                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value < compareDT) tasks.Remove(tasks[i]);
+                            }
+                        }
+                        else
+                        {
+                            SearchBorder.BorderBrush = (SolidColorBrush)mainWindow.FindResource("PastDue");
+                            SearchBorder.BorderThickness = new Thickness(2);
+                        }
+                        searchTerm = searchTerm.Replace(match.Value, "").Trim();
+                    }
                 }
 
                 if (searchTerm.Contains('#'))
