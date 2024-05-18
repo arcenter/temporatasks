@@ -58,7 +58,7 @@
                             
                             <Grid Height="40">
 
-                                <TextBox x:Name="dateTextBox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
+                                <TextBox x:Name="dateTextBox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TextBox_TextChanged"/>
 
                                 <Border x:Name="calendarButtonBorder" HorizontalAlignment="Right" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseUp="Calendar_MouseUp" Focusable="False"  Cursor="Hand" Width="40" CornerRadius="0 10 10 0">
                                     <Border.Background>
@@ -82,7 +82,7 @@
 
                             <Grid>
 
-                                <TextBox x:Name="timeTextBox" GotKeyboardFocus="Textbox_GotKeyboardFocus" Style="{StaticResource RoundedTextBox}"/>
+                                <TextBox x:Name="timeTextBox" GotKeyboardFocus="Textbox_GotKeyboardFocus" Style="{StaticResource RoundedTextBox}" TextChanged="TextBox_TextChanged"/>
 
                                 <Border x:Name="TimeBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" Height="40" CornerRadius="10"/>
 

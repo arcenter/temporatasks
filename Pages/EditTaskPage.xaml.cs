@@ -203,6 +203,24 @@ namespace TemporaTasks.Pages
             ((TextBox)sender).SelectAll();
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);
+                DateBorder.BorderThickness = new Thickness(0);
+                TimeBorder.BorderThickness = new Thickness(0);
+            }
+            catch (IncorrectDateException)
+            {
+                if (((TextBox)sender).Name == "dateTextBox") DateBorder.BorderThickness = new Thickness(2);
+            }
+            catch (IncorrectTimeException)
+            {
+                if (((TextBox)sender).Name == "timeTextBox") TimeBorder.BorderThickness = new Thickness(2);
+            }
+        }
+
         //private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
         //{
         //    string? temp;
@@ -213,9 +231,9 @@ namespace TemporaTasks.Pages
         //    temp = DTHelper.RegexRelativeDateMatch(TaskNameTextbox.Text);
         //    if (temp != null) dateTextBox.Text = temp;
 
-            // Error - '#something #thing' comes as a whole
-            //Match match = TagIdentifier().Match(TaskNameTextbox.Text);
-            //if (match.Success) TagsStackAdd(match.Value[2..^1]);
+        // Error - '#something #thing' comes as a whole
+        //Match match = TagIdentifier().Match(TaskNameTextbox.Text);
+        //if (match.Success) TagsStackAdd(match.Value[2..^1]);
         //}
 
         //[GeneratedRegex(" #.{1,} ")]

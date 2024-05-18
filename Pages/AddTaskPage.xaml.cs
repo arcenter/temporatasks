@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -245,6 +244,24 @@ namespace TemporaTasks.Pages
         private void HighPriority_MouseDown(object sender, MouseButtonEventArgs e)
         {
             checkMark.Opacity = (checkMark.Opacity + 1) % 2;
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);
+                DateBorder.BorderThickness = new Thickness(0);
+                TimeBorder.BorderThickness = new Thickness(0);
+            }
+            catch (IncorrectDateException)
+            {
+                if (((TextBox)sender).Name == "dateTextBox") DateBorder.BorderThickness = new Thickness(2);
+            }
+            catch (IncorrectTimeException)
+            {
+                if (((TextBox)sender).Name == "timeTextBox") TimeBorder.BorderThickness = new Thickness(2);
+            }
         }
     }
 }

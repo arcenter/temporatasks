@@ -195,6 +195,24 @@ namespace TemporaTasks.Windows
             ((TextBox)sender).SelectAll();
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);
+                DateBorder.BorderThickness = new Thickness(0);
+                TimeBorder.BorderThickness = new Thickness(0);
+            }
+            catch (IncorrectDateException)
+            {
+                if (((TextBox)sender).Name == "dateTextBox") DateBorder.BorderThickness = new Thickness(2);
+            }
+            catch (IncorrectTimeException)
+            {
+                if (((TextBox)sender).Name == "timeTextBox") TimeBorder.BorderThickness = new Thickness(2);
+            }
+        }
+
         //private void TaskNameTextbox_TextChanged(object sender, TextChangedEventArgs e)
         //{
         //    string? temp;
