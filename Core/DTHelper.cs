@@ -120,12 +120,10 @@ namespace TemporaTasks.Core
                         {
                             throw new IncorrectDateException();
                         }
+                        _ = new DateTime(year, month, day);
                     }
                 }
-                catch
-                {
-                    throw new IncorrectDateException();
-                }
+                catch { throw new IncorrectDateException(); }
             }
 
             if (time.Length != 0)
@@ -168,10 +166,12 @@ namespace TemporaTasks.Core
                     minute = newDate.Minute;
                 }
 
-                else
-                    throw new IncorrectTimeException();
+                else throw new IncorrectTimeException();
 
-                if (hour < 0 || hour > 23 || minute < 0 || minute > 59) throw new IncorrectTimeException();
+                try { _ = new DateTime(year, month, day, hour, minute, 00); }
+                catch { throw new IncorrectTimeException(); }
+
+                //if (hour < 0 || hour > 23 || minute < 0 || minute > 59) throw new IncorrectTimeException();
             }
 
             return new DateTime(year, month, day, hour, minute, 0);
