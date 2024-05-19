@@ -244,7 +244,7 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.X:
-                    if (hoveredTask.IsMouseOver)
+                    if (hoveredTask != null && hoveredTask.IsMouseOver)
                     {
                         currentFocus = TaskStack.Children.IndexOf(hoveredTask);
                         FocusTask();
