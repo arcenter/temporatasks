@@ -172,7 +172,7 @@ namespace TemporaTasks
             TrayIcon.ShowBalloonTip(title, message, symbol);
             balloonCalledRecently = true;
             await Task.Delay(2500);
-            if (!IsActive) WindowHide(false);
+            // if (!IsActive) WindowHide(false);
             balloonCalledRecently = false;
         }
 
