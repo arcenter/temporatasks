@@ -26,8 +26,9 @@ namespace TemporaTasks
             SourceInitialized += Window1_SourceInitialized;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (TaskFile.saveFilePath == null)
             {
                 string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\TemporaTasks\\";
                 TaskFile.backupPath = $"{path}backups\\";
@@ -37,6 +38,12 @@ namespace TemporaTasks
 
                 TaskFile.saveFilePath = $"{path}data.json";
                 TaskFile.LoadData();
+            }
+            else
+            {
+                IsHitTestVisible = false;
+                await Task.Delay(500);
+                IsHitTestVisible = true;
             }
         }
 
