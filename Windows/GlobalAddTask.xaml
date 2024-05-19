@@ -130,7 +130,24 @@
 
                 </StackPanel>
 
-                <Border Background="Transparent" MouseDown="HighPriority_MouseDown" Cursor="Hand" DockPanel.Dock="Right" Height="35" VerticalAlignment="Bottom" Margin="0 0 40 0">
+                <Border Background="Transparent" MouseDown="GarbleTask_MouseDown" Cursor="Hand" DockPanel.Dock="Right" Height="35" VerticalAlignment="Bottom" Margin="0 0 40 0">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <Grid>
+                            <Label Content="Garble Task" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" VerticalAlignment="Center"/>
+                            <Line x:Name="L6" Stroke="{StaticResource Text}" X2="6" Margin="20.5 24 0 0" Visibility="Collapsed"/>
+                        </Grid>
+
+                        <Border BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" Margin="10 0 0 0">
+                            <Path Data="M1,4 L4,6 L7,1" x:Name="L6checkMark" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0" />
+                        </Border>
+
+                    </StackPanel>
+
+                </Border>
+
+                <Border Background="Transparent" MouseDown="HighPriority_MouseDown" Cursor="Hand" DockPanel.Dock="Right" Height="35" VerticalAlignment="Bottom" Margin="0 0 20 0">
 
                     <StackPanel Orientation="Horizontal">
 
@@ -140,7 +157,7 @@
                         </Grid>
 
                         <Border BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" Margin="10 0 0 0">
-                            <Path Data="M1,4 L4,6 L7,1" x:Name="checkMark" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0" />
+                            <Path Data="M1,4 L4,6 L7,1" x:Name="L5checkMark" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0" />
                         </Border>
 
                     </StackPanel>

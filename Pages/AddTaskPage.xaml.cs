@@ -75,8 +75,15 @@ namespace TemporaTasks.Pages
                     return;
                 }
 
+                else if (e.SystemKey == Key.B)
+                {
+                    GarbleTask_MouseDown(null, null);
+                    e.Handled = true;
+                    return;
+                }
+
                 else
-                    foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
+                    foreach (Line L in new Line[] { L1, L2, L3, L4, L5, L6 })
                         L.Visibility = Visibility.Visible;
             }
 
@@ -108,7 +115,7 @@ namespace TemporaTasks.Pages
         {
             if (!(Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
             {
-                foreach (Line L in new Line[] { L1, L2, L3, L4, L5 })
+                foreach (Line L in new Line[] { L1, L2, L3, L4, L5, L6 })
                     L.Visibility = Visibility.Collapsed;
                 e.Handled = true;
             }
@@ -197,9 +204,11 @@ namespace TemporaTasks.Pages
             foreach (Tags tag in TagsStack.Children)
                 tagList.Add(tag.TagText);
 
-            IndividualTask.TaskPriority taskPriority = (checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
+            bool garbled = L6checkMark.Opacity == 1;
 
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, null, false, taskPriority));
+            IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
+
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, null, garbled, taskPriority));
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }
@@ -261,7 +270,12 @@ namespace TemporaTasks.Pages
 
         private void HighPriority_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            checkMark.Opacity = (checkMark.Opacity + 1) % 2;
+            L5checkMark.Opacity = (L5checkMark.Opacity + 1) % 2;
+        }
+
+        private void GarbleTask_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            L6checkMark.Opacity = (L6checkMark.Opacity + 1) % 2;
         }
     }
 }
