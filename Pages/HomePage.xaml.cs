@@ -37,6 +37,8 @@ namespace TemporaTasks.Pages
         ViewCategory currentViewCategory = ViewCategory.Home;
 
         List<IndividualTask> displayedTasks = [];
+        List<IndividualTask> focusedTasks = [];
+
         public HomePage()
         {
             InitializeComponent();
@@ -1107,11 +1109,11 @@ namespace TemporaTasks.Pages
             FocusTask();
         }
 
-        private async void FocusTask()
+        private async void FocusTask(bool unfocus = true)
         {
             if (!currentFocus.HasValue) return;
 
-            UnfocusTasks();
+            UnfocusTasks(unfocus);
 
             int count = TaskStack.Children.Count;
             if (count > 0)
@@ -1143,12 +1145,17 @@ namespace TemporaTasks.Pages
                     TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset - 50);
 
                 task.StrokeOn();
+                focusedTasks.Add(task);
             }
         }
 
-        private void UnfocusTasks()
+        private void UnfocusTasks(bool unfocus = true)
         {
-            foreach (object obj in TaskStack.Children) if (obj is IndividualTask task) task.StrokeOff();
+            if (unfocus && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+        {
+                foreach (IndividualTask task in focusedTasks) task.StrokeOff();
+                focusedTasks.Clear();
+            }
         }
 
         private void ToggleTaskCompletion(IndividualTask task)
