@@ -157,6 +157,7 @@ namespace TemporaTasks
                 await Task.Delay(201);
                 Hide();
                 BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
+                homePage.TaskStack.Children.Clear();
             }
             else
             {
