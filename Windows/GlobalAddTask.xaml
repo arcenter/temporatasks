@@ -193,7 +193,7 @@
 
         </StackPanel>
 
-        <Border CornerRadius="20" BorderBrush="{StaticResource Border}" BorderThickness="1" IsHitTestVisible="False"/>
+        <Border CornerRadius="20" BorderBrush="{StaticResource Border}" BorderThickness="1" IsHitTestVisible="False" d:Visibility="Collapsed"/>
 
     </Grid>
 

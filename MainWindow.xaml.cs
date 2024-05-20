@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
+using TemporaTasks.Windows;
 
 namespace TemporaTasks
 {
@@ -171,8 +172,19 @@ namespace TemporaTasks
             if (balloonCalledRecently) return;
             TrayIcon.ShowBalloonTip(title, message, symbol);
             balloonCalledRecently = true;
-            await Task.Delay(2500);
             // if (!IsActive) WindowHide(false);
+
+            ///
+
+            foreach (Window _window in Application.Current.Windows) if (_window.IsActive && _window is not GlobalAddTask) goto end;
+            TaskDueWindow window = new();
+            window.Show();
+            window.Activate();
+            end:
+
+            ///
+
+            await Task.Delay(2500);
             balloonCalledRecently = false;
         }
 
