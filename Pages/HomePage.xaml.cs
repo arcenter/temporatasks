@@ -200,7 +200,7 @@ namespace TemporaTasks.Pages
                 //{
                 //    foreach (IndividualTask task in displayedTasks)
                 //        if (task.DueDT.HasValue && task.DueDT.Value.Date == DateTime.Now.Date)
-                //            task.ChangeDueTime("plus5m", null);
+                //            ChangeFocusTaskDueTime("plus5m", null);
                 //        else
                 //            return;
                 //    return;
@@ -385,44 +385,44 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.D0:
-                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) task.ChangeDueTime("none", null);
-                        else task.ChangeDueTime("now", null);
+                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ChangeFocusTaskDueTime("none");
+                        else ChangeFocusTaskDueTime("now");
                         return;
 
                     case Key.D1:
-                        task.ChangeDueTime("plus1m", null);
+                        ChangeFocusTaskDueTime("plus1m");
                         return;
 
                     case Key.D2:
-                        task.ChangeDueTime("plus10m", null);
+                        ChangeFocusTaskDueTime("plus10m");
                         return;
 
                     case Key.D3:
-                        task.ChangeDueTime("plus30m", null);
+                        ChangeFocusTaskDueTime("plus30m");
                         return;
 
                     case Key.D4:
-                        task.ChangeDueTime("plus1h", null);
+                        ChangeFocusTaskDueTime("plus1h");
                         return;
 
                     case Key.D5:
-                        task.ChangeDueTime("plus5m", null);
+                        ChangeFocusTaskDueTime("plus5m");
                         return;
 
                     case Key.D6:
-                        task.ChangeDueTime("plus6h", null);
+                        ChangeFocusTaskDueTime("plus6h");
                         return;
 
                     case Key.D7:
-                        task.ChangeDueTime("plus1w", null);
+                        ChangeFocusTaskDueTime("plus1w");
                         return;
 
                     case Key.D8:
-                        task.ChangeDueTime("plus12h", null);
+                        ChangeFocusTaskDueTime("plus12h");
                         return;
 
                     case Key.D9:
-                        task.ChangeDueTime("plus1d", null);
+                        ChangeFocusTaskDueTime("plus1d");
                         return;
 
                     case Key.G:
@@ -1074,6 +1074,12 @@ namespace TemporaTasks.Pages
                     if (taskTimeRemaining < TimeSpan.FromHours(1).TotalSeconds) task.NewDueDT();
                 }
             }
+        }
+
+        private void ChangeFocusTaskDueTime(string newTime)
+        {
+            foreach (IndividualTask task in focusedTasks)
+                task.ChangeDueTime(newTime, null);
         }
 
         private void PreviousTaskFocus()
