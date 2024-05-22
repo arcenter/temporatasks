@@ -19,7 +19,7 @@ namespace TemporaTasks.Core
 {
     public static class TaskFile
     {
-        public static string saveFilePath;
+        public static string saveFilePath = null;
         public static string backupPath;
         
         public static ArrayList TaskList = [];

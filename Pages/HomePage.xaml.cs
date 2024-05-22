@@ -484,7 +484,8 @@ namespace TemporaTasks.Pages
         private void Page_KeyUp(object sender, KeyEventArgs e)
         {
             if (SearchTextBox.IsFocused || Keyboard.IsKeyDown(Key.LWin) || RightClickMenuPopup.IsOpen) return;
-            if (e.Key == Key.S || e.Key == Key.OemQuestion)
+
+            else if (e.Key == Key.S || e.Key == Key.OemQuestion)
                 SearchTextBox.Focus();
         }
 
@@ -1124,7 +1125,7 @@ namespace TemporaTasks.Pages
             int count = TaskStack.Children.Count;
             if (count > 0)
             {
-                if (!(currentFocus.Value > 0 && currentFocus.Value < count)) currentFocus = 0;
+                if (currentFocus.Value < 0 || currentFocus.Value > count) currentFocus = 0;
 
                 int limit = count;
                 while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
