@@ -56,6 +56,7 @@ namespace TemporaTasks.Core
 
                     sortType = int.Parse(settings["sortType"]);
                     notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
+                    notifPopupMode = settings["notifPopupMode"] == "0";
                 }
 
                 // double increment = 1/data.Count;
@@ -123,6 +124,7 @@ namespace TemporaTasks.Core
             Dictionary<string, string> temp2 = [];
             temp2["sortType"] = sortType.ToString();
             temp2["notifMode"] = ((int)notificationMode).ToString();
+            temp2["notifPopupMode"] = notifPopupMode ? "1" : "0";
             temp["settings"] = temp2;
 
             foreach (IndividualTask task in TaskList)
