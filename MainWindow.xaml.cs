@@ -173,19 +173,15 @@ namespace TemporaTasks
             if (balloonCalledRecently) return;
             TrayIcon.ShowBalloonTip(title, message, symbol);
             balloonCalledRecently = true;
-            // if (!IsActive) WindowHide(false);
 
-            ///
-
-            foreach (Window _window in Application.Current.Windows) if (_window.IsActive && _window is not GlobalAddTask) goto end;
-            TaskDueWindow window = new();
-            window.Show();
-            window.Activate();
-            end:
-
-            ///
+            //foreach (Window _window in Application.Current.Windows) if (_window.IsActive && _window is not GlobalAddTask) goto end;
+            //TaskDueWindow window = new();
+            //window.Show();
+            //window.Activate();
+            //end:
 
             await Task.Delay(2500);
+            if (TaskFile.notifPopupMode && !IsActive) WindowHide(false);
             balloonCalledRecently = false;
         }
 

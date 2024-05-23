@@ -34,6 +34,7 @@ namespace TemporaTasks.Core
         }
 
         public static NotificationMode notificationMode = NotificationMode.Normal;
+        public static bool notifPopupMode = false;
         public static IndividualTask.TempGarbleMode tempGarbleMode = IndividualTask.TempGarbleMode.None;
 
         public static DispatcherTimer NotificationModeTimer = new();

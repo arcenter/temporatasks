@@ -75,6 +75,7 @@ namespace TemporaTasks.Pages
             }
 
             UpdateNotificationMode();
+            UpdateNotifPopupMode();
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -593,6 +594,46 @@ namespace TemporaTasks.Pages
                 if (notifLine.Opacity != 1) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
                 if (notifLineHP.Opacity != 0) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
             }
+        }
+
+        private async void NotifPopupButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            NotifPopupButton.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            NotifPopupIcon.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
+
+            if (NotifPopupButton.IsMouseOver)
+            {
+                NotifPopupGrid.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+                {
+                    DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                    NotifPopupGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    NotifPopupGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+
+                await Task.Delay(251);
+
+                {
+                    DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                    NotifPopupGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    NotifPopupGrid.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+            }
+        }
+
+        private void NotifPopupButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e == null || e.ChangedButton == MouseButton.Left)
+            {
+                TaskFile.notifPopupMode = !TaskFile.notifPopupMode;
+                UpdateNotifPopupMode();
+                TaskFile.SaveData();
+            }
+        }
+
+        private void UpdateNotifPopupMode()
+        {
+            NotifPopupLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.notifPopupMode ? 0 : 1, TimeSpan.FromMilliseconds(250)));
         }
 
         private async void EyeButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
