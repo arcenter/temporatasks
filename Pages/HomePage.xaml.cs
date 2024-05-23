@@ -103,10 +103,10 @@ namespace TemporaTasks.Pages
 
             currentFocus = null;
             UnfocusTasks();
-            
+
             SearchTextBox.Text = "";
             RunSearchTextBoxCloseAnimation();
-            
+
             homePage.Focus();
             GenerateTaskStack();
         }
@@ -218,12 +218,12 @@ namespace TemporaTasks.Pages
                 if (Keyboard.IsKeyDown(Key.G))
                 {
                     foreach (IndividualTask task in displayedTasks)
-                        {
-                            GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
-                            bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
-                                           && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
-                            task.Garble(null, isVisible);
-                        }
+                    {
+                        GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
+                        bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
+                                       && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
+                        task.Garble(null, isVisible);
+                    }
                     return;
                 }
             }
@@ -440,7 +440,7 @@ namespace TemporaTasks.Pages
 
                     case Key.D:
                     case Key.Delete:
-                        TrashIcon_MouseDown(task);
+                        foreach (IndividualTask _task in focusedTasks) { TrashIcon_MouseDown(_task); }
                         if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
                         return;
@@ -567,7 +567,7 @@ namespace TemporaTasks.Pages
         {
             if (e.ChangedButton == MouseButton.Right) OpenMuteModeRightClickMenuPopup();
         }
-                
+
         private void OpenMuteModeRightClickMenuPopup()
         {
             RightClickMenuPopup.Child = muteModeRightClickMenu;
@@ -761,9 +761,9 @@ namespace TemporaTasks.Pages
             SearchBorder.BorderThickness = new Thickness(0);
 
             List<IndividualTask> tasks = [];
-            
+
             int tasksInHour = 0;
-            
+
             if (currentViewCategory == ViewCategory.Completed)
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
@@ -786,14 +786,14 @@ namespace TemporaTasks.Pages
                 string searchTerm = SearchTextBox.Text.ToLower();
 
                 if (searchTerm.Contains("$n"))
-            {
+                {
                     for (int i = tasks.Count - 1; i >= 0; i--)
                         if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
                     searchTerm = searchTerm.Replace("$n", "").Trim();
-            }
+                }
 
                 if (searchTerm.Contains("$p"))
-            {
+                {
                     for (int i = tasks.Count - 1; i >= 0; i--)
                         if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
                     searchTerm = searchTerm.Replace("$p", "").Trim();
@@ -826,10 +826,10 @@ namespace TemporaTasks.Pages
                 }
 
                 if (searchTerm.Contains('#'))
-                    {
+                {
                     MatchCollection matches = RegexTags().Matches(searchTerm);
                     if (matches.Count != 0)
-                        {
+                    {
                         for (int i = tasks.Count - 1; i >= 0; i--)
                         {
                             if (tasks[i].TagList != null)
@@ -837,31 +837,31 @@ namespace TemporaTasks.Pages
                                 foreach (string tag in tasks[i].TagList)
                                     foreach (Match match in matches)
                                         if (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
-                                                goto NextTask;
-                                            tasks.Remove(tasks[i]);
+                                            goto NextTask;
+                                tasks.Remove(tasks[i]);
                             }
                             else tasks.Remove(tasks[i]);
-                                NextTask:;
-                            }
+                            NextTask:;
+                        }
                         foreach (Match match in matches)
                             searchTerm = searchTerm.Replace($"{match.Value}", "").Trim();
                         searchTerm = searchTerm.Trim();
-                        }
+                    }
                 }
 
                 if (searchTerm.Length > 0)
                 {
                     try
                     {
-                Regex regex = new(searchTerm);
-                    for (int i = tasks.Count - 1; i >= 0; i--)
+                        Regex regex = new(searchTerm);
+                        for (int i = tasks.Count - 1; i >= 0; i--)
                         {
-                    if (regex.Match(tasks[i].TaskName.ToLower()).Success) continue;
-                    tasks.Remove(tasks[i]);
-                                    }
-                            }
+                            if (regex.Match(tasks[i].TaskName.ToLower()).Success) continue;
+                            tasks.Remove(tasks[i]);
+                        }
+                    }
                     catch { }
-            }
+                }
             }
 
             Dictionary<IndividualTask, object> yesDate = [], sortedDict = [];
@@ -872,87 +872,87 @@ namespace TemporaTasks.Pages
             {
                 if (reverseSort)
                     tasks = [.. tasks.OrderByDescending(pair => pair.TaskName)];
-                            else
+                else
                     tasks = [.. tasks.OrderBy(pair => pair.TaskName)];
 
                 TaskCount.Content = $"{tasks.Count}t";
-                                foreach (IndividualTask task in tasks)
-                                    {
+                foreach (IndividualTask task in tasks)
+                {
                     TaskStack.Children.Add(task);
-                                            if (task.IsDue) dueTasks++;
-                                        }
+                    if (task.IsDue) dueTasks++;
+                }
 
                 goto Finally;
-                                    }
+            }
 
             else if (SortComboBox.SelectedIndex == 1)
-                            foreach (IndividualTask task in tasks)
+                foreach (IndividualTask task in tasks)
                     if (task.CreatedDT.HasValue)
-                            {
+                    {
                         yesDate[task] = task.CreatedDT.Value;
-                                if (task.IsDue) dueTasks++;
-                            }
+                        if (task.IsDue) dueTasks++;
+                    }
                     else noDate.Add(task);
 
             else if (SortComboBox.SelectedIndex == 2)
-                            foreach (IndividualTask task in tasks)
-                                if (task.DueDT.HasValue)
-                                {
+                foreach (IndividualTask task in tasks)
+                    if (task.DueDT.HasValue)
+                    {
                         yesDate[task] = task.DueDT.Value;
-                                    if (task.IsDue) dueTasks++;
-                                }
+                        if (task.IsDue) dueTasks++;
+                    }
                     else noDate.Add(task);
 
-                    if (reverseSort)
-                    {
+            if (reverseSort)
+            {
                 sortedDict = yesDate.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
                 noDate.Reverse();
-                    }
+            }
             else sortedDict = yesDate.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
             tasks = [.. sortedDict.Keys];
             tasks.AddRange(noDate);
 
-                    foreach (IndividualTask task in sortedDict.Keys)
-                    {
+            foreach (IndividualTask task in sortedDict.Keys)
+            {
                 DateTime date = (DateTime)sortedDict[task];
-                        string dateString = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy");
+                string dateString = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy");
 
-                        if (!days.ContainsKey(dateString))
-                        {
-                            days[dateString] = [];
+                if (!days.ContainsKey(dateString))
+                {
+                    days[dateString] = [];
 
-                            SectionDivider sectionDivider = new(dateString);
-                            if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
-                            sectionDivider.MouseDown += Section_MouseDown;
+                    SectionDivider sectionDivider = new(dateString);
+                    if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
+                    sectionDivider.MouseDown += Section_MouseDown;
 
-                            TaskStack.Children.Add(sectionDivider);
-                        }
+                    TaskStack.Children.Add(sectionDivider);
+                }
 
-                        TaskStack.Children.Add(task);
-                        days[dateString].Add(task);
-                    }
+                TaskStack.Children.Add(task);
+                days[dateString].Add(task);
+            }
 
             if (noDate.Count > 0)
-                    {
-                        days["No date"] = [];
+            {
+                days["No date"] = [];
 
                 SectionDivider sectionDivider = new($"No date ({noDate.Count})");
-                        if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
-                        sectionDivider.MouseDown += Section_MouseDown;
+                if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
+                sectionDivider.MouseDown += Section_MouseDown;
 
-                        TaskStack.Children.Add(sectionDivider);
+                TaskStack.Children.Add(sectionDivider);
 
                 foreach (IndividualTask task in noDate)
-                        {
-                            TaskStack.Children.Add(task);
-                            days["No date"].Add(task);
-                        }
-                    }
+                {
+                    TaskStack.Children.Add(task);
+                    days["No date"].Add(task);
+                }
+            }
 
             TaskCount.Content = $"{tasks.Count}t";
 
-            Finally:
+        Finally:
 
             DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
 
@@ -1158,7 +1158,7 @@ namespace TemporaTasks.Pages
         private void UnfocusTasks(bool unfocus = true)
         {
             if (unfocus && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
-        {
+            {
                 foreach (IndividualTask task in focusedTasks) task.StrokeOff();
                 focusedTasks.Clear();
             }
@@ -1178,7 +1178,7 @@ namespace TemporaTasks.Pages
             TaskFile.tempGarbleMode = tempGarbleMode;
             EyeIcon.Source = (ImageSource)mainWindow.FindResource($"{tempGarbleMode}EyeIcon");
             foreach (IndividualTask task in displayedTasks)
-                    task.TempGarble(tempGarbleMode);
+                task.TempGarble(tempGarbleMode);
             UpdateNextDueTask();
         }
 
