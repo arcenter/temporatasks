@@ -185,6 +185,11 @@ namespace TemporaTasks
             balloonCalledRecently = false;
         }
 
+        public async void HotkeyRegFailNotif()
+        {
+            TrayIcon.ShowBalloonTip("Hotkey Registration Failed", "TemporaTasks wasn't able to register hotkeys, as another application might be using them", BalloonIcon.Error);
+        }
+
         private void TrayIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
             WindowHide(Visibility == Visibility.Visible);
