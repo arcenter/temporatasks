@@ -14,6 +14,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using TemporaTasks.Windows;
+using TemporaTasks.UserControls;
 
 namespace TemporaTasks
 {
@@ -151,7 +152,7 @@ namespace TemporaTasks
 
         public async void WindowHide(bool hide = true)
         {
-            if (hide && Opacity != 0)
+            if (hide)
             {
                 BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(200)));
                 await Task.Delay(201);
@@ -164,22 +165,18 @@ namespace TemporaTasks
                 IsWindowUnHidden?.Invoke();
                 Show();
                 Activate();
+                await Task.Delay(25);
+                homePage.Focus();
             }
         }
 
         bool balloonCalledRecently = false;
-        public async void OnTaskDue(string title, string message, BalloonIcon symbol)
+        public async void OnTaskDue(IndividualTask task)
         {
-            if (balloonCalledRecently) return;
-            TrayIcon.ShowBalloonTip(title, message, symbol);
+            if (balloonCalledRecently || TaskFile.notificationMode == TaskFile.NotificationMode.Muted) return;
             balloonCalledRecently = true;
-
-            //foreach (Window _window in Application.Current.Windows) if (_window.IsActive && _window is not GlobalAddTask) goto end;
-            //TaskDueWindow window = new();
-            //window.Show();
-            //window.Activate();
-            //end:
-
+            if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal || (TaskFile.notificationMode == TaskFile.NotificationMode.High && task.taskPriority == IndividualTask.TaskPriority.High))
+                TrayIcon.ShowBalloonTip($"{((task.taskPriority == IndividualTask.TaskPriority.High) ? "⚠" : "")}Task Due!", task.IsGarbled() ? "Garbled Task" : task.TaskName, BalloonIcon.Info);
             await Task.Delay(2500);
             if (TaskFile.notifPopupMode && !IsActive) WindowHide(false);
             balloonCalledRecently = false;

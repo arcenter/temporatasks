@@ -318,10 +318,11 @@ namespace TemporaTasks.UserControls
                     {
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
-                        if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal)
-                            mainWindow.OnTaskDue("Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                        else if (TaskFile.notificationMode == TaskFile.NotificationMode.High && taskPriority == TaskPriority.High)
-                            mainWindow.OnTaskDue("⚠ Task Due!", garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                        mainWindow.OnTaskDue(this);
+                        //if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal)
+                        //    mainWindow.OnTaskDue(garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                        //else if (TaskFile.notificationMode == TaskFile.NotificationMode.High && taskPriority == TaskPriority.High)
+                        //    mainWindow.OnTaskDue(garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         TaskTimer.Interval = TimeSpan.FromMinutes(5);
                     };
                     TaskTimer.Start();
