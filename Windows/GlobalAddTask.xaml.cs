@@ -193,7 +193,7 @@ namespace TemporaTasks.Windows
             IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
             long randomLong = (long)(new Random().NextDouble() * long.MaxValue);
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, null, garbled, taskPriority));
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, "", DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, null, garbled, taskPriority));
             TaskFile.SaveData();
             ((MainWindow)Application.Current.MainWindow).FrameView.Navigate(new HomePage());
             CloseWindow();

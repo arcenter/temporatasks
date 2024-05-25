@@ -88,7 +88,7 @@ namespace TemporaTasks.Core
 
                         IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, attachments);
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, attachments);
                         TaskList.Add(taskObj);
                     }
                     catch { }
@@ -131,6 +131,7 @@ namespace TemporaTasks.Core
             {
                 temp2 = [];
                 temp2["taskName"] = task.TaskName;
+                temp2["taskDesc"] = task.TaskDesc;
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);

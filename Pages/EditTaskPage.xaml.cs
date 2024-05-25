@@ -24,6 +24,7 @@ namespace TemporaTasks.Pages
 
             this.task = task;
             TaskNameTextbox.Text = task.TaskName;
+            TaskDescTextbox.Text = task.TaskDesc;
 
             CreatedLabel.Content = $"Created {task.CreatedDT.Value:dddd, dd MMMM, yyyy} at {task.CreatedDT.Value:hh:mm:ss tt}";
             
@@ -204,7 +205,7 @@ namespace TemporaTasks.Pages
             IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, garbled, taskPriority);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, garbled, taskPriority);
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }

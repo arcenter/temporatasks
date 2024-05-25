@@ -39,6 +39,20 @@
 
                     </StackPanel>
 
+                        <StackPanel Margin="0 15 0 0">
+
+                            <Grid>
+                                <Label Content="Task Description" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                                <Line x:Name="L7" Stroke="{StaticResource Text}" X2="7" Margin="28.5 14 0 0" Visibility="Collapsed"/>
+                            </Grid>
+
+                            <Grid Height="80" Margin="0 5 0 0">
+                                <TextBox x:Name="TaskDescTextbox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextWrapping="Wrap" VerticalContentAlignment="Top" Padding="10,10,10,10"/>
+                                <Border x:Name="DescBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
+                            </Grid>
+
+                        </StackPanel>
+
                     <Grid Margin="0 15 0 0">
 
                         <Grid.ColumnDefinitions>

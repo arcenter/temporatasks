@@ -19,6 +19,7 @@ namespace TemporaTasks.UserControls
 
         public long TaskUID { get; set; }
         public string TaskName { get; set; }
+        public string TaskDesc { get; set; }
 
         public ArrayList? TagList { get; set; }
 
@@ -65,7 +66,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, string _TaskName, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
+        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
         {
             InitializeComponent();
 
@@ -73,6 +74,8 @@ namespace TemporaTasks.UserControls
             
             taskNameTextBlock.Text = TaskName = _TaskName;
             TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
+
+            TaskDesc = _TaskDesc;
 
             CreatedDT = _CreatedDT;
             DueDT = _DueDT;
