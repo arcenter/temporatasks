@@ -281,6 +281,10 @@ namespace TemporaTasks.Pages
                     NotifButton_MouseDown(null, null);
                     return;
 
+                case Key.O:
+                    NotifPopupButton_MouseDown(null, null);
+                    return;
+
                 case Key.Z:
                     if (lastTask.Count == 0) return;
                     IndividualTask task = lastTask.Last();
