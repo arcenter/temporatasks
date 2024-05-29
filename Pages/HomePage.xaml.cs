@@ -624,7 +624,7 @@ namespace TemporaTasks.Pages
                 }
             }
         }
-
+        
         private void NotifPopupButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e == null || e.ChangedButton == MouseButton.Left)
@@ -784,6 +784,7 @@ namespace TemporaTasks.Pages
                     SenderScrollViewer.ScrollToVerticalOffset(SenderScrollViewer.VerticalOffset - e.Delta);
                     e.Handled = true;
                 }
+                if (RightClickMenuPopup.IsOpen) ((TaskRightClickMenu)RightClickMenuPopup.Child).PopupClose();
             }
             catch { }
         }
