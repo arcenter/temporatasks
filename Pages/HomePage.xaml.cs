@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -1188,15 +1189,9 @@ namespace TemporaTasks.Pages
 
                 IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
 
-                double verticalOffset = TaskStackScroller.VerticalOffset;
-
-                task.BringIntoView();
-                await Task.Delay(1);
-
-                if (verticalOffset < TaskStackScroller.VerticalOffset)
-                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + 50);
-                else if (verticalOffset > TaskStackScroller.VerticalOffset)
-                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset - 50);
+                double verticalCenter = (TaskStackScroller.ActualHeight / 2) - task.ActualHeight;
+                double relativeHeight = task.TransformToVisual(TaskStackScroller).Transform(new Point(0, 0)).Y;
+                TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + relativeHeight - verticalCenter);
 
                 task.StrokeOn();
                 focusedTasks.Add(task);
