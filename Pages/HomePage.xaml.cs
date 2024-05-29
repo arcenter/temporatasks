@@ -460,10 +460,13 @@ namespace TemporaTasks.Pages
                     case Key.V:
                         if (dateClipboard.HasValue)
                         {
-                            task.DueDT = dateClipboard;
+                            foreach (IndividualTask _task in focusedTasks)
+                            {
+                                _task.DueDT = dateClipboard;
+                                _task.DueDateTimeLabelUpdate();
+                                _task.NewDueDT();
+                            }
                             TaskFile.SaveData();
-                            task.DueDateTimeLabelUpdate();
-                            task.NewDueDT();
                         }
                         return;
                 }
