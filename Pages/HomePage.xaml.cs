@@ -48,7 +48,7 @@ namespace TemporaTasks.Pages
             muteModeRightClickMenu = new(RightClickMenuPopup);
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             SortComboBox.SelectedIndex = TaskFile.sortType;
             mainWindow.KeyDown += Page_KeyDown;
@@ -71,6 +71,8 @@ namespace TemporaTasks.Pages
                 }
 
                 GenerateTaskStack(false);
+
+                await Task.Delay(750);
                 if (currentFocus.HasValue) FocusTask();
             }
 
