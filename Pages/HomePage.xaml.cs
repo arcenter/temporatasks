@@ -1197,7 +1197,7 @@ namespace TemporaTasks.Pages
                 TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + relativeHeight - verticalCenter);
 
                 task.StrokeOn();
-                focusedTasks.Add(task);
+                if (!focusedTasks.Contains(task)) focusedTasks.Add(task);
             }
         }
 
