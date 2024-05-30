@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
+using static TemporaTasks.Core.TaskFile;
 using static TemporaTasks.UserControls.IndividualTask;
 
 namespace TemporaTasks.Pages
@@ -372,6 +374,11 @@ namespace TemporaTasks.Pages
                         Clipboard.SetText(task.TaskName);
                         return;
                     }
+                    else if (Keyboard.IsKeyDown(Key.E))
+                    {
+                        ExportTasks();
+                        return;
+                    }
                 }
 
                 switch (e.Key)
@@ -533,7 +540,7 @@ namespace TemporaTasks.Pages
         private void TaskMouseDown(object sender, MouseButtonEventArgs e)
         {
             currentFocus = TaskStack.Children.IndexOf((IndividualTask)sender);
-            FocusTask(e.ChangedButton != MouseButton.Middle);
+            FocusTask(e.ChangedButton == MouseButton.Left);
         }
 
         private async void NotifButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -1257,6 +1264,29 @@ namespace TemporaTasks.Pages
             else
                 foreach (IndividualTask task in displayedTasks)
                     task.Visibility = Visibility.Visible;
+        }
+
+        private void ExportTasks()
+        {
+            Dictionary<string, Dictionary<string, string>> temp = [];
+            Dictionary<string, string> _temp;
+
+            foreach (IndividualTask task in focusedTasks)
+            {
+                _temp = [];
+                _temp["taskName"] = task.TaskName;
+                _temp["taskDesc"] = task.TaskDesc;
+                _temp["createdTime"] = DateTimeToString(task.CreatedDT);
+                _temp["dueTime"] = DateTimeToString(task.DueDT);
+                _temp["completedTime"] = DateTimeToString(task.CompletedDT);
+                _temp["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
+                _temp["garbled"] = task.IsGarbled() ? "1" : "0";
+                _temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
+                _temp["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
+                temp[task.TaskUID.ToString()] = _temp;
+            }
+
+            Clipboard.SetText(JsonSerializer.Serialize(temp));
         }
     }
 }

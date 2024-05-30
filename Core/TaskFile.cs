@@ -153,7 +153,7 @@ namespace TemporaTasks.Core
             saveLock = false;
         }
 
-        private static string DateTimeToString(DateTime? dateTime)
+        public static string DateTimeToString(DateTime? dateTime)
         {
             if (dateTime.HasValue) return ((long)(dateTime.Value.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds).ToString();
             else return "";
