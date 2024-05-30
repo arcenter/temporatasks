@@ -67,7 +67,7 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <ToolTip.Content>
-                                        <userControl:ButtonToolTip T1="Toggle between mute states" B1="m"/>
+                                        <userControl:ButtonToolTip T1="Toggle between task visibility states" B1="ctrl" T2="+" B2="1/2/3"/>
                                     </ToolTip.Content>
                                 </ToolTip>
                             </Border.ToolTip>
