@@ -28,7 +28,8 @@ namespace TemporaTasks.Pages
         DateTime? dateClipboard = null;
         List<IndividualTask> lastTask = [];
 
-        IndividualTask hoveredTask = null;
+        IndividualTask? hoveredTask = null;
+        IndividualTask? editedTask = null;
         MuteModeRightClickMenu muteModeRightClickMenu;
 
         private enum ViewCategory
@@ -445,7 +446,7 @@ namespace TemporaTasks.Pages
 
                     case Key.E:
                     case Key.Enter:
-                        mainWindow.FrameView.Navigate(new EditTaskPage(task));
+                        EditIcon_MouseDown(task);
                         return;
 
                     case Key.P:
@@ -1016,6 +1017,13 @@ namespace TemporaTasks.Pages
 
             displayedTasks = tasks;
 
+            if (editedTask is not null)
+            {
+                currentFocus = TaskStack.Children.IndexOf(editedTask);
+                FocusTask();
+                editedTask = null;
+            }
+
             if (currentViewCategory == ViewCategory.Completed)
                 for (int i = 0; i <= Math.Min(10, tasks.Count); i++)
                     tasks[i].UpdateLayoutAndStrikethrough();
@@ -1236,6 +1244,7 @@ namespace TemporaTasks.Pages
 
         private void EditIcon_MouseDown(object sender)
         {
+            editedTask = (IndividualTask)sender;
             mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)sender));
         }
 
