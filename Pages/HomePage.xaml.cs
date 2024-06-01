@@ -1025,7 +1025,7 @@ namespace TemporaTasks.Pages
             }
 
             if (currentViewCategory == ViewCategory.Completed)
-                for (int i = 0; i <= Math.Min(10, tasks.Count); i++)
+                for (int i = 0; i < Math.Min(10, tasks.Count); i++)
                     tasks[i].UpdateLayoutAndStrikethrough();
 
             else UpdateNextDueTask();
