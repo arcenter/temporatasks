@@ -10,7 +10,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
-using static TemporaTasks.Core.TaskFile;
 using static TemporaTasks.UserControls.IndividualTask;
 
 namespace TemporaTasks.Pages
@@ -1284,9 +1283,9 @@ namespace TemporaTasks.Pages
                 _temp = [];
                 _temp["taskName"] = task.TaskName;
                 _temp["taskDesc"] = task.TaskDesc;
-                _temp["createdTime"] = DateTimeToString(task.CreatedDT);
-                _temp["dueTime"] = DateTimeToString(task.DueDT);
-                _temp["completedTime"] = DateTimeToString(task.CompletedDT);
+                _temp["createdTime"] = TaskFile.DateTimeToString(task.CreatedDT);
+                _temp["dueTime"] = TaskFile.DateTimeToString(task.DueDT);
+                _temp["completedTime"] = TaskFile.DateTimeToString(task.CompletedDT);
                 _temp["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
                 _temp["garbled"] = task.IsGarbled() ? "1" : "0";
                 _temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
