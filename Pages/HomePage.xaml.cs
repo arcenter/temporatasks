@@ -97,6 +97,7 @@ namespace TemporaTasks.Pages
                 task.IsEditIconClicked -= EditIcon_MouseDown;
                 task.MouseEnter -= TaskMouseEnter;
             }
+            TaskStack.Children.Clear();
         }
 
         private void RefreshToPage(ViewCategory viewCategory)
@@ -531,7 +532,7 @@ namespace TemporaTasks.Pages
             UnfocusTasks();
             if (TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOff) SetTempGarble(TempGarbleMode.None);
             foreach (IndividualTask task in displayedTasks) task.DueDateTimeLabelUpdate();
-            // GenerateTaskStack(false);
+            GenerateTaskStack(false);
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -787,7 +788,6 @@ namespace TemporaTasks.Pages
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             UnfocusTasks();
-            TaskStack.Children.Clear();
             mainWindow.FrameView.Navigate(new AddTaskPage());
         }
 
