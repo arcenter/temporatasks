@@ -249,12 +249,15 @@ namespace TemporaTasks
 
         protected void ResetCursor(object sender, MouseEventArgs e)
         {
-            if (Mouse.LeftButton != MouseButtonState.Pressed)
+            try
             {
-                this.Cursor = Cursors.Arrow;
-                FrameView.IsHitTestVisible = true;
-                homePage.WindowIsResizing(false);
-            }
+                if (Mouse.LeftButton != MouseButtonState.Pressed)
+                {
+                    this.Cursor = Cursors.Arrow;
+                    FrameView.IsHitTestVisible = true;
+                    homePage.WindowIsResizing(false);
+                }
+            } catch { }
         }
 
         protected void Resize(object sender, MouseButtonEventArgs e)
