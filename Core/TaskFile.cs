@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using TemporaTasks.UserControls;
+using static TemporaTasks.UserControls.IndividualTask;
 
 namespace TemporaTasks.Core
 {
@@ -42,8 +43,8 @@ namespace TemporaTasks.Core
 
         public async static void LoadData()
         {
-                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.Cursor = Cursors.Wait;
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.Cursor = Cursors.Wait;
 
             if (File.Exists(saveFilePath))
             {
@@ -97,9 +98,50 @@ namespace TemporaTasks.Core
                 }
             }
 
-                mainWindow.Cursor = Cursors.Arrow;
-                mainWindow.LoadPage();
+            mainWindow.Cursor = Cursors.Arrow;
+            mainWindow.LoadPage();
+        }
+
+        public static void ImportTasks()
+        {
+            try
+            {
+                string clipText = Clipboard.GetText();
+                if (clipText == null) return;
+
+                Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(clipText);
+
+                if (data.Keys.Contains("settings")) data.Remove("settings");
+
+                foreach (string taskUID in data.Keys)
+                {
+                    try
+                    {
+                        DateTime? createdTime = null;
+                        if (data[taskUID].ContainsKey("createdTime")) createdTime = StringToDateTime(data, taskUID, "createdTime");
+
+                        DateTime? dueTime = null;
+                        if (data[taskUID].ContainsKey("dueTime")) dueTime = StringToDateTime(data, taskUID, "dueTime");
+
+                        DateTime? completedTime = null;
+                        if (data[taskUID].ContainsKey("completedTime")) completedTime = StringToDateTime(data, taskUID, "completedTime");
+
+                        ArrayList? tagList = null;
+                        if (data[taskUID].ContainsKey("tags") && data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
+
+                        bool garbled = false;
+                        if (data[taskUID].TryGetValue("garbled", out string? value) && value != "0") garbled = true;
+
+                        TaskPriority taskPriority = TaskPriority.Normal;
+                        if (data[taskUID].TryGetValue("taskPriority", out string? value2)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), value2);
+
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, null);
+                        TaskList.Add(taskObj);
+                    }
+                    catch { }
+                }
             }
+            catch { }
         }
 
         private static DateTime? StringToDateTime(Dictionary<string, Dictionary<string, string>> data, string taskUID, string field)

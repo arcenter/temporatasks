@@ -108,7 +108,7 @@ namespace TemporaTasks.Pages
 
             currentFocus = null;
             UnfocusTasks();
-
+            
             SearchTextBox.Text = "";
             RunSearchTextBoxCloseAnimation();
 
@@ -214,6 +214,13 @@ namespace TemporaTasks.Pages
                 else if (Keyboard.IsKeyDown(Key.M))
                 {
                     OpenMuteModeRightClickMenuPopup();
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.I))
+                {
+                    TaskFile.ImportTasks();
+                    GenerateTaskStack(false);
                     return;
                 }
             }
