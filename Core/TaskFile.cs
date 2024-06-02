@@ -42,11 +42,11 @@ namespace TemporaTasks.Core
 
         public async static void LoadData()
         {
-            if (File.Exists(saveFilePath))
-            {
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
                 mainWindow.Cursor = Cursors.Wait;
 
+            if (File.Exists(saveFilePath))
+            {
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
 
                 if (data.Keys.Contains("settings"))
@@ -95,6 +95,7 @@ namespace TemporaTasks.Core
                     await Task.Delay(1);
                     // mainWindow.LoadBar.RenderTransform = new ScaleTransform(scale += increment, 1);
                 }
+            }
 
                 mainWindow.Cursor = Cursors.Arrow;
                 mainWindow.LoadPage();
