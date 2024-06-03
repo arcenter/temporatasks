@@ -164,6 +164,8 @@ namespace TemporaTasks
                 IsWindowUnHidden?.Invoke();
                 Show();
                 Activate();
+                Topmost = true;
+                Topmost = false;
                 await Task.Delay(25);
                 homePage.Focus();
             }
@@ -188,7 +190,7 @@ namespace TemporaTasks
 
         private void TrayIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            WindowHide(Visibility == Visibility.Visible);
+            WindowHide(IsActive);
         }
 
         private void TrayIcon_TrayRightMouseUp(object sender, RoutedEventArgs e)
