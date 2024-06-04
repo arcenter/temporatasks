@@ -547,7 +547,7 @@ namespace TemporaTasks.Pages
         private void TaskMouseDown(object sender, MouseButtonEventArgs e)
         {
             currentFocus = TaskStack.Children.IndexOf((IndividualTask)sender);
-            FocusTask(e.ChangedButton == MouseButton.Left);
+            FocusTask(e.ChangedButton != MouseButton.Middle, false);
         }
 
         private async void NotifButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -1187,7 +1187,7 @@ namespace TemporaTasks.Pages
             FocusTask();
         }
 
-        private async void FocusTask(bool unfocus = true)
+        private async void FocusTask(bool unfocus = true, bool centerTaskOnScreen = true)
         {
             if (!currentFocus.HasValue) return;
 
@@ -1212,9 +1212,12 @@ namespace TemporaTasks.Pages
 
                 IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
 
-                double verticalCenter = (TaskStackScroller.ActualHeight / 2) - task.ActualHeight;
-                double relativeHeight = task.TransformToVisual(TaskStackScroller).Transform(new Point(0, 0)).Y;
-                TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + relativeHeight - verticalCenter);
+                if (centerTaskOnScreen)
+                {
+                    double verticalCenter = (TaskStackScroller.ActualHeight / 2) - task.ActualHeight;
+                    double relativeHeight = task.TransformToVisual(TaskStackScroller).Transform(new Point(0, 0)).Y;
+                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + relativeHeight - verticalCenter);
+                }
 
                 task.StrokeOn();
                 if (!focusedTasks.Contains(task)) focusedTasks.Add(task);
