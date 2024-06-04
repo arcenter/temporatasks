@@ -399,7 +399,7 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.Space:
-                        ToggleTaskCompletion(task);
+                        task.ToggleCompletionStatus();
                         return;
 
                     case Key.L:
@@ -1228,15 +1228,6 @@ namespace TemporaTasks.Pages
                 foreach (IndividualTask task in focusedTasks) task.StrokeOff();
                 focusedTasks.Clear();
             }
-        }
-
-        private void ToggleTaskCompletion(IndividualTask task)
-        {
-            task.ToggleCompletionStatus();
-
-            int temp = TaskStack.Children.IndexOf(task);
-            if (temp > -1) currentFocus = temp;
-            FocusTask();
         }
 
         private void SetTempGarble(TempGarbleMode tempGarbleMode)
