@@ -803,7 +803,11 @@ namespace TemporaTasks.Pages
                     SenderScrollViewer.ScrollToVerticalOffset(SenderScrollViewer.VerticalOffset - e.Delta);
                     e.Handled = true;
                 }
-                if (RightClickMenuPopup.IsOpen) ((TaskRightClickMenu)RightClickMenuPopup.Child).PopupClose();
+                if (currentFocus != null)
+                {
+                    System.Windows.Controls.Primitives.Popup _ = ((IndividualTask)TaskStack.Children[currentFocus.Value]).RightClickMenuPopup;
+                    if (_ != null && _.IsOpen) ((TaskRightClickMenu)_.Child).PopupClose();
+                }
             }
             catch { }
         }
