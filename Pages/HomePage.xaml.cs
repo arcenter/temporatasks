@@ -303,9 +303,8 @@ namespace TemporaTasks.Pages
                     TaskFile.TaskList.Add(task);
                     TaskFile.SaveData();
                     lastTask.Remove(task);
-                    GenerateTaskStack(false);
-                    currentFocus = TaskStack.Children.IndexOf(task);
-                    FocusTask();
+                    editedTask = task;
+                    GenerateTaskStack();
                     return;
 
                 case Key.Escape:
