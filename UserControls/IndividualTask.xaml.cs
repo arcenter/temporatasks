@@ -159,7 +159,7 @@ namespace TemporaTasks.UserControls
         {
             IsCompleted = !IsCompleted;
 
-            if (RecurranceTimeSpan.HasValue)
+            if (IsCompleted && RecurranceTimeSpan.HasValue)
             {
                 long randomLong;
                 randomGen:

@@ -191,10 +191,13 @@ namespace TemporaTasks.Core
         {
             Match match;
 
-            if (TimeSpan.TryParse(timespan, out TimeSpan output))
+            if (timespan == "")
+                return null;
+
+            else if (TimeSpan.TryParse(timespan, out TimeSpan output))
                 return output;
 
-            if ((match = RegexAddHour().Match(timespan)).Success)
+            else if ((match = RegexAddHour().Match(timespan)).Success)
                 return TimeSpan.FromHours(int.Parse(match.Value[..^1]));
 
             else if ((match = RegexAddMinute().Match(timespan.ToLower())).Success)
