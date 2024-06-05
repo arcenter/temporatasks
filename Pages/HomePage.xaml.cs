@@ -178,6 +178,12 @@ namespace TemporaTasks.Pages
                     return;
                 }
 
+                if (Keyboard.IsKeyDown(Key.R))
+                {
+                    GenerateTaskStack(force: true);
+                    return;
+                }
+
                 if (Keyboard.IsKeyDown(Key.OemTilde))
                 {
                     EyeButton_MouseDown(null, null);
