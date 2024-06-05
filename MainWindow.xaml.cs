@@ -207,6 +207,11 @@ namespace TemporaTasks
             tooltip.VerticalOffset = mousePosition.Y;
         }
 
+        private void window_Deactivated(object sender, EventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);

@@ -8,7 +8,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
-        Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" PreviewKeyDown="Window_PreviewKeyDown" MouseUp="Window_MouseUp" MinWidth="404" MinHeight="500" Loaded="Window_Loaded"
+        Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Deactivated="window_Deactivated" KeyDown="Window_KeyDown" PreviewKeyDown="Window_PreviewKeyDown" MouseUp="Window_MouseUp" MinWidth="404" MinHeight="500" Loaded="Window_Loaded"
         AllowsTransparency="True" Background="Transparent" KeyboardNavigation.DirectionalNavigation="None">
 
     <Grid Background="{StaticResource Background}">
@@ -110,7 +110,7 @@
 
         <!--https://gist.github.com/JoshClose/1367657-->
         
-        <Border BorderThickness="0" Grid.RowSpan="2">
+        <Border BorderThickness="0" Grid.RowSpan="2" d:Visibility="Collapsed">
             <Grid>
                 <Rectangle x:Name="ResizeN" Fill="Transparent" VerticalAlignment="Top" Height="10" Margin="9,-2,9,0" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseLeftButtonDown="Resize" />
                 <Rectangle x:Name="ResizeS" Fill="Transparent" VerticalAlignment="Bottom" Height="10" Margin="9,0,9,-2" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseLeftButtonDown="Resize" />
@@ -124,7 +124,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="WindowBorder" BorderBrush="{StaticResource Border}" BorderThickness="1" Grid.RowSpan="2" />
+        <Border x:Name="WindowBorder" BorderBrush="{StaticResource Border}" BorderThickness="1" Grid.RowSpan="2" d:Visibility="Collapsed"/>
 
     </Grid>
 
