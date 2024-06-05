@@ -52,7 +52,7 @@ namespace TemporaTasks.UserControls
         public Nullable<DateTime> DueDT;
         public Nullable<DateTime> CompletedDT;
         
-        // public Nullable<TimeSpan> RecurranceTimeSpan;
+        public Nullable<TimeSpan> RecurranceTimeSpan;
         
         public DispatcherTimer TaskTimer = new();
         readonly private DispatcherTimer TemporaryRemainingTimer = new();
@@ -82,7 +82,7 @@ namespace TemporaTasks.UserControls
             IsCompleted = _CompletedDT.HasValue;
             CompletedDT = _CompletedDT;
 
-            // RecurranceTimeSpan = _RecurranceTimeSpan;
+            RecurranceTimeSpan = _RecurranceTimeSpan;
             TagList = _TagList;
             Attachments = _Attachments;
 
@@ -158,6 +158,21 @@ namespace TemporaTasks.UserControls
         public void ToggleCompletionStatus()
         {
             IsCompleted = !IsCompleted;
+
+            if (RecurranceTimeSpan.HasValue)
+            {
+                long randomLong;
+                randomGen:
+                randomLong = (long)(new Random().NextDouble() * long.MaxValue);
+                foreach (IndividualTask task in TaskFile.TaskList) if (task.TaskUID == randomLong) { goto randomGen; }
+
+                Nullable<DateTime> newDateTime = (DueDT.HasValue) ?
+                    DueDT.Value + RecurranceTimeSpan.Value :
+                    DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value ;
+
+                TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskName, TaskDesc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, TagList, RecurranceTimeSpan, garbled, taskPriority, Attachments));
+            }
+
             TaskFile.SaveData();
             NewDueDT();
             UpdateTaskCheckBoxAndBackground();

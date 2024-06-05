@@ -191,25 +191,26 @@ namespace TemporaTasks.Core
         {
             Match match;
 
-            if ((match = RegexAddYear().Match(timespan)).Success)
-                return TimeSpan.FromDays(365.25 * int.Parse(match.Value[..^1]));
-
-            else if ((match = RegexAddMonth().Match(timespan)).Success)
-                return TimeSpan.FromDays(30.5 * int.Parse(match.Value[..^1]));
-            
-            else if ((match = RegexAddDay().Match(timespan)).Success)
-                return TimeSpan.FromDays(int.Parse(match.Value[..^1]));
-
-            else if ((match = RegexAddHour().Match(timespan)).Success)
+            if ((match = RegexAddHour().Match(timespan)).Success)
                 return TimeSpan.FromHours(int.Parse(match.Value[..^1]));
 
-            else if ((match = RegexAddMinute().Match(timespan)).Success)
+            else if ((match = RegexAddMinute().Match(timespan.ToLower())).Success)
+            {
+                if (timespan.Contains('M'))
+                    return TimeSpan.FromDays(30.5 * int.Parse(match.Value[..^1]));
                 return TimeSpan.FromMinutes(int.Parse(match.Value[..^1]));
+            }
 
             else if ((match = RegexAddSecond().Match(timespan)).Success)
                 return TimeSpan.FromSeconds(int.Parse(match.Value[..^1]));
 
-            return null;
+            else if ((match = RegexAddDay().Match(timespan)).Success)
+                return TimeSpan.FromDays(int.Parse(match.Value[..^1]));
+
+            else if ((match = RegexAddYear().Match(timespan)).Success)
+                return TimeSpan.FromDays(365.25 * int.Parse(match.Value[..^1]));
+
+            throw new IncorrectDateTimeException();
         }
 
         //public static string? matchedTime;
@@ -465,6 +466,13 @@ namespace TemporaTasks.Core
     public class IncorrectTimeException : Exception
     {
         public IncorrectTimeException()
+        { }
+    }
+
+    [Serializable]
+    public class IncorrectDateTimeException : Exception
+    {
+        public IncorrectDateTimeException()
         { }
     }
 }

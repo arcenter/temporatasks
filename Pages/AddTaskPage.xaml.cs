@@ -194,16 +194,16 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            //Nullable<TimeSpan> recurranceTimeSpan = null;
-            //try
-            //{
-            //    recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);
-            //}
-            //catch
-            //{
-            //    RecurranceBorder.BorderThickness = new Thickness(2);
-            //    return;
-            //}
+            Nullable<TimeSpan> recurranceTimeSpan = null;
+            try
+            {
+                recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);
+            }
+            catch
+            {
+                RecurranceBorder.BorderThickness = new Thickness(2);
+                return;
+            }
 
             //if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
             //if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
@@ -225,7 +225,7 @@ namespace TemporaTasks.Pages
 
             IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
-            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, TaskDescTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, null, garbled, taskPriority));
+            TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskNameTextbox.Text, TaskDescTextbox.Text, DateTimeOffset.UtcNow.LocalDateTime, newDueDate, null, tagList, recurranceTimeSpan, garbled, taskPriority));
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }
