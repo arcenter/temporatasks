@@ -194,7 +194,7 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            Nullable<TimeSpan> recurranceTimeSpan = null;
+            Nullable<TimeSpan> recurranceTimeSpan;
             try
             {
                 recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);

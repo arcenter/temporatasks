@@ -110,30 +110,54 @@
 
                         </Grid>
 
-                        <StackPanel Margin="0 15 0 0">
+                        <Grid Margin="0 15 0 0">
 
-                            <Grid>
-                                <Label Content="Tags" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
-                                <Line x:Name="L4" Stroke="{StaticResource Text}" X2="7" Margin="13 14 0 0" Visibility="Collapsed"/>
-                            </Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                            <Grid Margin="0 5 0 0" Height="40">
+                            <StackPanel>
 
-                                <DockPanel>
+                                <Grid>
+                                    <Label Content="Tags" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                                    <Line x:Name="L4" Stroke="{StaticResource Text}" X2="7" Margin="13 14 0 0" Visibility="Collapsed"/>
+                                </Grid>
 
-                                    <StackPanel Orientation="Horizontal" x:Name="TagsStack" DockPanel.Dock="Left"/>
+                                <Grid Margin="0 5 0 0" Height="40">
 
-                                    <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
+                                    <DockPanel>
 
-                                </DockPanel>
+                                        <StackPanel Orientation="Horizontal" x:Name="TagsStack" DockPanel.Dock="Left"/>
 
-                                <Border BorderBrush="#363636" BorderThickness="2" CornerRadius="10"/>
+                                        <TextBox x:Name="TagsTextbox" Style="{StaticResource TransparentUnroundedTextBox}" DockPanel.Dock="Right" PreviewKeyDown="TagsTextbox_PreviewKeyDown" GotKeyboardFocus="Textbox_GotKeyboardFocus"/>
 
-                                <Border x:Name="TagsBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
+                                    </DockPanel>
 
-                            </Grid>
+                                    <Border BorderBrush="#363636" BorderThickness="2" CornerRadius="10"/>
 
-                        </StackPanel>
+                                    <Border x:Name="TagsBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
+
+                                </Grid>
+
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+
+                                <Grid>
+                                    <Label Content="Recurrance" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" Margin="0 0 0 5"/>
+                                    <Line x:Name="L8" Stroke="{StaticResource Text}" X2="7" Margin="0 14 0 0" Visibility="Collapsed"/>
+                                </Grid>
+
+                                <Grid>
+                                    <TextBox x:Name="RecurranceTextBox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TextBox_TextChanged"/>
+                                    <Border x:Name="RecurranceBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" Height="40" CornerRadius="10"/>
+                                </Grid>
+
+                            </StackPanel>
+
+                        </Grid>
 
                         <DockPanel Margin="0 20 0 0">
 

@@ -34,6 +34,9 @@ namespace TemporaTasks.Pages
                 timeTextBox.Text = DTHelper.TimeToString(task.DueDT.Value);
             }
 
+            if (task.RecurranceTimeSpan.HasValue)
+                RecurranceTextBox.Text = task.RecurranceTimeSpan.Value.ToString();
+
             if (task.TagList != null)
                 foreach (string tag in task.TagList)
                     TagsStackAdd(tag);
@@ -208,6 +211,17 @@ namespace TemporaTasks.Pages
                 return;
             }
 
+            Nullable<TimeSpan> recurranceTimeSpan;
+            try
+            {
+                recurranceTimeSpan = DTHelper.RecurranceStringToDateTime(RecurranceTextBox.Text);
+            }
+            catch
+            {
+                RecurranceBorder.BorderThickness = new Thickness(2);
+                return;
+            }
+
             //if (DTHelper.matchedDate != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedDate, "");
             //if (DTHelper.matchedTime != null) TaskNameTextbox.Text = TaskNameTextbox.Text.Replace(DTHelper.matchedTime, "");
             TaskNameTextbox.Text = TaskNameTextbox.Text.Trim();
@@ -221,7 +235,7 @@ namespace TemporaTasks.Pages
             IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.CreatedDT, newDueDate, null, tagList, null, garbled, taskPriority);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.CreatedDT, newDueDate, null, tagList, recurranceTimeSpan, garbled, taskPriority);
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }
