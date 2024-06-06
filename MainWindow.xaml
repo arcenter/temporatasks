@@ -8,7 +8,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
-        Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Deactivated="window_Deactivated" KeyDown="Window_KeyDown" PreviewKeyDown="Window_PreviewKeyDown" MouseUp="Window_MouseUp" MinWidth="404" MinHeight="500" Loaded="Window_Loaded"
+        Title="TemporaTasks" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" PreviewKeyDown="Window_PreviewKeyDown" MouseUp="Window_MouseUp" MinWidth="404" MinHeight="500" Loaded="Window_Loaded"
         AllowsTransparency="True" Background="Transparent" KeyboardNavigation.DirectionalNavigation="None">
 
     <Grid Background="{StaticResource Background}">
