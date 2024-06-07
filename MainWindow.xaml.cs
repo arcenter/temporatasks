@@ -38,7 +38,7 @@ namespace TemporaTasks
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
                 if (!Directory.Exists(TaskFile.backupPath)) Directory.CreateDirectory(TaskFile.backupPath);
 
-                TaskFile.saveFilePath = $"{path}data.json";
+                TaskFile.saveFilePath = $"{path}data.ttask";
                 TaskFile.LoadData();
             }
             else
