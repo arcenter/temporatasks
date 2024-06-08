@@ -230,6 +230,12 @@ namespace TemporaTasks.Pages
                     GenerateTaskStack(false);
                     return;
                 }
+
+                else if (Keyboard.IsKeyDown(Key.O))
+                {
+                    TaskFile.OpenTasksFile();
+                    return;
+                }
             }
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))

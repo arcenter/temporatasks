@@ -51,8 +51,12 @@ namespace TemporaTasks
 
         public void LoadPage()
         {
+            if (homePage == null)
+            {
             homePage = new();
             FrameView.Navigate(homePage);
+        }
+            else homePage.GenerateTaskStack(force: true);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

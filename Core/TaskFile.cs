@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -100,6 +101,29 @@ namespace TemporaTasks.Core
 
             mainWindow.Cursor = Cursors.Arrow;
             mainWindow.LoadPage();
+        }
+
+        public static void OpenTasksFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "TemporaTask File (*.ttask)|*.ttask";
+            openFileDialog.InitialDirectory = Path.GetDirectoryName(saveFilePath);
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedFilePath = openFileDialog.FileName;
+                string oldPath = saveFilePath;
+                try
+                {
+                    saveFilePath = selectedFilePath;
+                    LoadData();
+                }
+                catch
+                {
+                    saveFilePath = oldPath;
+                    LoadData();
+                }
+            }
         }
 
         public static void ImportTasks()
