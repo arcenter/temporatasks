@@ -236,6 +236,12 @@ namespace TemporaTasks.Pages
                     TaskFile.OpenTasksFile();
                     return;
                 }
+
+                else if (Keyboard.IsKeyDown(Key.S))
+                {
+                    TaskFile.SaveTasksFile();
+                    return;
+                }
             }
 
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
@@ -824,7 +830,7 @@ namespace TemporaTasks.Pages
         }
 
         private bool generateLock = false;
-        private async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
+        public async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
         {
             if ((generateLock && !force) || TaskStack == null) return;
             generateLock = true;

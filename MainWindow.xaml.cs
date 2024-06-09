@@ -53,9 +53,9 @@ namespace TemporaTasks
         {
             if (homePage == null)
             {
-            homePage = new();
-            FrameView.Navigate(homePage);
-        }
+                homePage = new();
+                FrameView.Navigate(homePage);
+            }
             else homePage.GenerateTaskStack(force: true);
         }
 
@@ -153,7 +153,7 @@ namespace TemporaTasks
 
         public delegate void WindowUnHidden();
         public event WindowUnHidden IsWindowUnHidden;
-
+        
         public async void WindowHide(bool hide = true)
         {
             if (hide)

@@ -24,7 +24,7 @@ namespace TemporaTasks.Core
         public static string saveFilePath = null;
         public static string backupPath;
         
-        public static ArrayList TaskList = [];
+        public static ArrayList TaskList;
 
         public static int sortType = 2;
 
@@ -46,6 +46,8 @@ namespace TemporaTasks.Core
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.Cursor = Cursors.Wait;
+
+            TaskList = [];
 
             if (File.Exists(saveFilePath))
             {
@@ -124,6 +126,29 @@ namespace TemporaTasks.Core
                     LoadData();
                 }
             }
+        }
+
+        public static void SaveTasksFile()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "TemporaTask File (*.ttask)|*.ttask";
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(saveFilePath);
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string selectedFilePath = saveFileDialog.FileName;
+                string oldPath = saveFilePath;
+                try
+                {
+                    saveFilePath = selectedFilePath;
+                    SaveData();
+                }
+                catch
+                {
+                    saveFilePath = oldPath;
+                    SaveData();
+            }
+        }
         }
 
         public static void ImportTasks()
