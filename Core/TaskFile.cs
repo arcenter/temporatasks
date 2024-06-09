@@ -78,8 +78,13 @@ namespace TemporaTasks.Core
                         DateTime? completedTime = null;
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
 
-                        // TimeSpan? recurranceTimeSpan = null;
-                        // if (data[taskUID]["recurranceTS"] != "") recurranceTimeSpan = TimeSpan.Parse(data[taskUID]["recurranceTS"]);
+                        TimeSpan? recurrance = null;
+                        if (data[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "")
+                        {
+                            recurrance = TimeSpan.Parse(recurranceString);
+                            Trace.WriteLine($"XXXX {recurranceString}");
+                            Trace.WriteLine($"XXXX {recurrance.Value.Days}");
+                        }
 
                         ArrayList? tagList = null;
                         if (data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
@@ -147,8 +152,8 @@ namespace TemporaTasks.Core
                 {
                     saveFilePath = oldPath;
                     SaveData();
+                }
             }
-        }
         }
 
         public static void ImportTasks()
@@ -159,7 +164,7 @@ namespace TemporaTasks.Core
                 if (clipText == null) return;
 
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(clipText);
-
+                
                 if (data.Keys.Contains("settings")) data.Remove("settings");
 
                 foreach (string taskUID in data.Keys)
@@ -233,8 +238,8 @@ namespace TemporaTasks.Core
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
-                // temp2["recurranceTS"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.ToString() : "";
                 temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
+                temp2["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
                 temp2["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
