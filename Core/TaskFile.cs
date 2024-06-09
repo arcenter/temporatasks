@@ -166,6 +166,9 @@ namespace TemporaTasks.Core
                 {
                     try
                     {
+                        string? taskDesc = null;
+                        if (data[taskUID].TryGetValue("taskDesc", out string? value)) taskDesc = value;
+
                         DateTime? createdTime = null;
                         if (data[taskUID].ContainsKey("createdTime")) createdTime = StringToDateTime(data, taskUID, "createdTime");
 
@@ -176,15 +179,18 @@ namespace TemporaTasks.Core
                         if (data[taskUID].ContainsKey("completedTime")) completedTime = StringToDateTime(data, taskUID, "completedTime");
 
                         ArrayList? tagList = null;
-                        if (data[taskUID].ContainsKey("tags") && data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
+                        if (data[taskUID].TryGetValue("tags", out string? tagString) && tagString != "") tagList = new ArrayList(tagString.Split(';'));
+
+                        TimeSpan? recurrance = null;
+                        if (data[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "") recurrance = TimeSpan.Parse(recurranceString);
 
                         bool garbled = false;
-                        if (data[taskUID].TryGetValue("garbled", out string? value) && value != "0") garbled = true;
+                        if (data[taskUID].TryGetValue("garbled", out string? garbledString) && garbledString != "0") garbled = true;
 
                         TaskPriority taskPriority = TaskPriority.Normal;
-                        if (data[taskUID].TryGetValue("taskPriority", out string? value2)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), value2);
+                        if (data[taskUID].TryGetValue("taskPriority", out string? priorityText)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), priorityText);
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, null);
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], taskDesc, createdTime, dueTime, completedTime, tagList, recurrance, garbled, taskPriority, null);
                         TaskList.Add(taskObj);
                     }
                     catch { }

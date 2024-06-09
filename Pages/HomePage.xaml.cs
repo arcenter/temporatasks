@@ -759,7 +759,7 @@ namespace TemporaTasks.Pages
         {
             TaskFile.sortType = SortComboBox.SelectedIndex;
             TaskFile.SaveData();
-            GenerateTaskStack(force: true);
+            GenerateTaskStack(force: true); 
         }
 
         private void ReverseButton_MouseDown(object sender, MouseButtonEventArgs e)
