@@ -999,6 +999,8 @@ namespace TemporaTasks.Pages
             tasks = [.. sortedDict.Keys];
             tasks.AddRange(noDate);
 
+            List<SectionDivider> sectionDividers = [];
+
             foreach (IndividualTask task in sortedDict.Keys)
             {
                 DateTime date = (DateTime)sortedDict[task];
@@ -1011,6 +1013,7 @@ namespace TemporaTasks.Pages
                     SectionDivider sectionDivider = new(dateString);
                     if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
                     sectionDivider.MouseDown += Section_MouseDown;
+                    sectionDividers.Add(sectionDivider);
 
                     TaskStack.Children.Add(sectionDivider);
                 }
@@ -1023,9 +1026,10 @@ namespace TemporaTasks.Pages
             {
                 days["No date"] = [];
 
-                SectionDivider sectionDivider = new($"No date ({noDate.Count})");
+                SectionDivider sectionDivider = new("No date");
                 if (TaskStack.Children.Count > 0) sectionDivider.MainGrid.Margin = new Thickness(0, 14, 0, 0);
                 sectionDivider.MouseDown += Section_MouseDown;
+                sectionDividers.Add(sectionDivider);
 
                 TaskStack.Children.Add(sectionDivider);
 
@@ -1033,6 +1037,16 @@ namespace TemporaTasks.Pages
                 {
                     TaskStack.Children.Add(task);
                     days["No date"].Add(task);
+                }
+            }
+
+            foreach (SectionDivider sectionDivider in sectionDividers)
+            {
+                string? _ = sectionDivider.SectionTitle.Content.ToString();
+                if (_ == null) continue;
+                else
+                {
+                    sectionDivider.SectionTitle.Content += $" ({days[_].Count})";
                 }
             }
 
@@ -1118,7 +1132,7 @@ namespace TemporaTasks.Pages
         private async void Section_MouseDown(object sender, MouseEventArgs e)
         {
             ArrayList aL;
-            string? _ = ((SectionDivider)sender).SectionTitle.Content.ToString();
+            string? _ = ((SectionDivider)sender).Background.Tag.ToString();
             if (_ == null) return;
             else aL = days[_];
 
