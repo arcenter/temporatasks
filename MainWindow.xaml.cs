@@ -182,7 +182,7 @@ namespace TemporaTasks
             balloonCalledRecently = true;
             if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal || (TaskFile.notificationMode == TaskFile.NotificationMode.High && task.taskPriority == IndividualTask.TaskPriority.High))
                 TrayIcon.ShowBalloonTip($"{((task.taskPriority == IndividualTask.TaskPriority.High) ? "⚠" : "")}Task Due!", task.IsGarbled() ? "Garbled Task" : task.TaskName, BalloonIcon.Info);
-            await Task.Delay(2500);
+            await Task.Delay(5000);
             if (TaskFile.notifPopupMode && !IsActive) WindowHide(false);
             balloonCalledRecently = false;
         }
