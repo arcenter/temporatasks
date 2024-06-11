@@ -244,20 +244,20 @@ namespace TemporaTasks.Pages
                 }
             }
 
-            else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
-            {
-                if (Keyboard.IsKeyDown(Key.G))
-                {
-                    foreach (IndividualTask task in displayedTasks)
-                    {
-                        GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
-                        bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
-                                       && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
-                        task.Garble(null, isVisible);
-                    }
-                    return;
-                }
-            }
+            //else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+            //{
+            //    if (Keyboard.IsKeyDown(Key.G))
+            //    {
+            //        foreach (IndividualTask task in displayedTasks)
+            //        {
+            //            GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
+            //            bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
+            //                           && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
+            //            task.Garble(null, isVisible);
+            //        }
+            //        return;
+            //    }
+            //}
 
             switch (e.Key)
             {
