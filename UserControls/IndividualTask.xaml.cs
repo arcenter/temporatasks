@@ -490,48 +490,98 @@ namespace TemporaTasks.UserControls
             TaskFile.SaveData();
         }
 
-        public void TempGarble(TempGarbleMode garbleMode)
+        public async void TempGarble(TempGarbleMode garbleMode, bool playAnimation = false)
         {
-            if (garbleMode == TempGarbleMode.TempGarbleOn || (garbleMode == TempGarbleMode.None && garbled))
+            if ((garbleMode == TempGarbleMode.TempGarbleOn || (garbleMode == TempGarbleMode.None && garbled)) && TextSP.Opacity != 1)
             {
-                if (TextSP.Opacity == 1) return;
-
-                ToolTipService.SetIsEnabled(Background, true);
-
-                strikethroughLine.Visibility = Visibility.Hidden;
-                taskNameTextBlock.Visibility = Visibility.Hidden;
-                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
-
-                TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
-
-                Random random = new();
-                int limit = 3 + random.Next() % 2;
-
-                for (int i = 0; i < limit; i++)
+                if (playAnimation)
                 {
-                    TextSP.Children.Add(new Line()
+                    strikethroughLine.Visibility = Visibility.Hidden;
+                    TextSP.Children.Clear();
+                    TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
+
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    await Task.Delay(400);
+                    taskNameTextBlock.Visibility = Visibility.Hidden;
+
+                    Random random = new();
+                    int limit = 3 + random.Next() % 2;
+
+                    for (int i = 0; i < limit; i++)
                     {
-                        X1 = 0,
-                        X2 = 50 + random.Next() % 100,
-                        Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
-                        StrokeThickness = 4,
-                        StrokeStartLineCap = PenLineCap.Round,
-                        StrokeEndLineCap = PenLineCap.Round,
-                        Margin = new Thickness(0, 0, 10, 0),
-                        IsHitTestVisible = false
-                    });
+                        Line line = new()
+                        {
+                            X1 = 0,
+                            X2 = 0,
+                            Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
+                            StrokeThickness = 4,
+                            StrokeStartLineCap = PenLineCap.Round,
+                            StrokeEndLineCap = PenLineCap.Round,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            IsHitTestVisible = false
+                        };
+
+                        TextSP.Children.Add(line);
+                        line.BeginAnimation(Line.X2Property, new DoubleAnimation(50 + random.Next() % 100, TimeSpan.FromMilliseconds(275)));
+                        await Task.Delay(300);
+                    }
+                }
+
+                else
+                {
+                    ToolTipService.SetIsEnabled(Background, true);
+
+                    strikethroughLine.Visibility = Visibility.Hidden;
+                    taskNameTextBlock.Visibility = Visibility.Hidden;
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+
+                    TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
+
+                    Random random = new();
+                    int limit = 3 + random.Next() % 2;
+
+                    for (int i = 0; i < limit; i++)
+                    {
+                        TextSP.Children.Add(new Line()
+                        {
+                            X1 = 0,
+                            X2 = 50 + random.Next() % 100,
+                            Stroke = (SolidColorBrush)mainWindow.FindResource("CheckBox"),
+                            StrokeThickness = 4,
+                            StrokeStartLineCap = PenLineCap.Round,
+                            StrokeEndLineCap = PenLineCap.Round,
+                            Margin = new Thickness(0, 0, 10, 0),
+                            IsHitTestVisible = false
+                        });
+                    }
                 }
             }
-            else if (garbleMode == TempGarbleMode.TempGarbleOff || (garbleMode == TempGarbleMode.None && !garbled))
+            else if ((garbleMode == TempGarbleMode.TempGarbleOff || (garbleMode == TempGarbleMode.None && !garbled)) && TextSP.Opacity != 0)
             {
-                TextSP.Children.Clear();
-                ToolTipService.SetIsEnabled(Background, false);
+                if (playAnimation)
+                {
+                    TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    await Task.Delay(400);
+                    TextSP.Children.Clear();
 
-                strikethroughLine.Visibility = Visibility.Visible;
-                taskNameTextBlock.Visibility = Visibility.Visible;
-                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromTicks(0)));
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                    taskNameTextBlock.Visibility = Visibility.Visible;
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
 
-                TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                    strikethroughLine.Visibility = Visibility.Visible;
+                }
+
+                else
+                {
+                    TextSP.Children.Clear();
+                    ToolTipService.SetIsEnabled(Background, false);
+
+                    strikethroughLine.Visibility = Visibility.Visible;
+                    taskNameTextBlock.Visibility = Visibility.Visible;
+                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromTicks(0)));
+
+                    TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                }
             }
         }
     }

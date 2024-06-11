@@ -547,7 +547,7 @@ namespace TemporaTasks.Pages
         {
             currentFocus = null;
             UnfocusTasks();
-            if (TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOff) SetTempGarble(TempGarbleMode.None);
+            if (TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOff) SetTempGarble(TempGarbleMode.None, true);
             foreach (IndividualTask task in displayedTasks) task.DueDateTimeLabelUpdate();
             GenerateTaskStack(false);
         }
@@ -1267,13 +1267,22 @@ namespace TemporaTasks.Pages
                 focusedTasks.Clear();
             }
         }
-
-        private void SetTempGarble(TempGarbleMode tempGarbleMode)
+        
+        private void SetTempGarble(TempGarbleMode tempGarbleMode, bool dontPlayAnimation = false)
         {
             TaskFile.tempGarbleMode = tempGarbleMode;
             EyeIcon.Source = (ImageSource)mainWindow.FindResource($"{tempGarbleMode}EyeIcon");
             foreach (IndividualTask task in displayedTasks)
-                task.TempGarble(tempGarbleMode);
+            {
+                if (dontPlayAnimation) task.TempGarble(tempGarbleMode, false);
+                else
+                {
+                    GeneralTransform transform = task.TransformToAncestor(TaskStackScroller);
+                    bool isVisible = (transform.Transform(new Point(task.ActualWidth, task.ActualHeight)).Y >= -50
+                                   && transform.Transform(new Point(0, 0)).Y <= TaskStackScroller.ViewportHeight);
+                    task.TempGarble(tempGarbleMode, isVisible);
+                }
+            }
             UpdateNextDueTask();
         }
 
