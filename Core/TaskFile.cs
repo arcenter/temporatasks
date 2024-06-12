@@ -78,6 +78,8 @@ namespace TemporaTasks.Core
                         DateTime? completedTime = null;
                         completedTime = StringToDateTime(data, taskUID, "completedTime");
 
+                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), data[taskUID]["taskStatus"]);
+
                         TimeSpan? recurrance = null;
                         if (data[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "")
                         {
@@ -97,7 +99,7 @@ namespace TemporaTasks.Core
 
                         IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, tagList, null, garbled, taskPriority, attachments);
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, taskStatus, tagList, null, garbled, taskPriority, attachments);
                         TaskList.Add(taskObj);
                     }
                     catch { }
@@ -240,6 +242,7 @@ namespace TemporaTasks.Core
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
+                temp2["taskStatus"] = ((int)task.taskStatus).ToString();
                 temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
                 temp2["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
