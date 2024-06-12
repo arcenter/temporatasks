@@ -235,7 +235,7 @@ namespace TemporaTasks.Pages
             IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
             task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.CreatedDT, newDueDate, null, tagList, recurranceTimeSpan, garbled, taskPriority);
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.TaskUID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.CreatedDT, newDueDate, null, task.taskStatus, tagList, recurranceTimeSpan, garbled, taskPriority);
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }
