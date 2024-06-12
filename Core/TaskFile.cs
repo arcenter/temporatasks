@@ -104,6 +104,8 @@ namespace TemporaTasks.Core
                     await Task.Delay(1);
                     // mainWindow.LoadBar.RenderTransform = new ScaleTransform(scale += increment, 1);
                 }
+
+                mainWindow.WindowTitle.Content = $" | {Path.GetFileName(saveFilePath)}";
             }
 
             mainWindow.Cursor = Cursors.Arrow;

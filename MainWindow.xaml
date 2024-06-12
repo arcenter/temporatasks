@@ -104,7 +104,10 @@
 
             <Image x:Name="AppIcon" Source="/Resources/Icons/icon.ico" Width="15" Height="15"/>
 
-            <Label Content="TemporaTasks" Foreground="{StaticResource Text}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="0,0,0,0" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Label Content="TemporaTasks" Foreground="{StaticResource Text}" VerticalContentAlignment="Center" Padding="0" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="11"/>
+                <Label x:Name="WindowTitle" Foreground="{StaticResource Strikethrough}" VerticalContentAlignment="Center" Padding="0" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Semibold" FontSize="11" Margin="2 0 0 0"/>
+            </StackPanel>
 
         </Grid>
 
