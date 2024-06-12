@@ -56,7 +56,7 @@ namespace TemporaTasks
                 homePage = new();
                 FrameView.Navigate(homePage);
             }
-            else homePage.GenerateTaskStack(force: true);
+            else homePage.newFileLoaded();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

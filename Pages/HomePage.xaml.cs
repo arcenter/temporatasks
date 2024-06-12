@@ -117,6 +117,14 @@ namespace TemporaTasks.Pages
             GenerateTaskStack();
         }
 
+        public void newFileLoaded()
+        {
+            SortComboBox.SelectedIndex = TaskFile.sortType;
+            UpdateNotificationMode();
+            UpdateNotifPopupMode();
+            GenerateTaskStack(force: true);
+        }
+
         private async void RunAnimation(Image Icon)
         {
             Icon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
