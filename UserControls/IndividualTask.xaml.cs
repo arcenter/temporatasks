@@ -42,10 +42,24 @@ namespace TemporaTasks.UserControls
 
         public TaskPriority taskPriority = TaskPriority.Normal;
 
+        public enum TaskStatus
+        {
+            Normal,
+            Completed,
+            WontDo,
+            Deleted
+        }
+
+        public TaskStatus taskStatus = TaskStatus.Normal;
+
         public bool IsCompleted
         {
             get { return CompletedDT.HasValue; }
-            set { CompletedDT = value ? DateTime.Now : null; }
+            set
+            {
+                CompletedDT = value ? DateTime.Now : null;
+                taskStatus = value ? TaskStatus.Completed : TaskStatus.Normal;
+        }
         }
 
         public Nullable<DateTime> CreatedDT;
@@ -66,7 +80,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
+        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, TaskStatus _taskStatus, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
         {
             InitializeComponent();
 
@@ -82,6 +96,7 @@ namespace TemporaTasks.UserControls
             IsCompleted = _CompletedDT.HasValue;
             CompletedDT = _CompletedDT;
 
+            taskStatus = _taskStatus;
             RecurranceTimeSpan = _RecurranceTimeSpan;
             TagList = _TagList;
             Attachments = _Attachments;
@@ -170,7 +185,7 @@ namespace TemporaTasks.UserControls
                     DueDT.Value + RecurranceTimeSpan.Value :
                     DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value ;
 
-                TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskName, TaskDesc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, TagList, RecurranceTimeSpan, garbled, taskPriority, Attachments));
+                TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskName, TaskDesc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, IndividualTask.TaskStatus.Normal, TagList, RecurranceTimeSpan, garbled, taskPriority, Attachments));
             }
 
             TaskFile.SaveData();
