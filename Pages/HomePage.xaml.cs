@@ -861,16 +861,18 @@ namespace TemporaTasks.Pages
             if (currentViewCategory == ViewCategory.Completed)
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.IsCompleted) tasks.Add(task);
+                    if (task.taskStatus == IndividualTask.TaskStatus.Completed) tasks.Add(task);
             }
 
             else
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                 {
-                    if (task.IsCompleted) continue;
+                    if (task.taskStatus == IndividualTask.TaskStatus.Normal)
+                    {
                     tasks.Add(task);
                     if (task.DueDT.HasValue && task.DueDT.Value - DateTime.Now < TimeSpan.FromHours(1)) tasksInHour++;
+                }
                 }
                 TasksInHourLabel.Content = tasksInHour;
             }
