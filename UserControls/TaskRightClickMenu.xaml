@@ -54,6 +54,24 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <Border x:Name="WontDo" Background="{StaticResource DarkBlue}" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <local:ButtonToolTip T1="Won't do Task" B1="w"/>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Image Source="{StaticResource TempGarbleOnEyeIcon}" Width="12.5" IsHitTestVisible="False"/>
+                <Label Content="Won't do Task" Grid.Column="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="5 0 0 0" IsHitTestVisible="False"/>
+            </Grid>
+
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <Border x:Name="Garble" Background="{StaticResource DarkBlue}" Opacity="0" Grid.ColumnSpan="2" IsMouseDirectlyOverChanged="Border_IsMouseDirectlyOverChanged" MouseMove="Border_MouseMove" MouseDown="Button_MouseDown" Cursor="Hand" CornerRadius="5">
                     <Border.ToolTip>
                         <ToolTip>

@@ -114,6 +114,10 @@ namespace TemporaTasks.UserControls
                     PopupClose();
                     return;
 
+                case "WontDo":
+                    task.WontDoTask();
+                    return;
+
                 case "Garble":
                     task.Garble(null, true);
                     return;

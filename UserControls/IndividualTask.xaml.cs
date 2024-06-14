@@ -59,7 +59,7 @@ namespace TemporaTasks.UserControls
             {
                 CompletedDT = value ? DateTime.Now : null;
                 taskStatus = value ? TaskStatus.Completed : TaskStatus.Normal;
-        }
+            }
         }
 
         public Nullable<DateTime> CreatedDT;
@@ -191,6 +191,13 @@ namespace TemporaTasks.UserControls
             TaskFile.SaveData();
             NewDueDT();
             UpdateTaskCheckBoxAndBackground();
+        }
+
+        public void WontDoTask()
+        {
+            taskStatus = TaskStatus.WontDo;
+            taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
+            TaskFile.SaveData();
         }
 
         public void UpdateTaskCheckBoxAndBackground()
