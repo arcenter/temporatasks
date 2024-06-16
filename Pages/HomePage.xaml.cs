@@ -763,11 +763,20 @@ namespace TemporaTasks.Pages
             }
         }
 
+        public static bool initialFinished = false;
+
         private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (initialFinished)
+            {
             TaskFile.sortType = SortComboBox.SelectedIndex;
             TaskFile.SaveData();
             GenerateTaskStack(force: true); 
+        }
+            else
+            {
+                initialFinished = true;
+            }
         }
 
         private void ReverseButton_MouseDown(object sender, MouseButtonEventArgs e)
