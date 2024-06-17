@@ -769,10 +769,10 @@ namespace TemporaTasks.Pages
         {
             if (initialFinished)
             {
-            TaskFile.sortType = SortComboBox.SelectedIndex;
-            TaskFile.SaveData();
-            GenerateTaskStack(force: true); 
-        }
+                TaskFile.sortType = SortComboBox.SelectedIndex;
+                TaskFile.SaveData();
+                GenerateTaskStack(force: true);
+            }
             else
             {
                 initialFinished = true;
@@ -879,9 +879,9 @@ namespace TemporaTasks.Pages
                 {
                     if (task.taskStatus == IndividualTask.TaskStatus.Normal)
                     {
-                    tasks.Add(task);
-                    if (task.DueDT.HasValue && task.DueDT.Value - DateTime.Now < TimeSpan.FromHours(1)) tasksInHour++;
-                }
+                        tasks.Add(task);
+                        if (task.DueDT.HasValue && task.DueDT.Value - DateTime.Now < TimeSpan.FromHours(1)) tasksInHour++;
+                    }
                 }
                 TasksInHourLabel.Content = tasksInHour;
             }
@@ -1079,8 +1079,18 @@ namespace TemporaTasks.Pages
 
             if (editedTask is not null)
             {
-                currentFocus = TaskStack.Children.IndexOf(editedTask);
-                FocusTask();
+                int? index = null;
+                foreach (IndividualTask task in displayedTasks)
+                    if (task.TaskUID == editedTask.TaskUID)
+                    {
+                        index = TaskStack.Children.IndexOf(task);
+                        break;
+                    }
+                if (index.HasValue)
+                {
+                    currentFocus = index.Value;
+                    FocusTask();
+                }
                 editedTask = null;
             }
 
