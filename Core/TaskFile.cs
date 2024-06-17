@@ -182,6 +182,9 @@ namespace TemporaTasks.Core
                         DateTime? completedTime = null;
                         if (data[taskUID].ContainsKey("completedTime")) completedTime = StringToDateTime(data, taskUID, "completedTime");
 
+                        IndividualTask.TaskStatus taskStatus = IndividualTask.TaskStatus.Normal;
+                        if (data[taskUID].TryGetValue("taskStatus", out string? taskStatusString)) taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), taskStatusString);
+
                         ArrayList? tagList = null;
                         if (data[taskUID].TryGetValue("tags", out string? tagString) && tagString != "") tagList = new ArrayList(tagString.Split(';'));
 
@@ -194,7 +197,7 @@ namespace TemporaTasks.Core
                         TaskPriority taskPriority = TaskPriority.Normal;
                         if (data[taskUID].TryGetValue("taskPriority", out string? priorityText)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), priorityText);
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], taskDesc, createdTime, dueTime, completedTime, tagList, recurrance, garbled, taskPriority, null);
+                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], taskDesc, createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, null);
                         TaskList.Add(taskObj);
                     }
                     catch { }
