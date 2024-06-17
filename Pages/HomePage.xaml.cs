@@ -1328,7 +1328,7 @@ namespace TemporaTasks.Pages
             task.StrokeOff();
             lastTask.Add(task);
             TaskStack.Children.Remove(task);
-            TaskFile.TaskList.Remove(task);
+            task.taskStatus = IndividualTask.TaskStatus.Deleted;
             TaskFile.SaveData();
         }
 
