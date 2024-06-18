@@ -109,7 +109,7 @@ namespace TemporaTasks.Pages
 
             currentFocus = null;
             UnfocusTasks();
-            
+
             SearchTextBox.Text = "";
             RunSearchTextBoxCloseAnimation();
 
@@ -324,13 +324,7 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.Z:
-                    if (lastTask.Count == 0) return;
-                    IndividualTask task = lastTask.Last();
-                    TaskFile.TaskList.Add(task);
-                    TaskFile.SaveData();
-                    lastTask.Remove(task);
-                    editedTask = task;
-                    GenerateTaskStack();
+                    UndeleteTask();
                     return;
 
                 case Key.Escape:
@@ -488,6 +482,7 @@ namespace TemporaTasks.Pages
                     case Key.D:
                     case Key.Delete:
                         foreach (IndividualTask _task in focusedTasks) { TrashIcon_MouseDown(_task); }
+                        //NextTaskFocus();
                         if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
                         FocusTask();
                         return;
@@ -669,7 +664,7 @@ namespace TemporaTasks.Pages
                 }
             }
         }
-        
+
         private void NotifPopupButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e == null || e.ChangedButton == MouseButton.Left)
@@ -847,6 +842,8 @@ namespace TemporaTasks.Pages
         }
 
         private bool generateLock = false;
+        private TaskCompletionSource<bool> genTSCompletionSource;
+
         public async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
         {
             if ((generateLock && !force) || TaskStack == null) return;
@@ -854,6 +851,7 @@ namespace TemporaTasks.Pages
 
             await Task.Delay(250);
 
+            genTSCompletionSource = new();
             mainWindow.Cursor = Cursors.Wait;
 
             TaskStack.Children.Clear();
@@ -1103,6 +1101,8 @@ namespace TemporaTasks.Pages
             mainWindow.Cursor = Cursors.Arrow;
 
             generateLock = false;
+            try { genTSCompletionSource.SetResult(true); }
+            catch { }
         }
 
         [GeneratedRegex(@"#\S+")]
@@ -1296,7 +1296,7 @@ namespace TemporaTasks.Pages
                 focusedTasks.Clear();
             }
         }
-        
+
         private void SetTempGarble(TempGarbleMode tempGarbleMode, bool dontPlayAnimation = false)
         {
             TaskFile.tempGarbleMode = tempGarbleMode;
@@ -1337,6 +1337,29 @@ namespace TemporaTasks.Pages
             TaskStack.Children.Remove(task);
             task.taskStatus = IndividualTask.TaskStatus.Deleted;
             TaskFile.SaveData();
+        }
+
+        private async void UndeleteTask()
+        {
+            if (lastTask.Count == 0) return;
+
+            IndividualTask task = lastTask.Last();
+            if (task.IsCompleted) task.taskStatus = IndividualTask.TaskStatus.Completed;
+            else task.taskStatus = IndividualTask.TaskStatus.Normal;
+            task.Visibility = Visibility.Visible;
+            TaskFile.TaskList.Add(task);
+            TaskFile.SaveData();
+
+            lastTask.Remove(task);
+            editedTask = task;
+
+            GenerateTaskStack(false);
+            if (genTSCompletionSource != null) await genTSCompletionSource.Task;
+
+            await Task.Delay(50);
+            task.Appear();
+            await Task.Delay(251);
+            task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(500)));
         }
 
         private void TaskMouseEnter(object sender, MouseEventArgs e)
