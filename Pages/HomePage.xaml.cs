@@ -1321,12 +1321,19 @@ namespace TemporaTasks.Pages
             mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)sender));
         }
 
-        private void TrashIcon_MouseDown(object sender)
+        private async void TrashIcon_MouseDown(object sender)
         {
             IndividualTask task = (IndividualTask)sender;
             task.TaskTimer.Stop();
             task.StrokeOff();
             lastTask.Add(task);
+
+            task.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(500)));
+            await Task.Delay(501);
+
+            task.Disappear();
+            await Task.Delay(251);
+
             TaskStack.Children.Remove(task);
             task.taskStatus = IndividualTask.TaskStatus.Deleted;
             TaskFile.SaveData();
