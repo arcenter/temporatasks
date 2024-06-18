@@ -197,6 +197,7 @@ namespace TemporaTasks.UserControls
         {
             taskStatus = TaskStatus.WontDo;
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
+            TaskTimer.Stop();
             TaskFile.SaveData();
         }
 
@@ -348,7 +349,7 @@ namespace TemporaTasks.UserControls
         private void SetTimer()
         {
             TaskTimer.Stop();
-            if (DueDT.HasValue && !IsCompleted)
+            if (taskStatus == TaskStatus.Normal && DueDT.HasValue && !IsCompleted)
             {
                 double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
                 if (taskTimeRemaining <= 120)
