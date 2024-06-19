@@ -145,12 +145,12 @@ namespace TemporaTasks.Core
                 try
                 {
                     saveFilePath = selectedFilePath;
-                    SaveData();
+                    SaveData(force:true);
                 }
                 catch
                 {
                     saveFilePath = oldPath;
-                    SaveData();
+                    SaveData(force: true);
                 }
             }
         }
@@ -214,9 +214,9 @@ namespace TemporaTasks.Core
 
         public static bool saveLock = false;
 
-        public static async void SaveData(MainWindow? mainWindow = null)
+        public static async void SaveData(MainWindow? mainWindow = null, bool force = false)
         {
-            if (mainWindow == null)
+            if (mainWindow == null && !force)
             {
                 if (saveLock) return;
                 saveLock = true;
