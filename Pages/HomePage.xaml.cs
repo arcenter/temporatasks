@@ -339,7 +339,8 @@ namespace TemporaTasks.Pages
 
             if (currentFocus.HasValue)
             {
-                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+                if (TaskStack.Children[currentFocus.Value] is IndividualTask task) { }
+                else { Trace.WriteLine(((SectionDivider)TaskStack.Children[currentFocus.Value]).SectionTitle); Trace.WriteLine(currentFocus.Value); return; }
 
                 if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
@@ -481,10 +482,12 @@ namespace TemporaTasks.Pages
 
                     case Key.D:
                     case Key.Delete:
-                        foreach (IndividualTask _task in focusedTasks) { TrashIcon_MouseDown(_task); }
-                        //NextTaskFocus();
-                        if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = TaskStack.Children.Count - 1;
-                        FocusTask();
+                        List<IndividualTask> _focusedTasks = new(focusedTasks);
+                        foreach (IndividualTask _task in _focusedTasks) { TrashIcon_MouseDown(_task); }
+                        return;
+
+                    case Key.W:
+                        task.WontDoTask();
                         return;
 
                     case Key.C:
@@ -869,6 +872,18 @@ namespace TemporaTasks.Pages
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
                     if (task.taskStatus == IndividualTask.TaskStatus.Completed) tasks.Add(task);
+            }
+
+            else if (currentViewCategory == ViewCategory.Trash)
+            {
+                foreach (IndividualTask task in TaskFile.TaskList)
+                    if (task.taskStatus == IndividualTask.TaskStatus.Deleted) tasks.Add(task);
+            }
+
+            else if (currentViewCategory == ViewCategory.WontDo)
+            {
+                foreach (IndividualTask task in TaskFile.TaskList)
+                    if (task.taskStatus == IndividualTask.TaskStatus.WontDo) tasks.Add(task);
             }
 
             else
@@ -1325,7 +1340,6 @@ namespace TemporaTasks.Pages
         {
             IndividualTask task = (IndividualTask)sender;
             task.TaskTimer.Stop();
-            task.StrokeOff();
             lastTask.Add(task);
 
             task.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(500)));
@@ -1337,6 +1351,8 @@ namespace TemporaTasks.Pages
             TaskStack.Children.Remove(task);
             task.taskStatus = IndividualTask.TaskStatus.Deleted;
             TaskFile.SaveData();
+
+            NextTaskFocus();
         }
 
         private async void UndeleteTask()

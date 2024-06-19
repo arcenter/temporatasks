@@ -195,9 +195,18 @@ namespace TemporaTasks.UserControls
 
         public void WontDoTask()
         {
-            taskStatus = TaskStatus.WontDo;
-            taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
-            TaskTimer.Stop();
+            if (taskStatus == TaskStatus.WontDo)
+            {
+                taskStatus = TaskStatus.Normal;
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                NewDueDT();
+            }
+            else
+            {
+                taskStatus = TaskStatus.WontDo;
+                taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
+                TaskTimer.Stop();
+            }
             TaskFile.SaveData();
         }
 
