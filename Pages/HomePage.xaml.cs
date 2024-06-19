@@ -33,8 +33,10 @@ namespace TemporaTasks.Pages
 
         private enum ViewCategory
         {
-            Home,
-            Completed
+            Home = 0,
+            Completed = 1,
+            WontDo = 2,
+            Trash = 3
         }
 
         ViewCategory currentViewCategory = ViewCategory.Home;
@@ -104,7 +106,7 @@ namespace TemporaTasks.Pages
         {
             currentViewCategory = viewCategory;
             label.Content = currentViewCategory.ToString();
-            foreach (Image icon in new[] { HomeIcon, CompletedIcon })
+            foreach (Image icon in new[] { HomeIcon, CompletedIcon, WontDoIcon, TrashIcon })
                 icon.BeginAnimation(OpacityProperty, new DoubleAnimation(($"{viewCategory}Icon" == icon.Name) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
 
             currentFocus = null;
@@ -165,15 +167,17 @@ namespace TemporaTasks.Pages
 
             if ((Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
             {
-                if (Keyboard.IsKeyDown(Key.Up))
+                int? nextViewCategory = null;
+
+                if (Keyboard.IsKeyDown(Key.Up)) nextViewCategory = (((int)currentViewCategory) - 1);
+                else if (Keyboard.IsKeyDown(Key.Down)) nextViewCategory = (((int)currentViewCategory) + 1);
+                
+                if (nextViewCategory.HasValue)
                 {
-                    RunAnimation(HomeIcon);
-                    RefreshToPage(ViewCategory.Home);
-                }
-                else if (Keyboard.IsKeyDown(Key.Down))
-                {
-                    RunAnimation(CompletedIcon);
-                    RefreshToPage(ViewCategory.Completed);
+                    nextViewCategory %= 4;
+                    if (nextViewCategory == -1) nextViewCategory = 3;
+                    RunAnimation((new[] { HomeIcon, CompletedIcon, WontDoIcon, TrashIcon })[nextViewCategory.Value]);
+                    RefreshToPage((ViewCategory)Enum.Parse(typeof(ViewCategory), nextViewCategory.Value.ToString()));
                 }
             }
 
@@ -800,16 +804,12 @@ namespace TemporaTasks.Pages
         {
             ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
             if ((bool)e.NewValue)
-            {
-                if (((Border)sender).Name == "HomeButton") RunAnimation(HomeIcon);
-                else RunAnimation(CompletedIcon);
-            }
+                RunAnimation((new Dictionary<Border, Image>() { { HomeButton, HomeIcon }, { CompletedButton, CompletedIcon }, { WontDoButton, WontDoIcon }, { TrashButton, TrashIcon } })[(Border)sender]);
         }
 
         private void CategoryButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (((Border)sender).Name == "HomeButton") RefreshToPage(ViewCategory.Home);
-            else RefreshToPage(ViewCategory.Completed);
+            RefreshToPage((new Dictionary<Border, ViewCategory>() { { HomeButton, ViewCategory.Home }, { CompletedButton, ViewCategory.Completed }, { WontDoButton, ViewCategory.WontDo }, { TrashButton, ViewCategory.Trash } })[(Border)sender]);
         }
 
         private void AddButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
