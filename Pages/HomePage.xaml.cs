@@ -877,7 +877,12 @@ namespace TemporaTasks.Pages
             else if (currentViewCategory == ViewCategory.Trash)
             {
                 foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.taskStatus == IndividualTask.TaskStatus.Deleted) tasks.Add(task);
+                    if (task.taskStatus == IndividualTask.TaskStatus.Deleted)
+                    {
+                        tasks.Add(task);
+                        task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
+                        task.Appear(timeSpan: 0);
+                    }
             }
 
             else if (currentViewCategory == ViewCategory.WontDo)
@@ -1349,7 +1354,10 @@ namespace TemporaTasks.Pages
             await Task.Delay(251);
 
             TaskStack.Children.Remove(task);
-            task.taskStatus = IndividualTask.TaskStatus.Deleted;
+
+            if (task.taskStatus == IndividualTask.TaskStatus.Deleted) TaskFile.TaskList.Remove(task);
+            else task.taskStatus = IndividualTask.TaskStatus.Deleted;
+            
             TaskFile.SaveData();
 
             NextTaskFocus();

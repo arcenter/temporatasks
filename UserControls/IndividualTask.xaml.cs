@@ -413,10 +413,10 @@ namespace TemporaTasks.UserControls
 
         public new bool IsVisible = true;
 
-        public void Appear()
+        public void Appear(int timeSpan = 250)
         {
             Visibility = Visibility.Visible;
-            ChangeHeight(0, 69);
+            ChangeHeight(0, 69, timeSpan);
             IsVisible = true;
         }
 
@@ -428,9 +428,9 @@ namespace TemporaTasks.UserControls
             Visibility = Visibility.Collapsed;
         }
 
-        private void ChangeHeight(double oldValue, double newValue)
+        private void ChangeHeight(double oldValue, double newValue, int timeSpan = 250)
         {
-            var animation = new DoubleAnimation(oldValue, newValue, TimeSpan.FromMilliseconds(250));
+            var animation = new DoubleAnimation(oldValue, newValue, TimeSpan.FromMilliseconds(timeSpan));
             Storyboard.SetTarget(animation, this);
             Storyboard.SetTargetProperty(animation, new PropertyPath(HeightProperty));
 
