@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using TemporaTasks.Pages;
 using TemporaTasks.UserControls;
 using static TemporaTasks.UserControls.IndividualTask;
 
@@ -52,7 +53,8 @@ namespace TemporaTasks.Core
             if (File.Exists(saveFilePath))
             {
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
-
+                HomePage.initialFinished = false;
+                
                 if (data.Keys.Contains("settings"))
                 {
                     Dictionary<string, string> settings = data["settings"];
