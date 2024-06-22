@@ -66,7 +66,7 @@ namespace TemporaTasks.UserControls
         public DateTime? DueDT;
         public DateTime? CompletedDT;
         
-        public Nullable<TimeSpan> RecurranceTimeSpan;
+        public TimeSpan? RecurranceTimeSpan;
         
         public DispatcherTimer TaskTimer = new();
         readonly private DispatcherTimer TemporaryRemainingTimer = new();
@@ -80,7 +80,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, DateTime? _CreatedDT, DateTime? _DueDT, DateTime? _CompletedDT, TaskStatus _taskStatus, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
+        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, DateTime? _CreatedDT, DateTime? _DueDT, DateTime? _CompletedDT, TaskStatus _taskStatus, ArrayList? _TagList, TimeSpan? _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
         {
             InitializeComponent();
 

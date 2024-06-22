@@ -187,7 +187,7 @@ namespace TemporaTasks.Core
             return DateTime.Now > (dateTime - TimeSpan.FromMinutes(5));
         }
 
-        public static Nullable<TimeSpan> RecurranceStringToDateTime(string timespan)
+        public static TimeSpan? RecurranceStringToDateTime(string timespan)
         {
             Match match;
 
