@@ -136,9 +136,10 @@ namespace TemporaTasks.Core
 
         public static void SaveTasksFile()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            SaveFileDialog saveFileDialog = new();
             saveFileDialog.Filter = "TemporaTask File (*.ttask)|*.ttask";
             saveFileDialog.InitialDirectory = Path.GetDirectoryName(saveFilePath);
+            saveFileDialog.FileName = Path.GetFileName(saveFilePath);
 
             if (saveFileDialog.ShowDialog() == true)
             {
