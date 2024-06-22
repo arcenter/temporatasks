@@ -62,9 +62,9 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public Nullable<DateTime> CreatedDT;
-        public Nullable<DateTime> DueDT;
-        public Nullable<DateTime> CompletedDT;
+        public DateTime? CreatedDT;
+        public DateTime? DueDT;
+        public DateTime? CompletedDT;
         
         public Nullable<TimeSpan> RecurranceTimeSpan;
         
@@ -80,7 +80,7 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, Nullable<DateTime> _CreatedDT, Nullable<DateTime> _DueDT, Nullable<DateTime> _CompletedDT, TaskStatus _taskStatus, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
+        public IndividualTask(long _TaskUID, string _TaskName, string _TaskDesc, DateTime? _CreatedDT, DateTime? _DueDT, DateTime? _CompletedDT, TaskStatus _taskStatus, ArrayList? _TagList, Nullable<TimeSpan> _RecurranceTimeSpan, bool _garbled, TaskPriority _taskPriority, ArrayList? _Attachments = null)
         {
             InitializeComponent();
 
@@ -181,7 +181,7 @@ namespace TemporaTasks.UserControls
                 randomLong = (long)(new Random().NextDouble() * long.MaxValue);
                 foreach (IndividualTask task in TaskFile.TaskList) if (task.TaskUID == randomLong) { goto randomGen; }
 
-                Nullable<DateTime> newDateTime = (DueDT.HasValue) ?
+                DateTime? newDateTime = (DueDT.HasValue) ?
                     DueDT.Value + RecurranceTimeSpan.Value :
                     DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value ;
 
