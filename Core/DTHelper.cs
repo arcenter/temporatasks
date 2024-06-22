@@ -28,7 +28,7 @@ namespace TemporaTasks.Core
             return $"{hour.ToString().PadLeft(2, '0')}:{time.Minute.ToString().PadLeft(2, '0')} {apm}";
         }
 
-        public static Nullable<DateTime> StringToDateTime(string date, string time)
+        public static DateTime? StringToDateTime(string date, string time)
         {
             if (date.Length == 0 && time.Length == 0) return null;
 

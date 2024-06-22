@@ -178,7 +178,7 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            Nullable<DateTime> newDueDate;
+            DateTime? newDueDate;
             try
             {
                 newDueDate = DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);

@@ -164,7 +164,7 @@ namespace TemporaTasks.Windows
                 return;
             }
 
-            Nullable<DateTime> newDueDate;
+            DateTime? newDueDate;
             try
             {
                 newDueDate = DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);

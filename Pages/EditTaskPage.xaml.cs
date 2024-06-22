@@ -195,7 +195,7 @@ namespace TemporaTasks.Pages
         private void ConfirmButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             DateBorder.BorderThickness = TimeBorder.BorderThickness = new Thickness(0);
-            Nullable<DateTime> newDueDate;
+            DateTime? newDueDate;
             try
             {
                 newDueDate = DTHelper.StringToDateTime(dateTextBox.Text, timeTextBox.Text);
