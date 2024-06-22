@@ -238,8 +238,8 @@ namespace TemporaTasks.Core
             foreach (IndividualTask task in TaskList)
             {
                 temp2 = [];
-                temp2["taskName"] = task.TaskName;
-                temp2["taskDesc"] = task.TaskDesc;
+                temp2["taskName"] = task.Name;
+                temp2["taskDesc"] = task.Desc;
                 temp2["createdTime"] = DateTimeToString(task.CreatedDT);
                 temp2["dueTime"] = DateTimeToString(task.DueDT);
                 temp2["completedTime"] = DateTimeToString(task.CompletedDT);
@@ -249,7 +249,7 @@ namespace TemporaTasks.Core
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
                 temp2["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
-                temp[task.TaskUID.ToString()] = temp2;
+                temp[task.UID.ToString()] = temp2;
             }
             string temp3 = JsonSerializer.Serialize(temp);
             File.WriteAllText(saveFilePath, temp3);

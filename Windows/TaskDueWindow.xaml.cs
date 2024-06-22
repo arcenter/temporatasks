@@ -78,13 +78,13 @@ namespace TemporaTasks.Windows
             {
                 if (Keyboard.IsKeyDown(Key.D1))
                 {
-                    SetTempGarble(TempGarbleMode.TempGarbleOff);
+                    SetTempGarble(TempGarbleMode.Off);
                     return;
                 }
 
                 else if (Keyboard.IsKeyDown(Key.D2))
                 {
-                    SetTempGarble(TempGarbleMode.TempGarbleOn);
+                    SetTempGarble(TempGarbleMode.On);
                     return;
                 }
 
@@ -131,7 +131,7 @@ namespace TemporaTasks.Windows
 
                 if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.C))
                 {
-                    Clipboard.SetText(task.TaskName);
+                    Clipboard.SetText(task.Name);
                     return;
                 }
 

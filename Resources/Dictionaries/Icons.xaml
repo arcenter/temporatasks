@@ -263,7 +263,7 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
-    <DrawingImage x:Key="NoneEyeIcon">
+    <DrawingImage x:Key="TempGarbleNoneEyeIcon">
         <DrawingImage.Drawing>
             <DrawingGroup ClipGeometry="M0,0 V800 H800 V0 H0 Z">
                 <DrawingGroup Opacity="1">

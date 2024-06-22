@@ -110,7 +110,7 @@ namespace TemporaTasks.UserControls
                     return;
 
                 case "CopyTT":
-                    Clipboard.SetText(task.TaskName);
+                    Clipboard.SetText(task.Name);
                     PopupClose();
                     return;
 

@@ -207,13 +207,13 @@ namespace TemporaTasks.Pages
 
                 else if (Keyboard.IsKeyDown(Key.D1))
                 {
-                    SetTempGarble(TempGarbleMode.TempGarbleOff);
+                    SetTempGarble(TempGarbleMode.Off);
                     return;
                 }
 
                 else if (Keyboard.IsKeyDown(Key.D2))
                 {
-                    SetTempGarble(TempGarbleMode.TempGarbleOn);
+                    SetTempGarble(TempGarbleMode.On);
                     return;
                 }
 
@@ -405,7 +405,7 @@ namespace TemporaTasks.Pages
                     }
                     else if (Keyboard.IsKeyDown(Key.C))
                     {
-                        Clipboard.SetText(task.TaskName);
+                        Clipboard.SetText(task.Name);
                         return;
                     }
                     else if (Keyboard.IsKeyDown(Key.E))
@@ -560,7 +560,7 @@ namespace TemporaTasks.Pages
         {
             currentFocus = null;
             UnfocusTasks();
-            if (TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOff) SetTempGarble(TempGarbleMode.None, true);
+            if (TaskFile.tempGarbleMode == TempGarbleMode.Off) SetTempGarble(TempGarbleMode.None, true);
             foreach (IndividualTask task in displayedTasks) task.DueDateTimeLabelUpdate();
             GenerateTaskStack(false);
         }
@@ -982,7 +982,7 @@ namespace TemporaTasks.Pages
                         Regex regex = new(searchTerm);
                         for (int i = tasks.Count - 1; i >= 0; i--)
                         {
-                            if (regex.Match(tasks[i].TaskName.ToLower()).Success) continue;
+                            if (regex.Match(tasks[i].Name.ToLower()).Success) continue;
                             tasks.Remove(tasks[i]);
                         }
                     }
@@ -997,9 +997,9 @@ namespace TemporaTasks.Pages
             if (SortComboBox.SelectedIndex == 0)
             {
                 if (reverseSort)
-                    tasks = [.. tasks.OrderByDescending(pair => pair.TaskName)];
+                    tasks = [.. tasks.OrderByDescending(pair => pair.Name)];
                 else
-                    tasks = [.. tasks.OrderBy(pair => pair.TaskName)];
+                    tasks = [.. tasks.OrderBy(pair => pair.Name)];
 
                 TaskCount.Content = $"{tasks.Count}t";
                 foreach (IndividualTask task in tasks)
@@ -1102,7 +1102,7 @@ namespace TemporaTasks.Pages
             {
                 int? index = null;
                 foreach (IndividualTask task in displayedTasks)
-                    if (task.TaskUID == editedTask.TaskUID)
+                    if (task.UID == editedTask.UID)
                     {
                         index = TaskStack.Children.IndexOf(task);
                         break;
@@ -1170,12 +1170,12 @@ namespace TemporaTasks.Pages
             else
             {
                 StatusGrid.Visibility = Visibility.Visible;
-                if ((nextDueTask.IsGarbled() && TaskFile.tempGarbleMode != TempGarbleMode.TempGarbleOff) || TaskFile.tempGarbleMode == TempGarbleMode.TempGarbleOn)
+                if ((nextDueTask.IsGarbled() && TaskFile.tempGarbleMode != TempGarbleMode.Off) || TaskFile.tempGarbleMode == TempGarbleMode.On)
                     NextTaskDueNameLabel.Content = "Garbled Task";
                 else
                 {
-                    NextTaskDueNameLabel.Content = nextDueTask.TaskName;
-                    if (nextDueTask.TaskName.Length > 20) NextTaskDueNameLabel.Content = $"{nextDueTask.TaskName[..20].Trim()}...";
+                    NextTaskDueNameLabel.Content = nextDueTask.Name;
+                    if (nextDueTask.Name.Length > 20) NextTaskDueNameLabel.Content = $"{nextDueTask.Name[..20].Trim()}...";
                 }
                 NextTaskDueTimeLabel.Content = DTHelper.GetRelativeTaskDueTime(nextDueTask);
             }
@@ -1323,7 +1323,7 @@ namespace TemporaTasks.Pages
         private void SetTempGarble(TempGarbleMode tempGarbleMode, bool dontPlayAnimation = false)
         {
             TaskFile.tempGarbleMode = tempGarbleMode;
-            EyeIcon.Source = (ImageSource)mainWindow.FindResource($"{tempGarbleMode}EyeIcon");
+            EyeIcon.Source = (ImageSource)mainWindow.FindResource($"TempGarble{tempGarbleMode}EyeIcon");
             foreach (IndividualTask task in displayedTasks)
             {
                 if (dontPlayAnimation) task.TempGarble(tempGarbleMode, false);
@@ -1412,8 +1412,8 @@ namespace TemporaTasks.Pages
             foreach (IndividualTask task in focusedTasks)
             {
                 _temp = [];
-                _temp["taskName"] = task.TaskName;
-                _temp["taskDesc"] = task.TaskDesc;
+                _temp["taskName"] = task.Name;
+                _temp["taskDesc"] = task.Desc;
                 _temp["createdTime"] = TaskFile.DateTimeToString(task.CreatedDT);
                 _temp["dueTime"] = TaskFile.DateTimeToString(task.DueDT);
                 _temp["completedTime"] = TaskFile.DateTimeToString(task.CompletedDT);
@@ -1421,7 +1421,7 @@ namespace TemporaTasks.Pages
                 _temp["garbled"] = task.IsGarbled() ? "1" : "0";
                 _temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
                 _temp["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
-                temp[task.TaskUID.ToString()] = _temp;
+                temp[task.UID.ToString()] = _temp;
             }
 
             Clipboard.SetText(JsonSerializer.Serialize(temp));

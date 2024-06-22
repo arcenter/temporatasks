@@ -212,7 +212,7 @@ namespace TemporaTasks.Pages
             long randomLong;
             randomGen:
             randomLong = (long)(new Random().NextDouble() * long.MaxValue);
-            foreach (IndividualTask task in TaskFile.TaskList) if (task.TaskUID == randomLong) { goto randomGen; }
+            foreach (IndividualTask task in TaskFile.TaskList) if (task.UID == randomLong) { goto randomGen; }
 
             // TODO
             // this can probably be optimized by keeping a list of UIDs

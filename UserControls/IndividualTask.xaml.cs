@@ -17,20 +17,20 @@ namespace TemporaTasks.UserControls
     {
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
-        public long TaskUID { get; set; }
-        public string TaskName { get; set; }
-        public string TaskDesc { get; set; }
+        public long UID { get; set; }
+        public string Name { get; set; }
+        public string Desc { get; set; }
 
         public ArrayList? TagList { get; set; }
 
         public ArrayList? Attachments { get; set; }
 
-        private bool garbled = false;
+        private bool Garbled = false;
 
         public enum TempGarbleMode
         {
-            TempGarbleOff = 0,
-            TempGarbleOn = 1,
+            Off = 0,
+            On = 1,
             None = 2
         }
 
@@ -84,12 +84,12 @@ namespace TemporaTasks.UserControls
         {
             InitializeComponent();
 
-            TaskUID = _TaskUID;
+            UID = _TaskUID;
             
-            taskNameTextBlock.Text = TaskName = _TaskName;
+            taskNameTextBlock.Text = Name = _TaskName;
             TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
 
-            TaskDesc = _TaskDesc;
+            Desc = _TaskDesc;
 
             CreatedDT = _CreatedDT;
             DueDT = _DueDT;
@@ -101,7 +101,7 @@ namespace TemporaTasks.UserControls
             TagList = _TagList;
             Attachments = _Attachments;
 
-            garbled = _garbled;
+            Garbled = _garbled;
             if (_taskPriority == TaskPriority.High)
                 taskPriority = _taskPriority;
 
@@ -179,13 +179,13 @@ namespace TemporaTasks.UserControls
                 long randomLong;
                 randomGen:
                 randomLong = (long)(new Random().NextDouble() * long.MaxValue);
-                foreach (IndividualTask task in TaskFile.TaskList) if (task.TaskUID == randomLong) { goto randomGen; }
+                foreach (IndividualTask task in TaskFile.TaskList) if (task.UID == randomLong) { goto randomGen; }
 
                 DateTime? newDateTime = (DueDT.HasValue) ?
                     DueDT.Value + RecurranceTimeSpan.Value :
                     DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value ;
 
-                TaskFile.TaskList.Add(new IndividualTask(randomLong, TaskName, TaskDesc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, IndividualTask.TaskStatus.Normal, TagList, RecurranceTimeSpan, garbled, taskPriority, Attachments));
+                TaskFile.TaskList.Add(new IndividualTask(randomLong, Name, Desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, IndividualTask.TaskStatus.Normal, TagList, RecurranceTimeSpan, Garbled, taskPriority, Attachments));
             }
 
             TaskFile.SaveData();
@@ -441,12 +441,12 @@ namespace TemporaTasks.UserControls
 
         public bool IsLinkAvailable()
         {
-            return LinkRegex().Match(TaskName).Success;
+            return LinkRegex().Match(Name).Success;
         }
 
         public void LinkOpen()
         {
-            Match match = LinkRegex().Match(TaskName);
+            Match match = LinkRegex().Match(Name);
             if (match.Success)
             {
                 Process.Start(new ProcessStartInfo("cmd", "/C start" + " " + match.Value));
@@ -458,15 +458,15 @@ namespace TemporaTasks.UserControls
 
         public bool IsGarbled()
         {
-            return garbled;
+            return Garbled;
         }
 
         public async void Garble(bool? _garble = null, bool playAnimation = false)
         {
             bool garble = _garble ?? !IsGarbled();
 
-            if (garble == garbled) return;
-            garbled = garble;
+            if (garble == Garbled) return;
+            Garbled = garble;
 
             if (IsVisible && playAnimation)
             {
@@ -517,14 +517,14 @@ namespace TemporaTasks.UserControls
                 }
             }
 
-            else TempGarble(garble ? TempGarbleMode.TempGarbleOn : TempGarbleMode.TempGarbleOff);
+            else TempGarble(garble ? TempGarbleMode.On : TempGarbleMode.Off);
 
             TaskFile.SaveData();
         }
 
         public async void TempGarble(TempGarbleMode garbleMode, bool playAnimation = false)
         {
-            if ((garbleMode == TempGarbleMode.TempGarbleOn || (garbleMode == TempGarbleMode.None && garbled)) && TextSP.Opacity != 1)
+            if ((garbleMode == TempGarbleMode.On || (garbleMode == TempGarbleMode.None && Garbled)) && TextSP.Opacity != 1)
             {
                 if (playAnimation)
                 {
@@ -588,7 +588,7 @@ namespace TemporaTasks.UserControls
                     }
                 }
             }
-            else if ((garbleMode == TempGarbleMode.TempGarbleOff || (garbleMode == TempGarbleMode.None && !garbled)) && TextSP.Opacity != 0)
+            else if ((garbleMode == TempGarbleMode.Off || (garbleMode == TempGarbleMode.None && !Garbled)) && TextSP.Opacity != 0)
             {
                 if (playAnimation)
                 {
