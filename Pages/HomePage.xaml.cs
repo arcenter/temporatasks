@@ -91,14 +91,17 @@ namespace TemporaTasks.Pages
             mainWindow.KeyUp -= Page_KeyUp;
             mainWindow.MouseDown -= Window_MouseDown;
             mainWindow.IsWindowUnHidden -= Window_Unhidden;
-            foreach (IndividualTask task in TaskFile.TaskList)
-            {
+            
+            foreach (IndividualTask task in focusedTasks)
                 task.StrokeOff();
-                task.Background_MouseLeave(null, null);
-                task.IsTrashIconClicked -= TrashIcon_MouseDown;
-                task.IsEditIconClicked -= EditIcon_MouseDown;
-                task.MouseEnter -= TaskMouseEnter;
-            }
+            
+            //foreach (IndividualTask task in TaskFile.TaskList)
+            //{
+            //    task.IsTrashIconClicked -= TrashIcon_MouseDown;
+            //    task.IsEditIconClicked -= EditIcon_MouseDown;
+            //    task.MouseEnter -= TaskMouseEnter;
+            //}
+
             TaskStack.Children.Clear();
         }
 
