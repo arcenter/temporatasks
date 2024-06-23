@@ -1,18 +1,10 @@
 ﻿using Microsoft.Win32;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using TemporaTasks.Pages;
 using TemporaTasks.UserControls;
@@ -24,8 +16,10 @@ namespace TemporaTasks.Core
     {
         public static string saveFilePath = null;
         public static string backupPath;
-        
+
         public static ArrayList TaskList;
+
+        public static Dictionary<string, Dictionary<string, string>> globalData = [];
 
         public static int sortType = 2;
 
@@ -52,13 +46,14 @@ namespace TemporaTasks.Core
 
             if (File.Exists(saveFilePath))
             {
-                Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
-                HomePage.initialFinished = false;
+                globalData = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
                 
-                if (data.Keys.Contains("settings"))
+                HomePage.initialFinished = false;
+
+                if (globalData.Keys.Contains("settings"))
                 {
-                    Dictionary<string, string> settings = data["settings"];
-                    data.Remove("settings");
+                    Dictionary<string, string> settings = globalData["settings"];
+                    globalData.Remove("settings");
 
                     sortType = int.Parse(settings["sortType"]);
                     notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
@@ -67,40 +62,44 @@ namespace TemporaTasks.Core
 
                 // double increment = 1/data.Count;
                 // double scale = 0;
-                foreach (string taskUID in data.Keys)
+
+                foreach (string taskUID in globalData.Keys)
                 {
                     try
                     {
-                        DateTime? createdTime = null;
-                        createdTime = StringToDateTime(data, taskUID, "createdTime");
+                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), globalData[taskUID]["taskStatus"]);
 
-                        DateTime? dueTime = null;
-                        dueTime = StringToDateTime(data, taskUID, "dueTime");
+                        if (taskStatus != IndividualTask.TaskStatus.Completed)
+                        {
+                            DateTime? createdTime = null;
+                            createdTime = StringToDateTime(globalData, taskUID, "createdTime");
 
-                        DateTime? completedTime = null;
-                        completedTime = StringToDateTime(data, taskUID, "completedTime");
+                            DateTime? dueTime = null;
+                            dueTime = StringToDateTime(globalData, taskUID, "dueTime");
 
-                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), data[taskUID]["taskStatus"]);
+                            DateTime? completedTime = null;
+                            completedTime = StringToDateTime(globalData, taskUID, "completedTime");
 
-                        TimeSpan? recurrance = null;
-                        if (data[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "") recurrance = TimeSpan.Parse(recurranceString);
+                            TimeSpan? recurrance = null;
+                            if (globalData[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "") recurrance = TimeSpan.Parse(recurranceString);
 
-                        ArrayList? tagList = null;
-                        if (data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
-                        
-                        ArrayList? attachments = null;
-                        // if (data[taskUID]["attachments"] != "") attachments = new ArrayList(data[taskUID]["attachments"].Split(';'));
+                            ArrayList? tagList = null;
+                            if (globalData[taskUID]["tags"] != "") tagList = new ArrayList(globalData[taskUID]["tags"].Split(';'));
 
-                        bool garbled = false;
-                        if (data[taskUID]["garbled"] != "0") garbled = true;
+                            ArrayList? attachments = null;
+                            // if (globalData[taskUID]["attachments"] != "") attachments = new ArrayList(globalData[taskUID]["attachments"].Split(';'));
 
-                        IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
+                            bool garbled = false;
+                            if (globalData[taskUID]["garbled"] != "0") garbled = true;
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, attachments);
-                        TaskList.Add(taskObj);
+                            IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), globalData[taskUID]["taskPriority"]);
+
+                            IndividualTask taskObj = new(long.Parse(taskUID), globalData[taskUID]["taskName"], globalData[taskUID]["taskDesc"], createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, attachments);
+                            TaskList.Add(taskObj);
+                        }
                     }
                     catch { }
-                    await Task.Delay(1);
+                    //await Task.Delay(1);
                     // mainWindow.LoadBar.RenderTransform = new ScaleTransform(scale += increment, 1);
                 }
 
@@ -148,7 +147,7 @@ namespace TemporaTasks.Core
                 try
                 {
                     saveFilePath = selectedFilePath;
-                    SaveData(force:true);
+                    SaveData(force: true);
                 }
                 catch
                 {
@@ -166,7 +165,7 @@ namespace TemporaTasks.Core
                 if (clipText == null) return;
 
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(clipText);
-                
+
                 if (data.Keys.Contains("settings")) data.Remove("settings");
 
                 foreach (string taskUID in data.Keys)
@@ -233,7 +232,7 @@ namespace TemporaTasks.Core
             temp2["sortType"] = sortType.ToString();
             temp2["notifMode"] = ((int)notificationMode).ToString();
             temp2["notifPopupMode"] = notifPopupMode ? "1" : "0";
-            temp["settings"] = temp2;
+            globalData["settings"] = temp2;
 
             foreach (IndividualTask task in TaskList)
             {
@@ -249,9 +248,10 @@ namespace TemporaTasks.Core
                 temp2["garbled"] = task.IsGarbled() ? "1" : "0";
                 temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
                 temp2["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
-                temp[task.UID.ToString()] = temp2;
+                globalData[task.UID.ToString()] = temp2;
             }
-            string temp3 = JsonSerializer.Serialize(temp);
+
+            string temp3 = JsonSerializer.Serialize(globalData);
             File.WriteAllText(saveFilePath, temp3);
 
             string saveTime = DateTime.Now.ToString("yyMMddHHmm");
