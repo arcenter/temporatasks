@@ -5,22 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TemporaTasks.UserControls"
              mc:Ignorable="d"
-             d:DesignHeight="100" d:DesignWidth="800"
+             d:DesignHeight="50" d:DesignWidth="800"
              Loaded="IndividualTask_Loaded" Cursor="Hand">
 
     <Grid x:Name="ucGrid">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="14" />
+            <RowDefinition Height="12" />
             <RowDefinition />
-            <RowDefinition Height="15" />
+            <RowDefinition Height="12" />
         </Grid.RowDefinitions>
 
         <Popup x:Name="RightClickMenuPopup" VerticalOffset="10" Placement="MousePoint" AllowsTransparency="True"/>
 
         <Border x:Name="StrokeBorder" Grid.Row="1" CornerRadius="5" BorderBrush="{StaticResource Blue}" BorderThickness="0" Width="{Binding ActualWidth, ElementName=Background, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=Background, Mode=OneWay}" />
 
-        <Border x:Name="Background" Background="{StaticResource DarkBlue}" Opacity="0" Grid.Row="1" CornerRadius="5" MinHeight="40" MouseEnter="Background_MouseEnter" MouseLeave="Background_MouseLeave" MouseDown="Background_MouseDown" MouseUp="Background_MouseUp" MouseMove="Background_MouseMove" ToolTipService.IsEnabled="False" ToolTipService.InitialShowDelay="2000">
+        <Border x:Name="Background" Background="{StaticResource DarkBlue}" Opacity="0" Grid.Row="1" CornerRadius="5" MinHeight="36" MouseEnter="Background_MouseEnter" MouseLeave="Background_MouseLeave" MouseDown="Background_MouseDown" MouseUp="Background_MouseUp" MouseMove="Background_MouseMove" ToolTipService.IsEnabled="False" ToolTipService.InitialShowDelay="2000">
             <Border.ToolTip>
                 <ToolTip>
                     <ToolTip.Content>
@@ -38,10 +38,10 @@
 
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0 0 13 0">
 
-                <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsHitTestVisible="False" Padding="13 0 0 0"/>
+                <Label x:Name="DueDateTimeLabel" Foreground="{StaticResource Text}" Opacity="1" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Light" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsHitTestVisible="False" Padding="13 0 0 0"/>
 
                 <StackPanel x:Name="Icons" Orientation="Horizontal" Width="0" HorizontalAlignment="Right" Background="Transparent" Margin="13 0 0 0">
-                    <local:IconButton x:Name="EditIcon" SVGSource="{StaticResource pencilIcon}" Width="30" Height="30" MouseDown="EditIcon_MouseDown">
+                    <local:IconButton x:Name="EditIcon" SVGSource="{StaticResource pencilIcon}" Width="34.25" Height="34.25" MouseDown="EditIcon_MouseDown">
                         <local:IconButton.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
@@ -51,7 +51,7 @@
                         </local:IconButton.ToolTip>
                     </local:IconButton>
 
-                    <local:IconButton x:Name="TrashIcon" SVGSource="{StaticResource trashIcon}" Width="30" Height="30" Margin="5 0 0 0" MouseDown="TrashIcon_MouseDown">
+                    <local:IconButton x:Name="TrashIcon" SVGSource="{StaticResource trashIcon}" Width="34.25" Height="34.25" Margin="5 0 0 0" MouseDown="TrashIcon_MouseDown">
                         <local:IconButton.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
@@ -76,9 +76,9 @@
                 </Border>
 
                 <Grid Grid.Column="1">
-                    <TextBlock x:Name="taskNameTextBlock" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"/>
+                    <TextBlock x:Name="taskNameTextBlock" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"/>
                     <StackPanel x:Name="TextSP" Orientation="Horizontal" VerticalAlignment="Center" Opacity="0"/>
-                    <Rectangle x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 13" IsHitTestVisible="False" Height="2" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left" />
+                    <Rectangle x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 15" IsHitTestVisible="False" Height="2" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left" />
                 </Grid>
             </Grid>
         </DockPanel>
