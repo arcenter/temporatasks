@@ -241,7 +241,6 @@ namespace TemporaTasks.UserControls
 
         public void ToggleHP()
         {
-            Trace.WriteLine("Toggle");
             taskPriority = (taskPriority == TaskPriority.Normal) ? TaskPriority.High : TaskPriority.Normal;
             TaskFile.SaveData();
             UpdateHP();
