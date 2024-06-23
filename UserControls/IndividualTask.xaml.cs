@@ -148,7 +148,9 @@ namespace TemporaTasks.UserControls
 
         private void Background_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left) ToggleCompletionStatus();
+            if (e.ChangedButton == MouseButton.Left)
+                if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                    ToggleCompletionStatus();
         }
 
         private async void Background_MouseUp(object sender, MouseButtonEventArgs e)

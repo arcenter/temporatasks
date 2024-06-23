@@ -576,8 +576,21 @@ namespace TemporaTasks.Pages
 
         private void TaskMouseDown(object sender, MouseButtonEventArgs e)
         {
-            currentFocus = TaskStack.Children.IndexOf((IndividualTask)sender);
-            FocusTask(e.ChangedButton != MouseButton.Middle, false);
+            IndividualTask task = (IndividualTask)sender;
+            currentFocus = TaskStack.Children.IndexOf(task);
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                if (focusedTasks.Contains(task))
+                {
+                    task.StrokeOff();
+                    focusedTasks.Remove(task);
+                }
+                else
+                {
+                    task.StrokeOn();
+                    focusedTasks.Add(task);
+                }
+            } else FocusTask(e.ChangedButton != MouseButton.Middle, false);
         }
 
         private async void NotifButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
