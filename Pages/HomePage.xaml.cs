@@ -1430,7 +1430,9 @@ namespace TemporaTasks.Pages
                 _temp["createdTime"] = TaskFile.DateTimeToString(task.CreatedDT);
                 _temp["dueTime"] = TaskFile.DateTimeToString(task.DueDT);
                 _temp["completedTime"] = TaskFile.DateTimeToString(task.CompletedDT);
+                _temp["taskStatus"] = ((int)task.taskStatus).ToString();
                 _temp["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
+                _temp["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
                 _temp["garbled"] = task.IsGarbled() ? "1" : "0";
                 _temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
                 _temp["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
