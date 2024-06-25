@@ -16,7 +16,7 @@ namespace TemporaTasks.Pages
 {
     public partial class HomePage : Page
     {
-        readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            private readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromSeconds(100) };
 
         int? currentFocus = null;
@@ -91,10 +91,10 @@ namespace TemporaTasks.Pages
             mainWindow.KeyUp -= Page_KeyUp;
             mainWindow.MouseDown -= Window_MouseDown;
             mainWindow.IsWindowUnHidden -= Window_Unhidden;
-            
+
             foreach (IndividualTask task in focusedTasks)
                 task.StrokeOff();
-            
+
             //foreach (IndividualTask task in TaskFile.TaskList)
             //{
             //    task.IsTrashIconClicked -= TrashIcon_MouseDown;
@@ -174,7 +174,7 @@ namespace TemporaTasks.Pages
 
                 if (Keyboard.IsKeyDown(Key.Up)) nextViewCategory = (((int)currentViewCategory) - 1);
                 else if (Keyboard.IsKeyDown(Key.Down)) nextViewCategory = (((int)currentViewCategory) + 1);
-                
+
                 if (nextViewCategory.HasValue)
                 {
                     nextViewCategory %= 4;
@@ -1373,7 +1373,7 @@ namespace TemporaTasks.Pages
 
             if (task.taskStatus == IndividualTask.TaskStatus.Deleted) TaskFile.TaskList.Remove(task);
             else task.taskStatus = IndividualTask.TaskStatus.Deleted;
-            
+
             TaskFile.SaveData();
 
             NextTaskFocus();
