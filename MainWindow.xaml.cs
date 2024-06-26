@@ -178,7 +178,7 @@ namespace TemporaTasks
         bool balloonCalledRecently = false;
         public async void OnTaskDue(IndividualTask task)
         {
-            if (balloonCalledRecently || TaskFile.notificationMode == TaskFile.NotificationMode.Muted) return;
+            if (balloonCalledRecently) return;
             balloonCalledRecently = true;
             bool _ = TaskFile.notificationMode != TaskFile.NotificationMode.Muted && (TaskFile.notificationMode == TaskFile.NotificationMode.Normal || (TaskFile.notificationMode == TaskFile.NotificationMode.High && task.taskPriority == IndividualTask.TaskPriority.High));
             if (_)
@@ -192,7 +192,7 @@ namespace TemporaTasks
                     TrayIcon.ShowBalloonTip("Warning", $"{count} tasks are due!", BalloonIcon.Warning);
             }
             await Task.Delay(5000);
-            if (TaskFile.notifPopupMode && !IsActive) WindowHide(false);
+            if (_ && TaskFile.notifPopupMode && !IsActive) WindowHide(false);
             balloonCalledRecently = false;
         }
 
