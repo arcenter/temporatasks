@@ -172,8 +172,18 @@ namespace TemporaTasks.Core
                 {
                     try
                     {
-                        string? taskDesc = null;
-                        if (data[taskUID].TryGetValue("taskDesc", out string? value)) taskDesc = value;
+                        long newTaskUID = long.Parse(taskUID);
+                        foreach (IndividualTask task in TaskList)
+                            if (task.UID == newTaskUID)
+                            {
+                                newTaskUID = task.UID;
+                                break;
+                            }
+
+                        if (!(data[taskUID].TryGetValue("taskName", out string? taskName))) continue;
+
+                        data[taskUID].TryGetValue("taskDesc", out string? taskDesc);
+                        if (taskDesc is null) taskDesc = "";
 
                         DateTime? createdTime = null;
                         if (data[taskUID].ContainsKey("createdTime")) createdTime = StringToDateTime(data, taskUID, "createdTime");
@@ -199,7 +209,7 @@ namespace TemporaTasks.Core
                         TaskPriority taskPriority = TaskPriority.Normal;
                         if (data[taskUID].TryGetValue("taskPriority", out string? priorityText)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), priorityText);
 
-                        IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], taskDesc, createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, null);
+                        IndividualTask taskObj = new(newTaskUID, taskName, taskDesc, createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, null);
                         TaskList.Add(taskObj);
                     }
                     catch { }
