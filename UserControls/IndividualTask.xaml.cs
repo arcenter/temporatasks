@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Configuration;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -65,9 +64,9 @@ namespace TemporaTasks.UserControls
         public DateTime? CreatedDT;
         public DateTime? DueDT;
         public DateTime? CompletedDT;
-        
+
         public TimeSpan? RecurranceTimeSpan;
-        
+
         public DispatcherTimer TaskTimer = new();
         readonly private DispatcherTimer TemporaryRemainingTimer = new();
 
@@ -85,7 +84,7 @@ namespace TemporaTasks.UserControls
             InitializeComponent();
 
             UID = _TaskUID;
-            
+
             taskNameTextBlock.Text = Name = _TaskName;
             TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
 
@@ -179,13 +178,13 @@ namespace TemporaTasks.UserControls
             if (IsCompleted && RecurranceTimeSpan.HasValue)
             {
                 long randomLong;
-                randomGen:
+            randomGen:
                 randomLong = (long)(new Random().NextDouble() * long.MaxValue);
                 foreach (IndividualTask task in TaskFile.TaskList) if (task.UID == randomLong) { goto randomGen; }
 
                 DateTime? newDateTime = (DueDT.HasValue) ?
                     DueDT.Value + RecurranceTimeSpan.Value :
-                    DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value ;
+                    DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value;
 
                 TaskFile.TaskList.Add(new IndividualTask(randomLong, Name, Desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, IndividualTask.TaskStatus.Normal, TagList, RecurranceTimeSpan, Garbled, taskPriority, Attachments));
             }
@@ -214,7 +213,7 @@ namespace TemporaTasks.UserControls
 
         public void UpdateTaskCheckBoxAndBackground()
         {
-            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted? (taskPriority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
+            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? (taskPriority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
             UpdateHP();
             UpdateStrikethrough();
@@ -252,7 +251,7 @@ namespace TemporaTasks.UserControls
 
             DoubleAnimation animation;
 
-            int duration = (int)(4*strikethroughLine.MaxWidth);
+            int duration = (int)(4 * strikethroughLine.MaxWidth);
 
             if (IsCompleted && strikethroughLine.Width != strikethroughLine.MaxWidth)
                 animation = new DoubleAnimation(0, strikethroughLine.MaxWidth, TimeSpan.FromMilliseconds(duration));
@@ -305,7 +304,7 @@ namespace TemporaTasks.UserControls
             else
                 DueDateTimeLabel.Content = "";
 
-            DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue": "Text");
+            DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource((IsDue && !IsCompleted) ? "PastDue" : "Text");
             DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : (IsDue ? 1 : 0.5), TimeSpan.FromMilliseconds(250)));
         }
 
@@ -395,15 +394,15 @@ namespace TemporaTasks.UserControls
             else
                 DueDT = (DueDT ?? DateTime.Now) + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
                 {
-                    "plus1m"  => TimeSpan.FromMinutes(1),
-                    "plus5m"  => TimeSpan.FromMinutes(5),
+                    "plus1m" => TimeSpan.FromMinutes(1),
+                    "plus5m" => TimeSpan.FromMinutes(5),
                     "plus10m" => TimeSpan.FromMinutes(10),
                     "plus30m" => TimeSpan.FromMinutes(30),
-                    "plus1h"  => TimeSpan.FromHours(1),
-                    "plus6h"  => TimeSpan.FromHours(6),
+                    "plus1h" => TimeSpan.FromHours(1),
+                    "plus6h" => TimeSpan.FromHours(6),
                     "plus12h" => TimeSpan.FromHours(12),
-                    "plus1d"  => TimeSpan.FromDays(1),
-                    "plus1w"  => TimeSpan.FromDays(7),
+                    "plus1d" => TimeSpan.FromDays(1),
+                    "plus1w" => TimeSpan.FromDays(7),
                     _ => TimeSpan.FromTicks(0),
                 };
 
