@@ -187,6 +187,8 @@ namespace TemporaTasks.UserControls
                     DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value;
 
                 TaskFile.TaskList.Add(new IndividualTask(randomLong, Name, Desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, IndividualTask.TaskStatus.Normal, TagList, RecurranceTimeSpan, Garbled, taskPriority, Attachments));
+
+                RecurranceTimeSpan = null;
             }
 
             TaskFile.SaveData();
