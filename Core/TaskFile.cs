@@ -69,7 +69,7 @@ namespace TemporaTasks.Core
                     {
                         IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), globalData[taskUID]["taskStatus"]);
 
-                        if (taskStatus != IndividualTask.TaskStatus.Completed)
+                        // if (taskStatus != IndividualTask.TaskStatus.Completed)
                         {
                             DateTime? createdTime = null;
                             createdTime = StringToDateTime(globalData, taskUID, "createdTime");
