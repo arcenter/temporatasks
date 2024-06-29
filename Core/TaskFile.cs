@@ -240,7 +240,7 @@ namespace TemporaTasks.Core
 
             Dictionary<string, string> temp2 = [];
             temp2["sortType"] = sortType.ToString();
-            temp2["notifMode"] = ((int)notificationMode).ToString();
+            temp2["notifMode"] = (NotificationModeTimer.IsEnabled) ? "0" : ((int)notificationMode).ToString();
             temp2["notifPopupMode"] = notifPopupMode ? "1" : "0";
             globalData["settings"] = temp2;
 

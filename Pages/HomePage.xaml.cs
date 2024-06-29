@@ -16,7 +16,7 @@ namespace TemporaTasks.Pages
 {
     public partial class HomePage : Page
     {
-            private readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+        private readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromSeconds(100) };
 
         int? currentFocus = null;
