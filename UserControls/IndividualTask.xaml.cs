@@ -418,7 +418,7 @@ namespace TemporaTasks.UserControls
         public void Appear(int timeSpan = 250)
         {
             Visibility = Visibility.Visible;
-            ChangeHeight(0, 69, timeSpan);
+            ChangeHeight(0, 60, timeSpan);
             IsVisible = true;
         }
 
