@@ -43,7 +43,7 @@
                         <Border x:Name="HomeButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand">
                             <Border.ToolTip>
                                 <ToolTip>
-                                    <userControl:ButtonToolTip T1="Switch to Home View" B1="h"/>
+                                    <userControl:ButtonToolTip T1="Switch to Home" B1="h"/>
                                 </ToolTip>
                             </Border.ToolTip>
                         </Border>
@@ -53,7 +53,7 @@
                         <Border x:Name="CompletedButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand">
                             <Border.ToolTip>
                                 <ToolTip>
-                                    <userControl:ButtonToolTip T1="Switch to Completed View" B1="c"/>
+                                    <userControl:ButtonToolTip T1="Switch to Completed Tasks" B1="c"/>
                                 </ToolTip>
                             </Border.ToolTip>
                         </Border>
@@ -63,7 +63,7 @@
                         <Border x:Name="WontDoButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand">
                             <Border.ToolTip>
                                 <ToolTip>
-                                    <userControl:ButtonToolTip T1="Switch to Completed View" B1="c"/>
+                                    <userControl:ButtonToolTip T1="Switch to Wont Do Tasks" B1="w"/>
                                 </ToolTip>
                             </Border.ToolTip>
                         </Border>
@@ -73,7 +73,7 @@
                         <Border x:Name="TrashButton" Background="{StaticResource DarkBlue}" CornerRadius="5" Opacity="0" Width="40" Height="40" MouseDown="CategoryButton_MouseDown" IsMouseDirectlyOverChanged="CategoryButton_IsMouseDirectlyOverChanged" Cursor="Hand">
                             <Border.ToolTip>
                                 <ToolTip>
-                                    <userControl:ButtonToolTip T1="Switch to Completed View" B1="c"/>
+                                    <userControl:ButtonToolTip T1="Switch to Trashed Tasks" B1="t"/>
                                 </ToolTip>
                             </Border.ToolTip>
                         </Border>

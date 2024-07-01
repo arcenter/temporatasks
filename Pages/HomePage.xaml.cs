@@ -533,6 +533,16 @@ namespace TemporaTasks.Pages
                         RunAnimation(CompletedIcon);
                         RefreshToPage(ViewCategory.Completed);
                         return;
+
+                    case Key.W:
+                        RunAnimation(WontDoIcon);
+                        RefreshToPage(ViewCategory.WontDo);
+                        return;
+
+                    case Key.T:
+                        RunAnimation(TrashIcon);
+                        RefreshToPage(ViewCategory.Trash);
+                        return;
                 }
         }
 
