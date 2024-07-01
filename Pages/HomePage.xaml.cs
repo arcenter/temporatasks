@@ -1369,14 +1369,15 @@ namespace TemporaTasks.Pages
             task.Disappear();
             await Task.Delay(251);
 
+            NextTaskFocus();
+
             TaskStack.Children.Remove(task);
+            currentFocus -= 1;
 
             if (task.taskStatus == IndividualTask.TaskStatus.Deleted) TaskFile.TaskList.Remove(task);
             else task.taskStatus = IndividualTask.TaskStatus.Deleted;
 
             TaskFile.SaveData();
-
-            NextTaskFocus();
         }
 
         private async void UndeleteTask()
