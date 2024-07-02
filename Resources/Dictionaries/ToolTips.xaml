@@ -8,7 +8,7 @@
     </Style>
 
     <Style TargetType="Border">
-        <Setter Property="ToolTipService.InitialShowDelay" Value="3000"/>
+        <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
     </Style>
 
 </ResourceDictionary>
