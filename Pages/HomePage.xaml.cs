@@ -468,9 +468,9 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.G:
-                        task.Garble(null, true);
+                        foreach (IndividualTask _task in focusedTasks) _task.Garble(null, true);
                         return;
-
+                        
                     case Key.E:
                     case Key.Enter:
                         EditIcon_MouseDown(task);
@@ -483,7 +483,7 @@ namespace TemporaTasks.Pages
                     case Key.D:
                     case Key.Delete:
                         List<IndividualTask> _focusedTasks = new(focusedTasks);
-                        foreach (IndividualTask _task in _focusedTasks) { TrashIcon_MouseDown(_task); }
+                        foreach (IndividualTask _task in _focusedTasks) TrashIcon_MouseDown(_task);
                         return;
 
                     case Key.W:
