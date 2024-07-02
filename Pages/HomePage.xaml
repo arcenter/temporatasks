@@ -148,8 +148,7 @@
                             <Border.ToolTip>
                                 <ToolTip>
                                     <StackPanel Orientation="Horizontal">
-                                        <userControl:ButtonToolTip T1="Search Task" B1="s" T2="/"/>
-                                        <userControl:ButtonToolTip T1="/" B1="ctrl" T2="+" B2="f"/>
+                                        <userControl:ButtonToolTip T1="Search Task" B1="s"/>
                                     </StackPanel>
                                 </ToolTip>
                             </Border.ToolTip>

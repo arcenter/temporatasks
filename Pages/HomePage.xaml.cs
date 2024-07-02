@@ -186,13 +186,6 @@ namespace TemporaTasks.Pages
 
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (Keyboard.IsKeyDown(Key.F))
-                {
-                    SearchTextBox.Focus();
-                    RunSearchTextBoxCloseAnimation(true);
-                    return;
-                }
-
                 if (Keyboard.IsKeyDown(Key.R))
                 {
                     GenerateTaskStack(force: true);
