@@ -978,7 +978,7 @@ namespace TemporaTasks.Pages
                             {
                                 foreach (string tag in tasks[i].TagList)
                                     foreach (Match match in matches)
-                                        if (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
+                                        if ((new Regex(match.Value[1..])).Match(tag).Success) // (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
                                             goto NextTask;
                                 tasks.Remove(tasks[i]);
                             }
