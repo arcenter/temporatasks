@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -472,7 +473,6 @@ namespace TemporaTasks.UserControls
 
             if (IsVisible && playAnimation)
             {
-                ToolTipService.SetIsEnabled(Background, garble);
                 if (garble)
                 {
                     strikethroughLine.Visibility = Visibility.Hidden;
@@ -563,8 +563,6 @@ namespace TemporaTasks.UserControls
 
                 else
                 {
-                    ToolTipService.SetIsEnabled(Background, true);
-
                     strikethroughLine.Visibility = Visibility.Hidden;
                     taskNameTextBlock.Visibility = Visibility.Hidden;
                     taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
@@ -608,7 +606,6 @@ namespace TemporaTasks.UserControls
                 else
                 {
                     TextSP.Children.Clear();
-                    ToolTipService.SetIsEnabled(Background, false);
 
                     strikethroughLine.Visibility = Visibility.Visible;
                     taskNameTextBlock.Visibility = Visibility.Visible;
