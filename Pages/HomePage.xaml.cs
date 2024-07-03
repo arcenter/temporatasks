@@ -339,8 +339,11 @@ namespace TemporaTasks.Pages
 
             if (currentFocus.HasValue)
             {
-                if (TaskStack.Children[currentFocus.Value] is IndividualTask task) { }
-                else { Trace.WriteLine(((SectionDivider)TaskStack.Children[currentFocus.Value]).SectionTitle); Trace.WriteLine(currentFocus.Value); return; }
+                if (TaskStack.Children.Count == 0 || TaskStack.Children[currentFocus.Value] is not IndividualTask task)
+                {
+                    currentFocus = null;
+                    return;
+                }
 
                 if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
@@ -1260,39 +1263,43 @@ namespace TemporaTasks.Pages
         private void PreviousTaskFocus()
         {
             int limit = TaskStack.Children.Count;
-            do
-            {
-                currentFocus--;
-                if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
-                if (--limit <= 0)
+            if (limit > 0) {
+                do
                 {
-                    currentFocus = null;
-                    return;
-                }
-            } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
-            FocusTask();
+                    currentFocus--;
+                    if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+                    if (--limit <= 0)
+                    {
+                        currentFocus = null;
+                        return;
+                    }
+                } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
+                FocusTask();
+            }
         }
 
         private void NextTaskFocus()
         {
             int limit = TaskStack.Children.Count;
-            do
-            {
-                currentFocus++;
-                if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
-                if (--limit <= 0)
+            if (limit > 0) {
+                do
                 {
-                    currentFocus = null;
-                    return;
-                }
-            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
+                    currentFocus++;
+                    if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+                    if (--limit <= 0)
+                    {
+                        currentFocus = null;
+                        return;
+                    }
+                } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
 
-            FocusTask();
+                FocusTask();
+            }
         }
 
         private async void FocusTask(bool unfocus = true, bool centerTaskOnScreen = true)
         {
-            if (!currentFocus.HasValue) return;
+            if (!currentFocus.HasValue || TaskStack.Children.Count == 0 || TaskStack.Children.Count < currentFocus.Value) return;
 
             UnfocusTasks(unfocus);
 
