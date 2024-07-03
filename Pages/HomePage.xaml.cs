@@ -1407,7 +1407,7 @@ namespace TemporaTasks.Pages
             GenerateTaskStack(false);
             if (genTSCompletionSource != null) await genTSCompletionSource.Task;
 
-            await Task.Delay(50);
+            await Task.Delay(500);
             task.Appear();
             await Task.Delay(251);
             task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(500)));
