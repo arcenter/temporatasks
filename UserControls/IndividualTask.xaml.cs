@@ -89,7 +89,7 @@ namespace TemporaTasks.UserControls
             taskNameTextBlock.Text = Name = _TaskName;
             TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
 
-            Desc = _TaskDesc;
+            if ((Desc = _TaskDesc) != "") DescriptionIcon.Visibility = Visibility.Visible;
 
             CreatedDT = _CreatedDT;
             DueDT = _DueDT;
@@ -97,7 +97,7 @@ namespace TemporaTasks.UserControls
             CompletedDT = _CompletedDT;
 
             taskStatus = _taskStatus;
-            RecurranceTimeSpan = _RecurranceTimeSpan;
+            if ((RecurranceTimeSpan = _RecurranceTimeSpan) is not null) RepeatIcon.Visibility = Visibility.Visible;
             TagList = _TagList;
             Attachments = _Attachments;
 
