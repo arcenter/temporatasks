@@ -1263,7 +1263,9 @@ namespace TemporaTasks.Pages
         private void PreviousTaskFocus()
         {
             int limit = TaskStack.Children.Count;
-            if (limit > 0) {
+            
+            if (!currentFocus.HasValue || limit == 0 || limit < currentFocus.Value) return;
+
                 do
                 {
                     currentFocus--;
@@ -1276,12 +1278,13 @@ namespace TemporaTasks.Pages
                 } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
                 FocusTask();
             }
-        }
 
         private void NextTaskFocus()
         {
             int limit = TaskStack.Children.Count;
-            if (limit > 0) {
+
+            if (!currentFocus.HasValue || limit == 0 || limit < currentFocus.Value) return;
+
                 do
                 {
                     currentFocus++;
@@ -1295,7 +1298,6 @@ namespace TemporaTasks.Pages
 
                 FocusTask();
             }
-        }
 
         private async void FocusTask(bool unfocus = true, bool centerTaskOnScreen = true)
         {
