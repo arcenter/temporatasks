@@ -981,7 +981,7 @@ namespace TemporaTasks.Pages
                             {
                                 foreach (string tag in tasks[i].TagList)
                                     foreach (Match match in matches)
-                                        if ((new Regex(match.Value[1..])).Match(tag).Success) // (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
+                                        if ((new Regex(match.Value[1..], RegexOptions.IgnoreCase)).Match(tag).Success) // (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
                                             goto NextTask;
                                 tasks.Remove(tasks[i]);
                             }
@@ -1266,7 +1266,7 @@ namespace TemporaTasks.Pages
             
             if (!currentFocus.HasValue || limit == 0 || limit < currentFocus.Value) return;
 
-                do
+            do
                 {
                     currentFocus--;
                     if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
@@ -1276,8 +1276,8 @@ namespace TemporaTasks.Pages
                         return;
                     }
                 } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
-                FocusTask();
-            }
+            FocusTask();
+        }
 
         private void NextTaskFocus()
         {
@@ -1285,19 +1285,19 @@ namespace TemporaTasks.Pages
 
             if (!currentFocus.HasValue || limit == 0 || limit < currentFocus.Value) return;
 
-                do
+            do
+            {
+                currentFocus++;
+                if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+                if (--limit <= 0)
                 {
-                    currentFocus++;
-                    if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
-                    if (--limit <= 0)
-                    {
-                        currentFocus = null;
-                        return;
-                    }
-                } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
+                    currentFocus = null;
+                    return;
+                }
+            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
 
-                FocusTask();
-            }
+            FocusTask();
+        }
 
         private async void FocusTask(bool unfocus = true, bool centerTaskOnScreen = true)
         {
