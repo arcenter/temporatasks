@@ -63,6 +63,7 @@ namespace TemporaTasks.UserControls
         }
 
         public DateTime? CreatedDT;
+        public DateTime? ModifiedDT;
         public DateTime? DueDT;
         public DateTime? CompletedDT;
 
@@ -92,6 +93,7 @@ namespace TemporaTasks.UserControls
             if ((Desc = _TaskDesc) != "") DescriptionIcon.Visibility = Visibility.Visible;
 
             CreatedDT = _CreatedDT;
+            ModifiedDT = DateTimeOffset.UtcNow.LocalDateTime;
             DueDT = _DueDT;
             IsCompleted = _CompletedDT.HasValue;
             CompletedDT = _CompletedDT;
