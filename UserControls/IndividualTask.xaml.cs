@@ -187,9 +187,10 @@ namespace TemporaTasks.UserControls
                     DueDT.Value + RecurranceTimeSpan.Value :
                     DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value;
 
-                TaskFile.TaskList.Add(new IndividualTask(randomLong, Name, Desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, IndividualTask.TaskStatus.Normal, TagList, RecurranceTimeSpan, Garbled, taskPriority, Attachments));
+                TaskFile.TaskList.Add(new IndividualTask(randomLong, Name, Desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, TaskStatus.Normal, TagList, RecurranceTimeSpan, Garbled, taskPriority, Attachments));
 
                 RecurranceTimeSpan = null;
+                RepeatIcon.Visibility = Visibility.Collapsed;
             }
 
             TaskFile.SaveData();
