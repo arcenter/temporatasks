@@ -27,6 +27,7 @@ namespace TemporaTasks.Pages
             TaskDescTextbox.Text = task.Desc;
 
             CreatedLabel.Content = $"Created {task.CreatedDT.Value:dddd, dd MMMM, yyyy} at {task.CreatedDT.Value:hh:mm:ss tt}";
+            ModifiedLabel.Content = $"Modified {task.ModifiedDT.Value:dddd, dd MMMM, yyyy} at {task.ModifiedDT.Value:hh:mm:ss tt}";
             
             if (task.DueDT.HasValue)
             {

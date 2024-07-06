@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TemporaTasks.Pages"
       xmlns:userControl="clr-namespace:TemporaTasks.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="520" d:DesignWidth="1025"
+      d:DesignHeight="1520" d:DesignWidth="1025"
       Title="EditTaskPage" Loaded="Page_Loaded" Unloaded="Page_Unloaded">
 
     <Grid>
@@ -235,8 +235,11 @@
 
                             </StackPanel>
 
-                            <Label x:Name="CreatedLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0 0 20 0" VerticalAlignment="Center" HorizontalAlignment="Right" DockPanel.Dock="Right" Opacity="0.5"/>
+                            </DockPanel>
 
+                        <DockPanel Margin="0 40 0 0">
+                            <Label x:Name="CreatedLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Right" DockPanel.Dock="Right" Opacity="0.5" d:Content="Created time"/>
+                            <Label x:Name="ModifiedLabel" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" DockPanel.Dock="Left" Opacity="0.5" d:Content="Modified time"/>
                         </DockPanel>
 
                         <Rectangle Height="100"/>
