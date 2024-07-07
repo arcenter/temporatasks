@@ -9,11 +9,9 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
-using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
-using TemporaTasks.Windows;
 using TemporaTasks.UserControls;
 
 namespace TemporaTasks

@@ -3,11 +3,13 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
+	<!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
+	<!--<SelfContained>true</SelfContained>-->
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\Icons\icon.ico</ApplicationIcon>
-	<Version>0.0.3.0-beta.3</Version>
+	<Version>0.0.4.0-beta.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
