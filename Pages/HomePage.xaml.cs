@@ -550,6 +550,37 @@ namespace TemporaTasks.Pages
 
             else if (e.Key == Key.S || e.Key == Key.OemQuestion)
                 SearchTextBox.Focus();
+
+            else if (e.Key == Key.T)
+            {
+                if (currentFocus.HasValue)
+                {
+                    if (TaskStack.Children.Count == 0 || TaskStack.Children[currentFocus.Value] is not IndividualTask task)
+                        return;
+
+                    if (RightClickMenuPopup.Child != null)
+                        ((DateTimeChangerPopup)RightClickMenuPopup.Child).PopupClose(100);
+                    RightClickMenuPopup.Child = new DateTimeChangerPopup(task, RightClickMenuPopup);
+
+                    double windowWidth = mainWindow.ActualWidth;
+                    double windowHeight = mainWindow.ActualHeight;
+
+                    // Calculate the offsets to center the popup
+                    double horizontalOffset = (windowWidth + 444) / 2;
+                    double verticalOffset = (windowHeight - 90) / 2;
+
+                    Trace.WriteLine(horizontalOffset);
+                    Trace.WriteLine(verticalOffset);
+
+                    // Set the popup's offsets
+                    RightClickMenuPopup.HorizontalOffset = horizontalOffset;
+                    RightClickMenuPopup.VerticalOffset = verticalOffset;
+                    RightClickMenuPopup.Placement = PlacementMode.Relative;
+                    RightClickMenuPopup.PlacementTarget = mainWindow;
+
+                    RightClickMenuPopup.IsOpen = true;
+                }
+            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
