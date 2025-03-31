@@ -18,7 +18,9 @@
 
         <Popup x:Name="RightClickMenuPopup" VerticalOffset="10" Placement="MousePoint" AllowsTransparency="True"/>
 
-        <Border x:Name="StrokeBorder" Grid.Row="1" CornerRadius="5" BorderBrush="{StaticResource Blue}" BorderThickness="0" Width="{Binding ActualWidth, ElementName=Background, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=Background, Mode=OneWay}" />
+        <Border x:Name="SelectionBackground" Background="{StaticResource Accent}" Opacity="0" Grid.Row="1" CornerRadius="5" MinHeight="36" BorderThickness="0" Width="{Binding ActualWidth, ElementName=Background, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=Background, Mode=OneWay}"/>
+
+        <Border x:Name="StrokeBorder" Grid.Row="1" CornerRadius="5" BorderBrush="{StaticResource Blue}" BorderThickness="0" Width="{Binding ActualWidth, ElementName=Background, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=Background, Mode=OneWay}"/>
 
         <Border x:Name="Background" Background="{StaticResource DarkBlue}" Opacity="0" Grid.Row="1" CornerRadius="5" MinHeight="36" MouseEnter="Background_MouseEnter" MouseLeave="Background_MouseLeave" MouseDown="Background_MouseDown" MouseUp="Background_MouseUp" MouseMove="Background_MouseMove" ToolTipService.InitialShowDelay="1500">
             <Border.ToolTip>

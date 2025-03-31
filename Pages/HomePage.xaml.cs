@@ -21,7 +21,24 @@ namespace TemporaTasks.Pages
         private readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
         public DispatcherTimer UpdateTaskTimersTimer = new() { Interval = TimeSpan.FromSeconds(100) };
 
-        int? currentFocus = null;
+        int? _currentFocus = null;
+        int? currentFocus
+        {
+            get
+            {
+                return _currentFocus;
+            }
+            set
+            {
+                UnfocusTask();
+                _currentFocus = value;
+                if (_currentFocus != null)
+                {
+                    if (_currentFocus < 0) _currentFocus = displayedTasks.Count - 1;
+                    else if (_currentFocus > displayedTasks.Count - 1) _currentFocus = 0;
+                }
+            }
+        }
 
         bool reverseSort = false;
         Dictionary<string, ArrayList> days = [];
@@ -44,7 +61,7 @@ namespace TemporaTasks.Pages
         ViewCategory currentViewCategory = ViewCategory.Home;
 
         List<IndividualTask> displayedTasks = [];
-        List<IndividualTask> focusedTasks = [];
+        List<IndividualTask> selectedTasks = [];
 
         public HomePage()
         {
@@ -80,7 +97,7 @@ namespace TemporaTasks.Pages
                 GenerateTaskStack(false);
 
                 await Task.Delay(750);
-                if (currentFocus.HasValue) FocusTask();
+                if (currentFocus.HasValue) FocusCurrent();
             }
 
             UpdateNotificationMode();
@@ -94,8 +111,8 @@ namespace TemporaTasks.Pages
             mainWindow.MouseDown -= Window_MouseDown;
             mainWindow.IsWindowUnHidden -= Window_Unhidden;
 
-            foreach (IndividualTask task in focusedTasks)
-                task.StrokeOff();
+            UnfocusTask();
+            DeselectAll();
 
             //foreach (IndividualTask task in TaskFile.TaskList)
             //{
@@ -115,7 +132,6 @@ namespace TemporaTasks.Pages
                 icon.BeginAnimation(OpacityProperty, new DoubleAnimation(($"{viewCategory}Icon" == icon.Name) ? 0.75 : 0.25, TimeSpan.FromMilliseconds(250)));
 
             currentFocus = null;
-            UnfocusTasks();
 
             SearchTextBox.Text = "";
             RunSearchTextBoxCloseAnimation();
@@ -164,7 +180,7 @@ namespace TemporaTasks.Pages
                     if (e.Key == Key.Enter || e.Key == Key.Tab)
                     {
                         currentFocus = 0;
-                        FocusTask();
+                        FocusCurrent();
                     }
                 }
                 return;
@@ -194,7 +210,7 @@ namespace TemporaTasks.Pages
                     return;
                 }
 
-                if (Keyboard.IsKeyDown(Key.OemTilde))
+                else if (Keyboard.IsKeyDown(Key.OemTilde))
                 {
                     EyeButton_MouseDown(null, null);
                     return;
@@ -252,6 +268,19 @@ namespace TemporaTasks.Pages
                     TaskFile.SaveTasksFile();
                     return;
                 }
+
+                else if (Keyboard.IsKeyDown(Key.A))
+                {
+                    foreach (IndividualTask task in displayedTasks)
+                        TaskSelectedOn(task);
+                    return;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.D))
+                {
+                    DeselectAll();
+                    return;
+                }
             }
 
             //else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
@@ -273,7 +302,7 @@ namespace TemporaTasks.Pages
             {
                 case Key.Home:
                     currentFocus = 0;
-                    FocusTask();
+                    FocusCurrent();
                     return;
 
                 case Key.End:
@@ -286,13 +315,14 @@ namespace TemporaTasks.Pages
                     RunSearchTextBoxCloseAnimation(true);
                     return;
 
-                case Key.X:
-                    if (hoveredTask != null && hoveredTask.IsMouseOver)
-                    {
-                        currentFocus = TaskStack.Children.IndexOf(hoveredTask);
-                        FocusTask();
-                    }
-                    return;
+                //case Key.X:
+                //    if (hoveredTask != null && hoveredTask.IsMouseOver)
+                //    {
+                //        ToggleSelected(hoveredTask);
+                //        currentFocus = displayedTasks.IndexOf(hoveredTask);
+                //        FocusTask();
+                //    }
+                //    return;
 
                 case Key.H:
                     RunAnimation(HomeIcon);
@@ -302,13 +332,11 @@ namespace TemporaTasks.Pages
                 case Key.S:
                 case Key.OemQuestion:
                     currentFocus = null;
-                    UnfocusTasks();
                     RunSearchTextBoxCloseAnimation(true);
                     return;
 
                 case Key.R:
                     currentFocus = null;
-                    UnfocusTasks();
                     ReverseButton_MouseDown(null, null);
                     return;
 
@@ -331,74 +359,158 @@ namespace TemporaTasks.Pages
 
                 case Key.Escape:
                     if (currentFocus.HasValue)
-                    {
                         currentFocus = null;
-                        UnfocusTasks();
-                    }
+                    else if (selectedTasks.Count > 0)
+                        DeselectAll();
                     else mainWindow.WindowHide();
                     return;
             }
 
+            if (selectedTasks.Count > 0)
+            {
+                switch (e.Key)
+                {
+                    case Key.Space:
+                        foreach (IndividualTask task in selectedTasks)
+                            task.ToggleCompletionStatus();
+                        return;
+
+                    case Key.D0:
+                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ChangeSelectedTaskDueTime("none");
+                        else ChangeSelectedTaskDueTime("now");
+                        return;
+
+                    case Key.D1:
+                        ChangeSelectedTaskDueTime("plus1m");
+                        return;
+
+                    case Key.D2:
+                        ChangeSelectedTaskDueTime("plus10m");
+                        return;
+
+                    case Key.D3:
+                        ChangeSelectedTaskDueTime("plus30m");
+                        return;
+
+                    case Key.D4:
+                        ChangeSelectedTaskDueTime("plus1h");
+                        return;
+
+                    case Key.D5:
+                        ChangeSelectedTaskDueTime("plus5m");
+                        return;
+
+                    case Key.D6:
+                        ChangeSelectedTaskDueTime("plus6h");
+                        return;
+
+                    case Key.D7:
+                        ChangeSelectedTaskDueTime("plus1w");
+                        return;
+
+                    case Key.D8:
+                        ChangeSelectedTaskDueTime("plus12h");
+                        return;
+
+                    case Key.D9:
+                        ChangeSelectedTaskDueTime("plus1d");
+                        return;
+
+                    case Key.G:
+                        foreach (IndividualTask task in selectedTasks)
+                            task.Garble(null, true);
+                        return;
+
+                    case Key.P:
+                        foreach (IndividualTask task in selectedTasks)
+                            task.ToggleHP();
+                        return;
+
+                    case Key.D:
+                    case Key.Delete:
+                        List<IndividualTask> _selectedTasks = [.. selectedTasks];
+                        foreach (IndividualTask task in _selectedTasks)
+                            TrashIcon_MouseDown(task);
+                        return;
+
+                    case Key.W:
+                        foreach (IndividualTask task in selectedTasks)
+                            task.WontDoTask();
+                        return;
+
+                    case Key.V:
+                        if (dateClipboard.HasValue)
+                            foreach (IndividualTask task in selectedTasks)
+                            {
+                                task.DueDT = dateClipboard;
+                                task.DueDateTimeLabelUpdate();
+                                task.NewDueDT();
+                                TaskFile.SaveData();
+                            }
+                        return;
+                }
+            }
+
             if (currentFocus.HasValue)
             {
-                if (TaskStack.Children.Count == 0 || TaskStack.Children[currentFocus.Value] is not IndividualTask task)
+                if (displayedTasks.Count == 0)
                 {
                     currentFocus = null;
                     return;
                 }
 
-                if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                IndividualTask task = displayedTasks[currentFocus.Value];
+
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
                     if (Keyboard.IsKeyDown(Key.Down))
                     {
-                        int limit = TaskStack.Children.Count;
+                        ToggleSelected(task);
+                        NextTaskFocus();
+                        return;
+                    }
+
+                    else if (Keyboard.IsKeyDown(Key.Up))
+                    {
+                        ToggleSelected(task);
+                        PreviousTaskFocus();
+                        return;
+                    }
+                }
+
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                    if (Keyboard.IsKeyDown(Key.Down))
+                    {
+                        int limit = displayedTasks.Count;
                         do
                         {
                             currentFocus++;
-                            if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+                            if (currentFocus.Value > displayedTasks.Count - 1) currentFocus = 0;
                             if (--limit <= 0)
                             {
                                 currentFocus = null;
                                 return;
                             }
-                        } while (TaskStack.Children[currentFocus.Value] is IndividualTask && limit > 0);
+                        } while (displayedTasks[currentFocus.Value] is IndividualTask && limit > 0);
                         NextTaskFocus();
                         return;
                     }
                     else if (Keyboard.IsKeyDown(Key.Up))
                     {
                         currentFocus--;
-                        int limit = TaskStack.Children.Count;
+                        int limit = displayedTasks.Count;
                         do
                         {
                             currentFocus--;
-                            if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
+                            if (currentFocus.Value < 0) currentFocus = displayedTasks.Count - 1;
                             if (--limit <= 0)
                             {
                                 currentFocus = null;
                                 return;
                             }
-                        } while (TaskStack.Children[currentFocus.Value] is IndividualTask);
+                        } while (displayedTasks[currentFocus.Value] is IndividualTask);
                         NextTaskFocus();
-                        return;
-                    }
-                    else if (Keyboard.IsKeyDown(Key.Left))
-                    {
-                        int limit = TaskStack.Children.Count;
-                        do
-                        {
-                            currentFocus--;
-                            if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
-                            if (--limit <= 0)
-                            {
-                                currentFocus = null;
-                                return;
-                            }
-                        } while (TaskStack.Children[currentFocus.Value] is not SectionDivider);
-                        Section_MouseDown(TaskStack.Children[currentFocus.Value], null);
-
-                        currentFocus = null;
-
                         return;
                     }
                     else if (Keyboard.IsKeyDown(Key.C))
@@ -423,62 +535,63 @@ namespace TemporaTasks.Pages
                         NextTaskFocus();
                         return;
 
-                    case Key.Space:
-                        task.ToggleCompletionStatus();
-                        return;
-
                     case Key.L:
                         task.LinkOpen();
                         return;
 
+                    case Key.X:
+                        ToggleSelected(task);
+                        return;
+
+                    case Key.Space:
+                        task.ToggleCompletionStatus();
+                        return;
+
                     case Key.D0:
-                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ChangeFocusTaskDueTime("none");
-                        else ChangeFocusTaskDueTime("now");
+                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                            task.ChangeDueTime("none", null);
+                        else
+                            task.ChangeDueTime("now", null);
                         return;
 
                     case Key.D1:
-                        ChangeFocusTaskDueTime("plus1m");
+                        task.ChangeDueTime("plus1m", null);
                         return;
 
                     case Key.D2:
-                        ChangeFocusTaskDueTime("plus10m");
+                        task.ChangeDueTime("plus10m", null);
                         return;
 
                     case Key.D3:
-                        ChangeFocusTaskDueTime("plus30m");
+                        task.ChangeDueTime("plus30m", null);
                         return;
 
                     case Key.D4:
-                        ChangeFocusTaskDueTime("plus1h");
+                        task.ChangeDueTime("plus1h", null);
                         return;
 
                     case Key.D5:
-                        ChangeFocusTaskDueTime("plus5m");
+                        task.ChangeDueTime("plus5m", null);
                         return;
 
                     case Key.D6:
-                        ChangeFocusTaskDueTime("plus6h");
+                        task.ChangeDueTime("plus6h", null);
                         return;
 
                     case Key.D7:
-                        ChangeFocusTaskDueTime("plus1w");
+                        task.ChangeDueTime("plus1w", null);
                         return;
 
                     case Key.D8:
-                        ChangeFocusTaskDueTime("plus12h");
+                        task.ChangeDueTime("plus12h", null);
                         return;
 
                     case Key.D9:
-                        ChangeFocusTaskDueTime("plus1d");
+                        task.ChangeDueTime("plus1d", null);
                         return;
 
                     case Key.G:
-                        foreach (IndividualTask _task in focusedTasks) _task.Garble(null, true);
-                        return;
-                        
-                    case Key.E:
-                    case Key.Enter:
-                        EditIcon_MouseDown(task);
+                        task.Garble(null, true);
                         return;
 
                     case Key.P:
@@ -487,29 +600,30 @@ namespace TemporaTasks.Pages
 
                     case Key.D:
                     case Key.Delete:
-                        List<IndividualTask> _focusedTasks = new(focusedTasks);
-                        foreach (IndividualTask _task in _focusedTasks) TrashIcon_MouseDown(_task);
+                        TrashIcon_MouseDown(task);
                         return;
 
                     case Key.W:
                         task.WontDoTask();
                         return;
 
-                    case Key.C:
-                        dateClipboard = task.DueDT;
-                        return;
-
                     case Key.V:
                         if (dateClipboard.HasValue)
                         {
-                            foreach (IndividualTask _task in focusedTasks)
-                            {
-                                _task.DueDT = dateClipboard;
-                                _task.DueDateTimeLabelUpdate();
-                                _task.NewDueDT();
-                            }
+                            task.DueDT = dateClipboard;
+                            task.DueDateTimeLabelUpdate();
+                            task.NewDueDT();
                             TaskFile.SaveData();
                         }
+                        return;
+
+                    case Key.E:
+                    case Key.Enter:
+                        EditIcon_MouseDown(task);
+                        return;
+
+                    case Key.C:
+                        dateClipboard = task.DueDT;
                         return;
                 }
             }
@@ -524,7 +638,7 @@ namespace TemporaTasks.Pages
 
                     case Key.Down:
                         currentFocus = 0;
-                        FocusTask();
+                        FocusCurrent();
                         return;
 
                     case Key.C:
@@ -555,7 +669,7 @@ namespace TemporaTasks.Pages
             {
                 if (currentFocus.HasValue)
                 {
-                    if (TaskStack.Children.Count == 0 || TaskStack.Children[currentFocus.Value] is not IndividualTask task)
+                    if (displayedTasks.Count == 0 || displayedTasks[currentFocus.Value] is not IndividualTask task)
                         return;
 
                     if (RightClickMenuPopup.Child != null)
@@ -591,14 +705,16 @@ namespace TemporaTasks.Pages
                 if (SearchTextBox.Text.Length == 0) RunSearchTextBoxCloseAnimation();
             }
             if (hoveredTask != null && (hoveredTask.IsMouseOver || (hoveredTask.RightClickMenuPopup != null && hoveredTask.RightClickMenuPopup.IsMouseOver))) return;
+
+            if (e.ChangedButton == MouseButton.Middle && (hoveredTask == null || (hoveredTask != null && !hoveredTask.IsMouseOver)))
+                DeselectAll();
+
             currentFocus = null;
-            UnfocusTasks();
         }
 
         private void Window_Unhidden()
         {
             currentFocus = null;
-            UnfocusTasks();
             if (TaskFile.tempGarbleMode == TempGarbleMode.Off) SetTempGarble(TempGarbleMode.None, true);
             foreach (IndividualTask task in displayedTasks) task.DueDateTimeLabelUpdate();
             GenerateTaskStack(false);
@@ -616,20 +732,10 @@ namespace TemporaTasks.Pages
         private void TaskMouseDown(object sender, MouseButtonEventArgs e)
         {
             IndividualTask task = (IndividualTask)sender;
-            currentFocus = TaskStack.Children.IndexOf(task);
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-            {
-                if (focusedTasks.Contains(task))
-                {
-                    task.StrokeOff();
-                    focusedTasks.Remove(task);
-                }
-                else
-                {
-                    task.StrokeOn();
-                    focusedTasks.Add(task);
-                }
-            } else FocusTask(e.ChangedButton != MouseButton.Middle, false);
+            currentFocus = displayedTasks.IndexOf(task);
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) || e.ChangedButton == MouseButton.Middle)
+                ToggleSelected(task);
+            FocusTask(task, centerTaskOnScreen: false);
         }
 
         private async void NotifButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -874,7 +980,7 @@ namespace TemporaTasks.Pages
 
         private void AddButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            UnfocusTasks();
+            UnfocusTask();
             mainWindow.FrameView.Navigate(new AddTaskPage());
         }
 
@@ -892,7 +998,7 @@ namespace TemporaTasks.Pages
                 }
                 if (currentFocus != null)
                 {
-                    System.Windows.Controls.Primitives.Popup _ = ((IndividualTask)TaskStack.Children[currentFocus.Value]).RightClickMenuPopup;
+                    System.Windows.Controls.Primitives.Popup _ = ((IndividualTask)displayedTasks[currentFocus.Value]).RightClickMenuPopup;
                     if (_ != null && _.IsOpen) ((TaskRightClickMenu)_.Child).PopupClose();
                 }
             }
@@ -904,6 +1010,12 @@ namespace TemporaTasks.Pages
 
         public async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
         {
+            foreach (IndividualTask task in displayedTasks)
+            {
+                task.StrokeOff();
+                TaskSelectedOff(task);
+            }
+
             if ((generateLock && !force) || TaskStack == null) return;
             generateLock = true;
 
@@ -1156,13 +1268,13 @@ namespace TemporaTasks.Pages
                 foreach (IndividualTask task in displayedTasks)
                     if (task.UID == editedTask.UID)
                     {
-                        index = TaskStack.Children.IndexOf(task);
+                        index = displayedTasks.IndexOf(task);
                         break;
                     }
                 if (index.HasValue)
                 {
                     currentFocus = index.Value;
-                    FocusTask();
+                    FocusCurrent();
                 }
                 editedTask = null;
             }
@@ -1287,95 +1399,98 @@ namespace TemporaTasks.Pages
             }
         }
 
-        private void ChangeFocusTaskDueTime(string newTime)
+        private void ChangeSelectedTaskDueTime(string newTime)
         {
-            foreach (IndividualTask task in focusedTasks)
+            foreach (IndividualTask task in selectedTasks)
                 task.ChangeDueTime(newTime, null);
         }
 
         private void PreviousTaskFocus()
         {
-            int limit = TaskStack.Children.Count;
-            
-            if (!currentFocus.HasValue || limit == 0 || limit < currentFocus.Value) return;
-
-            do
-                {
-                    currentFocus--;
-                    if (currentFocus.Value < 0) currentFocus = TaskStack.Children.Count - 1;
-                    if (--limit <= 0)
-                    {
-                        currentFocus = null;
-                        return;
-                    }
-                } while (!(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible));
-            FocusTask();
+            if (!currentFocus.HasValue) return;
+            currentFocus--;
+            FocusCurrent();
         }
 
         private void NextTaskFocus()
         {
-            int limit = TaskStack.Children.Count;
+            if (!currentFocus.HasValue) return;
+            currentFocus++;
+            FocusCurrent();
+        }
 
-            if (!currentFocus.HasValue || limit == 0 || limit < currentFocus.Value) return;
+        private async void FocusCurrent(bool centerTaskOnScreen = true)
+        {
+            int count = displayedTasks.Count;
+            
+            if (!currentFocus.HasValue || count == 0) return;
+            if (currentFocus.Value < 0 || currentFocus.Value > count-1) currentFocus = 0;
 
-            do
+            int limit = count;
+            while (!(displayedTasks[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
             {
                 currentFocus++;
-                if (currentFocus.Value > TaskStack.Children.Count - 1) currentFocus = 0;
+                if (currentFocus.Value >= count-1) currentFocus = 0;
                 if (--limit <= 0)
                 {
                     currentFocus = null;
                     return;
                 }
-            } while (TaskStack.Children[currentFocus.Value] is not IndividualTask && limit > 0);
+            }
 
-            FocusTask();
+            FocusTask(displayedTasks[currentFocus.Value]);
         }
 
-        private async void FocusTask(bool unfocus = true, bool centerTaskOnScreen = true)
+        private void FocusTask(IndividualTask task, bool centerTaskOnScreen = true)
         {
-            if (!currentFocus.HasValue || TaskStack.Children.Count == 0 || TaskStack.Children.Count < currentFocus.Value) return;
-
-            UnfocusTasks(unfocus);
-
-            int count = TaskStack.Children.Count;
-            if (count > 0)
+            if (centerTaskOnScreen)
             {
-                if (currentFocus.Value < 0 || currentFocus.Value > count) currentFocus = 0;
+                double verticalCenter = (TaskStackScroller.ActualHeight / 2) - task.ActualHeight;
+                double relativeHeight = task.TransformToVisual(TaskStackScroller).Transform(new Point(0, 0)).Y;
+                TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + relativeHeight - verticalCenter);
+            }
+            task.StrokeOn();
+        }
 
-                int limit = count;
-                while (currentFocus.Value >= count || !(TaskStack.Children[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
-                {
-                    if (currentFocus.Value >= count) currentFocus = 0;
-                    currentFocus++;
-                    if (--limit <= 0)
-                    {
-                        currentFocus = null;
-                        return;
-                    }
-                }
+        private void UnfocusTask()
+        {
+            if (currentFocus.HasValue)
+                displayedTasks[currentFocus.Value].StrokeOff();
+        }
 
-                IndividualTask task = (IndividualTask)TaskStack.Children[currentFocus.Value];
+        private void ToggleSelected(IndividualTask task)
+        {
+            if (selectedTasks.Contains(task)) TaskSelectedOff(task);
+            else TaskSelectedOn(task);
+        }
 
-                if (centerTaskOnScreen)
-                {
-                    double verticalCenter = (TaskStackScroller.ActualHeight / 2) - task.ActualHeight;
-                    double relativeHeight = task.TransformToVisual(TaskStackScroller).Transform(new Point(0, 0)).Y;
-                    TaskStackScroller.ScrollToVerticalOffset(TaskStackScroller.VerticalOffset + relativeHeight - verticalCenter);
-                }
+        private void TaskSelectedOff(IndividualTask task)
+        {
+            selectedTasks.Remove(task);
+            task.SelectionBackground.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+            UpdateSelectedCount();
+        }
 
-                task.StrokeOn();
-                if (!focusedTasks.Contains(task)) focusedTasks.Add(task);
+        private void TaskSelectedOn(IndividualTask task)
+        {
+            if (!selectedTasks.Contains(task))
+            {
+                selectedTasks.Add(task);
+                task.SelectionBackground.BeginAnimation(OpacityProperty, new DoubleAnimation(0.75, TimeSpan.FromMilliseconds(250)));
+                UpdateSelectedCount();
             }
         }
 
-        private void UnfocusTasks(bool unfocus = true)
+        private void UpdateSelectedCount()
         {
-            if (unfocus && !(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
-            {
-                foreach (IndividualTask task in focusedTasks) task.StrokeOff();
-                focusedTasks.Clear();
-            }
+            SelectedTasksLabel.Content = $"{selectedTasks.Count} Task{(selectedTasks.Count > 1 ? "s" : "")} Selected";
+            SelectedTasksDivider.Visibility = SelectedTasksLabel.Visibility = (selectedTasks.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
+        }
+
+        private void DeselectAll()
+        {
+            while (selectedTasks.Count > 0)
+                TaskSelectedOff(selectedTasks[0]);
         }
 
         private void SetTempGarble(TempGarbleMode tempGarbleMode, bool dontPlayAnimation = false)
@@ -1468,7 +1583,7 @@ namespace TemporaTasks.Pages
             Dictionary<string, Dictionary<string, string>> temp = [];
             Dictionary<string, string> _temp;
 
-            foreach (IndividualTask task in focusedTasks)
+            foreach (IndividualTask task in selectedTasks)
             {
                 _temp = [];
                 _temp["taskName"] = task.Name;
