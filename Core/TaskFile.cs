@@ -226,7 +226,6 @@ namespace TemporaTasks.Core
         }
 
         public static bool saveLock = false;
-
         public static async void SaveData(MainWindow? mainWindow = null, bool force = false)
         {
             if (mainWindow == null && !force)
@@ -237,41 +236,46 @@ namespace TemporaTasks.Core
                 if (!saveLock) return;
             }
 
-            Dictionary<string, Dictionary<string, string>> temp = [];
+            string data = JsonSerializer.Serialize(GetTemporaDataDict());
+            File.WriteAllText(saveFilePath, data);
 
-            Dictionary<string, string> temp2 = [];
-            temp2["sortType"] = sortType.ToString();
-            temp2["notifMode"] = (NotificationModeTimer.IsEnabled) ? "0" : ((int)notificationMode).ToString();
-            temp2["notifPopupMode"] = notifPopupMode ? "1" : "0";
-            globalData["settings"] = temp2;
+            string saveTime = DateTime.Now.ToString("yyMMddHHmm");
+            File.WriteAllText($"{backupPath}\\{Path.GetFileNameWithoutExtension(saveFilePath)}-{saveTime}.ttask", data);
+
+            mainWindow?.Close();
+
+            saveLock = false;
+        }
+
+        public static Dictionary<string, Dictionary<string, string>> GetTemporaDataDict()
+        {
+            Dictionary<string, Dictionary<string, string>> data = [];
+            Dictionary<string, string> temp = [];
+            
+            temp["sortType"] = sortType.ToString();
+            temp["notifMode"] = (NotificationModeTimer.IsEnabled) ? "0" : ((int)notificationMode).ToString();
+            temp["notifPopupMode"] = notifPopupMode ? "1" : "0";
+            data["settings"] = temp;
 
             foreach (IndividualTask task in TaskList)
             {
-                temp2 = [];
-                temp2["taskName"] = task.Name;
-                temp2["taskDesc"] = task.Desc;
-                temp2["createdTime"] = DateTimeToString(task.CreatedDT);
-                temp2["modifiedTime"] = DateTimeToString(task.ModifiedDT);
-                temp2["dueTime"] = DateTimeToString(task.DueDT);
-                temp2["completedTime"] = DateTimeToString(task.CompletedDT);
-                temp2["taskStatus"] = ((int)task.taskStatus).ToString();
-                temp2["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
-                temp2["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
-                temp2["garbled"] = task.IsGarbled() ? "1" : "0";
-                temp2["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
-                temp2["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
-                globalData[task.UID.ToString()] = temp2;
+                temp = [];
+                temp["taskName"] = task.Name;
+                temp["taskDesc"] = task.Desc;
+                temp["createdTime"] = DateTimeToString(task.CreatedDT);
+                temp["modifiedTime"] = DateTimeToString(task.ModifiedDT);
+                temp["dueTime"] = DateTimeToString(task.DueDT);
+                temp["completedTime"] = DateTimeToString(task.CompletedDT);
+                temp["taskStatus"] = ((int)task.taskStatus).ToString();
+                temp["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
+                temp["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
+                temp["garbled"] = task.IsGarbled() ? "1" : "0";
+                temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
+                temp["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
+                data[task.UID.ToString()] = temp;
             }
 
-            string temp3 = JsonSerializer.Serialize(globalData);
-            File.WriteAllText(saveFilePath, temp3);
-
-            string saveTime = DateTime.Now.ToString("yyMMddHHmm");
-            File.WriteAllText($"{backupPath}\\data{saveTime}.json", temp3);
-
-            if (mainWindow != null) mainWindow.Close();
-
-            saveLock = false;
+            return data;
         }
 
         public static string DateTimeToString(DateTime? dateTime)
