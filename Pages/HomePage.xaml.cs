@@ -69,7 +69,7 @@ namespace TemporaTasks.Pages
             UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
             UpdateTaskTimersTimer.Start();
             TaskFile.NotificationModeTimer.Tick += (s, e) => UpdateNotificationTimer(TaskFile.NotificationMode.Normal);
-            muteModeRightClickMenu = new(RightClickMenuPopup);
+            muteModeRightClickMenu = new(MuteMenuPopup);
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -169,7 +169,7 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            if (RightClickMenuPopup.IsOpen) return;
+            if (IsAnyPopupOpen()) return;
 
             if (SearchTextBox.IsFocused)
             {
@@ -660,21 +660,21 @@ namespace TemporaTasks.Pages
 
         private void Page_KeyUp(object sender, KeyEventArgs e)
         {
-            if (SearchTextBox.IsFocused || Keyboard.IsKeyDown(Key.LWin) || RightClickMenuPopup.IsOpen) return;
+            if (SearchTextBox.IsFocused || Keyboard.IsKeyDown(Key.LWin) || IsAnyPopupOpen()) return;
 
             else if (e.Key == Key.S || e.Key == Key.OemQuestion)
                 SearchTextBox.Focus();
 
             else if (e.Key == Key.T)
             {
-                if (currentFocus.HasValue)
+                if (selectedTasks.Count > 0 || currentFocus.HasValue)
                 {
-                    if (displayedTasks.Count == 0 || displayedTasks[currentFocus.Value] is not IndividualTask task)
+                    if (displayedTasks.Count == 0)
                         return;
 
-                    if (RightClickMenuPopup.Child != null)
-                        ((DateTimeChangerPopup)RightClickMenuPopup.Child).PopupClose(100);
-                    RightClickMenuPopup.Child = new DateTimeChangerPopup(task, RightClickMenuPopup);
+                    List<IndividualTask> tasks = (selectedTasks.Count > 0) ? selectedTasks : [displayedTasks[currentFocus.Value]];
+
+                    QuickTimeChangeMenuPopup.Child = new DateTimeChangerPopup(tasks, QuickTimeChangeMenuPopup);
 
                     double windowWidth = mainWindow.ActualWidth;
                     double windowHeight = mainWindow.ActualHeight;
@@ -683,16 +683,13 @@ namespace TemporaTasks.Pages
                     double horizontalOffset = (windowWidth + 444) / 2;
                     double verticalOffset = (windowHeight - 90) / 2;
 
-                    Trace.WriteLine(horizontalOffset);
-                    Trace.WriteLine(verticalOffset);
-
                     // Set the popup's offsets
-                    RightClickMenuPopup.HorizontalOffset = horizontalOffset;
-                    RightClickMenuPopup.VerticalOffset = verticalOffset;
-                    RightClickMenuPopup.Placement = PlacementMode.Relative;
-                    RightClickMenuPopup.PlacementTarget = mainWindow;
+                    QuickTimeChangeMenuPopup.HorizontalOffset = horizontalOffset;
+                    QuickTimeChangeMenuPopup.VerticalOffset = verticalOffset;
+                    QuickTimeChangeMenuPopup.Placement = PlacementMode.Relative;
+                    QuickTimeChangeMenuPopup.PlacementTarget = mainWindow;
 
-                    RightClickMenuPopup.IsOpen = true;
+                    QuickTimeChangeMenuPopup.IsOpen = true;
                 }
             }
         }
@@ -783,8 +780,8 @@ namespace TemporaTasks.Pages
 
         private void OpenMuteModeRightClickMenuPopup()
         {
-            RightClickMenuPopup.Child = muteModeRightClickMenu;
-            RightClickMenuPopup.IsOpen = true;
+            MuteMenuPopup.Child = muteModeRightClickMenu;
+            MuteMenuPopup.IsOpen = true;
             muteModeRightClickMenu.UpdateNotificationMode += UpdateNotificationTimer;
         }
 
@@ -1454,7 +1451,9 @@ namespace TemporaTasks.Pages
 
         private void UnfocusTask()
         {
-            if (currentFocus.HasValue)
+            if (!currentFocus.HasValue || displayedTasks.Count == 0)
+                return;
+            else
                 displayedTasks[currentFocus.Value].StrokeOff();
         }
 
@@ -1601,6 +1600,11 @@ namespace TemporaTasks.Pages
             }
 
             Clipboard.SetText(JsonSerializer.Serialize(temp));
+        }
+
+        private bool IsAnyPopupOpen()
+        {
+            return MuteMenuPopup.IsOpen || QuickTimeChangeMenuPopup.IsOpen || FilterMenuPopup.IsOpen;
         }
     }
 }

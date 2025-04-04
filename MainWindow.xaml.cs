@@ -77,7 +77,7 @@ namespace TemporaTasks
             foreach (var textBox in GetVisualChildren<TextBox>(parent))
                 if (textBox.IsFocused)
                     return false;
-            return !homePage.RightClickMenuPopup.IsOpen;
+            return !homePage.MuteMenuPopup.IsOpen;
         }
 
         private IEnumerable<T> GetVisualChildren<T>(DependencyObject parent) where T : DependencyObject

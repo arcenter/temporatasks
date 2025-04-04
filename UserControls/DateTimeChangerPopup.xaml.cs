@@ -9,14 +9,14 @@ namespace TemporaTasks.UserControls
 {
     public partial class DateTimeChangerPopup : UserControl
     {
-        Popup popupObject;
-        IndividualTask task;
+        readonly Popup popupObject;
+        readonly List<IndividualTask> tasks;
 
-        public DateTimeChangerPopup(IndividualTask task, Popup popupObject)
+        public DateTimeChangerPopup(List<IndividualTask> tasks, Popup popupObject)
         {
             InitializeComponent();
             this.popupObject = popupObject;
-            this.task = task;
+            this.tasks = tasks;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -48,12 +48,12 @@ namespace TemporaTasks.UserControls
 
             else if (e.Key == Key.Enter)
             {
+                DateTime? newDueTime;
 
                 DateBorder.BorderThickness = TimeBorder.BorderThickness = new Thickness(0);
-                DateTime? newDueDate;
                 try
                 {
-                    newDueDate = DTHelper.StringToDateTime(DateTextbox.Text, TimeTextbox.Text);
+                    newDueTime = DTHelper.StringToDateTime(DateTextbox.Text, TimeTextbox.Text);
                 }
                 catch (IncorrectDateException)
                 {
@@ -66,12 +66,14 @@ namespace TemporaTasks.UserControls
                     return;
                 }
 
-                task.TaskTimer.Stop();
-                task.DueDT = newDueDate;
-                task.NewDueDT();
-
+                foreach (IndividualTask task in tasks)
+                {
+                    task.TaskTimer.Stop();
+                    task.DueDT = newDueTime;
+                    task.NewDueDT();
+                }
+                
                 TaskFile.SaveData();
-
                 PopupClose();
             }
         }
@@ -100,66 +102,6 @@ namespace TemporaTasks.UserControls
             await Task.Delay(delay+25);
             popupObject.IsOpen = false;
             popupObject.Child = null;
-        }
-
-        private void Border_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.75 : 0, TimeSpan.FromMilliseconds(250)));
-        }
-
-        private void Border_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point mousePosition = e.GetPosition(sender as UIElement);
-            ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
-            tooltip.HorizontalOffset = mousePosition.X;
-            tooltip.VerticalOffset = mousePosition.Y;
-        }
-
-        private void TimeChange_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            task.ChangeDueTime(sender, e);
-        }
-
-        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            switch (((Border)sender).Name)
-            {
-                case "Edit":
-                    PopupClose();
-                    task.EditIcon_MouseDown(null, null);
-                    return;
-
-                case "CopyTT":
-                    Clipboard.SetText(task.Name);
-                    PopupClose();
-                    return;
-
-                case "WontDo":
-                    task.WontDoTask();
-                    return;
-
-                case "Garble":
-                    task.Garble(null, true);
-                    return;
-
-                case "ToggleHP":
-                    task.ToggleHP();
-                    return;
-
-                case "OpenLink":
-                    task.LinkOpen();
-                    PopupClose();
-                    return;
-
-                case "Delete":
-                    PopupClose();
-                    task.TrashIcon_MouseDown(null, null);
-                    return;
-
-                default:
-                    return;
-            }
         }
 
         private void Textbox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
