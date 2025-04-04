@@ -18,8 +18,6 @@ namespace TemporaTasks.Core
 
         public static ArrayList TaskList;
 
-        public static Dictionary<string, Dictionary<string, string>> globalData = [];
-
         public static int sortType = 2;
 
         public enum NotificationMode
@@ -45,58 +43,54 @@ namespace TemporaTasks.Core
 
             if (File.Exists(saveFilePath))
             {
-                globalData = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
+                Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
                 
                 HomePage.initialFinished = false;
 
-                if (globalData.Keys.Contains("settings"))
+                if (data.ContainsKey("settings"))
                 {
-                    Dictionary<string, string> settings = globalData["settings"];
-                    globalData.Remove("settings");
+                    Dictionary<string, string> settings = data["settings"];
+                    data.Remove("settings");
 
                     sortType = int.Parse(settings["sortType"]);
                     notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
                     notifPopupMode = settings["notifPopupMode"] != "0";
                 }
 
-                // double increment = 1/data.Count;
-                // double scale = 0;
-
-                foreach (string taskUID in globalData.Keys)
+                foreach (string taskUID in data.Keys)
                 {
                     try
                     {
-                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), globalData[taskUID]["taskStatus"]);
+                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), data[taskUID]["taskStatus"]);
 
-                        // if (taskStatus != IndividualTask.TaskStatus.Completed)
                         {
                             DateTime? createdTime = null;
-                            createdTime = StringToDateTime(globalData, taskUID, "createdTime");
+                            createdTime = StringToDateTime(data, taskUID, "createdTime");
 
                             DateTime? modifiedTime = createdTime;
-                            if (globalData[taskUID].ContainsKey("modifiedTime")) modifiedTime = StringToDateTime(globalData, taskUID, "modifiedTime");
+                            if (data[taskUID].ContainsKey("modifiedTime")) modifiedTime = StringToDateTime(data, taskUID, "modifiedTime");
 
                             DateTime? dueTime = null;
-                            dueTime = StringToDateTime(globalData, taskUID, "dueTime");
+                            dueTime = StringToDateTime(data, taskUID, "dueTime");
 
                             DateTime? completedTime = null;
-                            completedTime = StringToDateTime(globalData, taskUID, "completedTime");
+                            completedTime = StringToDateTime(data, taskUID, "completedTime");
 
                             TimeSpan? recurrance = null;
-                            if (globalData[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "") recurrance = TimeSpan.Parse(recurranceString);
+                            if (data[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "") recurrance = TimeSpan.Parse(recurranceString);
 
                             ArrayList? tagList = null;
-                            if (globalData[taskUID]["tags"] != "") tagList = new ArrayList(globalData[taskUID]["tags"].Split(';'));
+                            if (data[taskUID]["tags"] != "") tagList = new ArrayList(data[taskUID]["tags"].Split(';'));
 
                             ArrayList? attachments = null;
                             // if (globalData[taskUID]["attachments"] != "") attachments = new ArrayList(globalData[taskUID]["attachments"].Split(';'));
 
                             bool garbled = false;
-                            if (globalData[taskUID]["garbled"] != "0") garbled = true;
+                            if (data[taskUID]["garbled"] != "0") garbled = true;
 
-                            IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), globalData[taskUID]["taskPriority"]);
+                            IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
 
-                            IndividualTask taskObj = new(long.Parse(taskUID), globalData[taskUID]["taskName"], globalData[taskUID]["taskDesc"], createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, attachments) { ModifiedDT = modifiedTime };
+                            IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, attachments) { ModifiedDT = modifiedTime };
                             TaskList.Add(taskObj);
                         }
                     }
