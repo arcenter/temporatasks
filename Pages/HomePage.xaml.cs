@@ -187,19 +187,40 @@ namespace TemporaTasks.Pages
                 return;
             }
 
-            if ((Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)))
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
             {
                 int? nextViewCategory = null;
 
-                if (Keyboard.IsKeyDown(Key.Up)) nextViewCategory = (((int)currentViewCategory) - 1);
-                else if (Keyboard.IsKeyDown(Key.Down)) nextViewCategory = (((int)currentViewCategory) + 1);
+                if (Keyboard.IsKeyDown(Key.Up))
+                {
+                    nextViewCategory = ((int)currentViewCategory) - 1;
+                    if (nextViewCategory == -1) nextViewCategory = 3;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.Down))
+                {
+                    nextViewCategory = ((int)currentViewCategory) + 1;
+                    if (nextViewCategory == 4) nextViewCategory = 0;
+                }
+
+                else if (Keyboard.IsKeyDown(Key.D1))
+                    nextViewCategory = 0;
+
+                else if (Keyboard.IsKeyDown(Key.D2))
+                    nextViewCategory = 1;
+
+                else if (Keyboard.IsKeyDown(Key.D3))
+                    nextViewCategory = 2;
+
+                else if (Keyboard.IsKeyDown(Key.D4))
+                    nextViewCategory = 3;
 
                 if (nextViewCategory.HasValue)
                 {
-                    nextViewCategory %= 4;
-                    if (nextViewCategory == -1) nextViewCategory = 3;
+                    e.Handled = true;
                     RunAnimation((new[] { HomeIcon, CompletedIcon, WontDoIcon, TrashIcon })[nextViewCategory.Value]);
                     RefreshToPage((ViewCategory)Enum.Parse(typeof(ViewCategory), nextViewCategory.Value.ToString()));
+                    return;
                 }
             }
 
