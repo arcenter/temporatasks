@@ -1,8 +1,6 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -48,7 +46,9 @@ namespace TemporaTasks.Pages
 
         IndividualTask? hoveredTask = null;
         IndividualTask? editedTask = null;
+        
         MuteModeRightClickMenu muteModeRightClickMenu;
+        FilterPopup filterPopup;
 
         private enum ViewCategory
         {
@@ -70,6 +70,7 @@ namespace TemporaTasks.Pages
             UpdateTaskTimersTimer.Start();
             TaskFile.NotificationModeTimer.Tick += (s, e) => UpdateNotificationTimer(TaskFile.NotificationMode.Normal);
             muteModeRightClickMenu = new(MuteMenuPopup);
+            filterPopup = new(FilterMenuPopup);
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -671,7 +672,7 @@ namespace TemporaTasks.Pages
                 {
                     if (displayedTasks.Count == 0)
                         return;
-
+                    
                     List<IndividualTask> tasks = (selectedTasks.Count > 0) ? selectedTasks : [displayedTasks[currentFocus.Value]];
 
                     QuickTimeChangeMenuPopup.Child = new DateTimeChangerPopup(tasks, QuickTimeChangeMenuPopup);
@@ -877,6 +878,41 @@ namespace TemporaTasks.Pages
             SetTempGarble((TempGarbleMode)Enum.Parse(typeof(TempGarbleMode), _.ToString()));
         }
 
+        private async void FilterButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            FilterButton.BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+            if (FilterButton.IsMouseOver)
+            {
+                FilterIcon.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 1 };
+
+                {
+                    DoubleAnimation ani = new(0.75, TimeSpan.FromMilliseconds(250));
+                    FilterIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    FilterIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+
+                await Task.Delay(251);
+
+                {
+                    DoubleAnimation ani = new(1, TimeSpan.FromMilliseconds(250));
+                    FilterIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, ani);
+                    FilterIcon.RenderTransform.BeginAnimation(ScaleTransform.ScaleYProperty, ani);
+                }
+            }
+        }
+
+        private void FilterButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left) OpenFilterMenuPopup();
+        }
+
+        private void OpenFilterMenuPopup()
+        {
+            FilterMenuPopup.Child = filterPopup;
+            FilterMenuPopup.IsOpen = true;
+            FilterMenuPopup.HorizontalOffset = (filterPopup.ActualWidth - FilterButton.ActualWidth) / 2;
+        }
+
         private void SearchBorder_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (!SearchTextBox.IsMouseOver && !SearchTextBox.IsFocused && SearchTextBox.Text.Length == 0)
@@ -1068,28 +1104,45 @@ namespace TemporaTasks.Pages
                 TasksInHourLabel.Content = tasksInHour;
             }
 
+            if ((int)filterPopup.PriorityCM.Tag == 1)
+                for (int i = tasks.Count - 1; i >= 0; i--)
+                    if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
+
+            if ((int)filterPopup.NoDueDateCM.Tag == 1)
+                for (int i = tasks.Count - 1; i >= 0; i--)
+                    if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
+
             if (SearchTextBox.Text.Length != 0)
             {
                 string searchTerm = SearchTextBox.Text.ToLower();
-
-                if (searchTerm.Contains("$n"))
-                {
-                    for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
-                    searchTerm = searchTerm.Replace("$n", "").Trim();
-                }
-
-                if (searchTerm.Contains("$p"))
-                {
-                    for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
-                    searchTerm = searchTerm.Replace("$p", "").Trim();
-                }
 
                 {
                     Match match;
                     if ((match = new Regex("\\$tb? ([^ ]+) ?").Match(searchTerm)).Success)
                     {
+                        DateTime? compareDT;
+                        try
+                        {
+                            compareDT = DTHelper.StringToDateTime(match.Value[3..].Trim(), "");
+
+                            if (match.Value[2] == 'b')
+                            {
+                                for (int i = tasks.Count - 1; i >= 0; i--)
+                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value > compareDT) tasks.Remove(tasks[i]);
+                            }
+                            else
+                            {
+                                for (int i = tasks.Count - 1; i >= 0; i--)
+                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value < compareDT) tasks.Remove(tasks[i]);
+                            }
+                        }
+                        catch (IncorrectDateException)
+                        {
+                            SearchBorder.BorderBrush = (SolidColorBrush)mainWindow.FindResource("PastDue");
+                            SearchBorder.BorderThickness = new Thickness(2);
+                        }
+
+                        /**
                         if (DateTime.TryParse(match.Value[3..].Trim(), out DateTime compareDT))
                         {
                             if (match.Value[2] == 'b')
@@ -1108,6 +1161,8 @@ namespace TemporaTasks.Pages
                             SearchBorder.BorderBrush = (SolidColorBrush)mainWindow.FindResource("PastDue");
                             SearchBorder.BorderThickness = new Thickness(2);
                         }
+                        **/
+
                         searchTerm = searchTerm.Replace(match.Value, "").Trim();
                     }
                 }

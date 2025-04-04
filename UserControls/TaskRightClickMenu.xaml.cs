@@ -90,7 +90,7 @@ namespace TemporaTasks.UserControls
         {
             Point mousePosition = e.GetPosition(sender as UIElement);
             ToolTip tooltip = (ToolTip)((Border)sender).ToolTip;
-            tooltip.Placement = System.Windows.Controls.Primitives.PlacementMode.Relative;
+            tooltip.Placement = PlacementMode.Relative;
             tooltip.HorizontalOffset = mousePosition.X;
             tooltip.VerticalOffset = mousePosition.Y;
         }

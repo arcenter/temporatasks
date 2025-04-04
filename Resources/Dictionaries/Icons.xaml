@@ -409,4 +409,18 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <!--https://www.svgrepo.com/svg/348147/filter-->
+
+    <DrawingImage x:Key="filterIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                <GeometryDrawing Geometry="F1 M16,16z M0,0z M1.75,1.75L1.75,1.75 14.25,1.75 14.25,3.25 9.25,8.75 9.25,12.75 6.75,14.25 6.75,8.75 1.75,3.25z">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Icons}" Thickness="1.5" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
 </ResourceDictionary>

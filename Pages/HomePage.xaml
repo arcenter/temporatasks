@@ -160,6 +160,22 @@
                             </DockPanel>
                         </Border>
 
+                        <Grid Height="40" Margin="20 0 0 0">
+                            <Border Background="{StaticResource Secondary}" CornerRadius="5" Cursor="Hand" Width="40">
+                                <Border.ToolTip>
+                                    <ToolTip>
+                                        <ToolTip.Content>
+                                            <userControl:ButtonToolTip T1="Filter tasks" B1="f"/>
+                                        </ToolTip.Content>
+                                    </ToolTip>
+                                </Border.ToolTip>
+                            </Border>
+                            <Border x:Name="FilterButton" Background="{StaticResource DarkBlue}" Opacity="0" CornerRadius="5" Cursor="Hand" Width="40" IsMouseDirectlyOverChanged="FilterButton_IsMouseDirectlyOverChanged" MouseDown="FilterButton_MouseDown"/>
+                            <Image x:Name="FilterIcon" Source="{StaticResource filterIcon}" Opacity="0.75" IsHitTestVisible="False" RenderTransformOrigin="0.5, 0.5" Width="10" Height="10"/>
+                        </Grid>
+
+                        <Popup x:Name="FilterMenuPopup" PlacementTarget="{Binding ElementName=FilterButton}" VerticalOffset="10" AllowsTransparency="True"/>
+
                         <Border Background="{StaticResource TitleBar}" CornerRadius="5" Margin="20 0 0 0">
                             <StackPanel Orientation="Horizontal">
                                 <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" Padding="15 0 0 0" Margin="0" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
