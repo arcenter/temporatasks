@@ -12,6 +12,8 @@ using System.Linq;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
 using static TemporaTasks.UserControls.IndividualTask;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace TemporaTasks.Pages
 {
@@ -38,6 +40,8 @@ namespace TemporaTasks.Pages
                 }
             }
         }
+
+        int currentPage = 0;
 
         bool reverseSort = false;
         Dictionary<string, ArrayList> days = [];
@@ -386,6 +390,16 @@ namespace TemporaTasks.Pages
                     else if (selectedTasks.Count > 0)
                         DeselectAll();
                     else mainWindow.WindowHide();
+                    return;
+
+                case Key.Left:
+                    currentPage--;
+                    GenerateTaskStack();
+                    return;
+
+                case Key.Right:
+                    currentPage++;
+                    GenerateTaskStack();
                     return;
             }
 
@@ -1267,10 +1281,20 @@ namespace TemporaTasks.Pages
             tasks = [.. sortedDict.Keys];
             tasks.AddRange(noDate);
 
+            {
+                if (currentPage < 0) currentPage = 0;
+                else if (currentPage > tasks.Count/50) currentPage = tasks.Count/50;
+                var start = currentPage * 50;
+                try { tasks = tasks.GetRange(start, 50); }
+                catch { tasks = tasks.GetRange(start, tasks.Count-start-1); }
+            }
+
             List<SectionDivider> sectionDividers = [];
 
             foreach (IndividualTask task in sortedDict.Keys)
             {
+                if (!tasks.Contains(task)) continue;
+
                 DateTime date = (DateTime)sortedDict[task];
                 string dateString = date.ToString("dddd, d") + DTHelper.GetDaySuffix(date.Day) + date.ToString(" MMMM yyyy");
 
@@ -1303,6 +1327,7 @@ namespace TemporaTasks.Pages
 
                 foreach (IndividualTask task in noDate)
                 {
+                    if (!tasks.Contains(task)) continue;
                     TaskStack.Children.Add(task);
                     days["No date"].Add(task);
                 }
