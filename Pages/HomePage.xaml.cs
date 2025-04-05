@@ -1281,12 +1281,17 @@ namespace TemporaTasks.Pages
             tasks = [.. sortedDict.Keys];
             tasks.AddRange(noDate);
 
+            TaskCount.Content = $"{tasks.Count}t";
+
+            if (tasks.Count == 0) goto Finally;
+
             {
+                var MAX_TASK_COUNT = 30;
                 if (currentPage < 0) currentPage = 0;
-                else if (currentPage > tasks.Count/50) currentPage = tasks.Count/50;
-                var start = currentPage * 50;
-                try { tasks = tasks.GetRange(start, 50); }
-                catch { tasks = tasks.GetRange(start, tasks.Count-start-1); }
+                else if (currentPage > tasks.Count / MAX_TASK_COUNT) currentPage = tasks.Count / MAX_TASK_COUNT;
+                var start = currentPage * MAX_TASK_COUNT;
+                try { tasks = tasks.GetRange(start, MAX_TASK_COUNT); }
+                catch { tasks = tasks.GetRange(start, tasks.Count - start); }
             }
 
             List<SectionDivider> sectionDividers = [];
@@ -1342,8 +1347,6 @@ namespace TemporaTasks.Pages
                     sectionDivider.SectionTitle.Content += $" ({days[_].Count})";
                 }
             }
-
-            TaskCount.Content = $"{tasks.Count}t";
 
         Finally:
 
