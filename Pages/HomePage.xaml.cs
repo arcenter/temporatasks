@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using System.Linq;
 using TemporaTasks.Core;
 using TemporaTasks.UserControls;
 using static TemporaTasks.UserControls.IndividualTask;
@@ -32,8 +33,8 @@ namespace TemporaTasks.Pages
                 _currentFocus = value;
                 if (_currentFocus != null)
                 {
-                    if (_currentFocus < 0) _currentFocus = displayedTasks.Count - 1;
-                    else if (_currentFocus > displayedTasks.Count - 1) _currentFocus = 0;
+                    if (_currentFocus < 0) _currentFocus = generatedTasks.Count - 1;
+                    else if (_currentFocus > generatedTasks.Count - 1) _currentFocus = 0;
                 }
             }
         }
@@ -60,7 +61,7 @@ namespace TemporaTasks.Pages
 
         ViewCategory currentViewCategory = ViewCategory.Home;
 
-        List<IndividualTask> displayedTasks = [];
+        List<IndividualTask> generatedTasks = [];
         List<IndividualTask> selectedTasks = [];
 
         public HomePage()
@@ -293,7 +294,7 @@ namespace TemporaTasks.Pages
 
                 else if (Keyboard.IsKeyDown(Key.A))
                 {
-                    foreach (IndividualTask task in displayedTasks)
+                    foreach (IndividualTask task in generatedTasks)
                         TaskSelectedOn(task);
                     return;
                 }
@@ -475,13 +476,13 @@ namespace TemporaTasks.Pages
 
             if (currentFocus.HasValue)
             {
-                if (displayedTasks.Count == 0)
+                if (generatedTasks.Count == 0)
                 {
                     currentFocus = null;
                     return;
                 }
 
-                IndividualTask task = displayedTasks[currentFocus.Value];
+                IndividualTask task = generatedTasks[currentFocus.Value];
 
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
@@ -504,34 +505,34 @@ namespace TemporaTasks.Pages
                 {
                     if (Keyboard.IsKeyDown(Key.Down))
                     {
-                        int limit = displayedTasks.Count;
+                        int limit = generatedTasks.Count;
                         do
                         {
                             currentFocus++;
-                            if (currentFocus.Value > displayedTasks.Count - 1) currentFocus = 0;
+                            if (currentFocus.Value > generatedTasks.Count - 1) currentFocus = 0;
                             if (--limit <= 0)
                             {
                                 currentFocus = null;
                                 return;
                             }
-                        } while (displayedTasks[currentFocus.Value] is IndividualTask && limit > 0);
+                        } while (generatedTasks[currentFocus.Value] is IndividualTask && limit > 0);
                         NextTaskFocus();
                         return;
                     }
                     else if (Keyboard.IsKeyDown(Key.Up))
                     {
                         currentFocus--;
-                        int limit = displayedTasks.Count;
+                        int limit = generatedTasks.Count;
                         do
                         {
                             currentFocus--;
-                            if (currentFocus.Value < 0) currentFocus = displayedTasks.Count - 1;
+                            if (currentFocus.Value < 0) currentFocus = generatedTasks.Count - 1;
                             if (--limit <= 0)
                             {
                                 currentFocus = null;
                                 return;
                             }
-                        } while (displayedTasks[currentFocus.Value] is IndividualTask);
+                        } while (generatedTasks[currentFocus.Value] is IndividualTask);
                         NextTaskFocus();
                         return;
                     }
@@ -691,10 +692,10 @@ namespace TemporaTasks.Pages
             {
                 if (selectedTasks.Count > 0 || currentFocus.HasValue)
                 {
-                    if (displayedTasks.Count == 0)
+                    if (generatedTasks.Count == 0)
                         return;
                     
-                    List<IndividualTask> tasks = (selectedTasks.Count > 0) ? selectedTasks : [displayedTasks[currentFocus.Value]];
+                    List<IndividualTask> tasks = (selectedTasks.Count > 0) ? selectedTasks : [generatedTasks[currentFocus.Value]];
 
                     QuickTimeChangeMenuPopup.Child = new DateTimeChangerPopup(tasks, QuickTimeChangeMenuPopup);
 
@@ -735,7 +736,7 @@ namespace TemporaTasks.Pages
         {
             currentFocus = null;
             if (TaskFile.tempGarbleMode == TempGarbleMode.Off) SetTempGarble(TempGarbleMode.None, true);
-            foreach (IndividualTask task in displayedTasks) task.DueDateTimeLabelUpdate();
+            foreach (IndividualTask task in generatedTasks) task.DueDateTimeLabelUpdate();
             GenerateTaskStack(false);
         }
 
@@ -751,7 +752,7 @@ namespace TemporaTasks.Pages
         private void TaskMouseDown(object sender, MouseButtonEventArgs e)
         {
             IndividualTask task = (IndividualTask)sender;
-            currentFocus = displayedTasks.IndexOf(task);
+            currentFocus = generatedTasks.IndexOf(task);
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) || e.ChangedButton == MouseButton.Middle)
                 ToggleSelected(task);
             FocusTask(task, centerTaskOnScreen: false);
@@ -1052,7 +1053,7 @@ namespace TemporaTasks.Pages
                 }
                 if (currentFocus != null)
                 {
-                    System.Windows.Controls.Primitives.Popup _ = ((IndividualTask)displayedTasks[currentFocus.Value]).RightClickMenuPopup;
+                    System.Windows.Controls.Primitives.Popup _ = ((IndividualTask)generatedTasks[currentFocus.Value]).RightClickMenuPopup;
                     if (_ != null && _.IsOpen) ((TaskRightClickMenu)_.Child).PopupClose();
                 }
             }
@@ -1064,87 +1065,89 @@ namespace TemporaTasks.Pages
 
         public async void GenerateTaskStack(bool scrollToTop = true, bool force = false)
         {
-            foreach (IndividualTask task in displayedTasks)
+            void ResetUI()
             {
-                task.StrokeOff();
-                TaskSelectedOff(task);
-            }
-
-            if ((generateLock && !force) || TaskStack == null) return;
-            generateLock = true;
-
-            await Task.Delay(250);
-
-            genTSCompletionSource = new();
-            mainWindow.Cursor = Cursors.Wait;
-
-            TaskStack.Children.Clear();
-            if (scrollToTop) TaskStackScroller.ScrollToVerticalOffset(0);
-
-            days.Clear();
-            SearchBorder.BorderBrush = null;
-            SearchBorder.BorderThickness = new Thickness(0);
-
-            List<IndividualTask> tasks = [];
-
-            int tasksInHour = 0;
-
-            if (currentViewCategory == ViewCategory.Completed)
-            {
-                foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.taskStatus == IndividualTask.TaskStatus.Completed) tasks.Add(task);
-            }
-
-            else if (currentViewCategory == ViewCategory.Trash)
-            {
-                foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.taskStatus == IndividualTask.TaskStatus.Deleted)
-                    {
-                        tasks.Add(task);
-                        task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
-                        task.Appear(timeSpan: 0);
-                    }
-            }
-
-            else if (currentViewCategory == ViewCategory.WontDo)
-            {
-                foreach (IndividualTask task in TaskFile.TaskList)
-                    if (task.taskStatus == IndividualTask.TaskStatus.WontDo) tasks.Add(task);
-            }
-
-            else
-            {
-                foreach (IndividualTask task in TaskFile.TaskList)
+                foreach (IndividualTask task in generatedTasks)
                 {
-                    if (task.taskStatus == IndividualTask.TaskStatus.Normal)
-                    {
-                        tasks.Add(task);
-                        if (task.DueDT.HasValue && task.DueDT.Value - DateTime.Now < TimeSpan.FromHours(1)) tasksInHour++;
-                    }
+                    task.StrokeOff();
+                    TaskSelectedOff(task);
                 }
-                TasksInHourLabel.Content = tasksInHour;
+
+                TaskStack.Children.Clear();
+                if (scrollToTop) TaskStackScroller.ScrollToVerticalOffset(0);
+
+                days.Clear();
+                SearchBorder.BorderBrush = null;
+                SearchBorder.BorderThickness = new Thickness(0);
             }
 
-            if ((int)filterPopup.PriorityCM.Tag == 1)
-                for (int i = tasks.Count - 1; i >= 0; i--)
-                    if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
-
-            if ((int)filterPopup.NoDueDateCM.Tag == 1)
-                for (int i = tasks.Count - 1; i >= 0; i--)
-                    if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
-
-            if (SearchTextBox.Text.Length != 0)
+            List<IndividualTask> GetCategoryTaskList()
             {
+                List<IndividualTask> tasks = [];
+
+                if (currentViewCategory == ViewCategory.Completed)
+                {
+                    foreach (IndividualTask task in TaskFile.TaskList)
+                        if (task.taskStatus == IndividualTask.TaskStatus.Completed) tasks.Add(task);
+                }
+
+                else if (currentViewCategory == ViewCategory.Trash)
+                {
+                    foreach (IndividualTask task in TaskFile.TaskList)
+                        if (task.taskStatus == IndividualTask.TaskStatus.Deleted)
+                        {
+                            tasks.Add(task);
+                            task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
+                            task.Appear(timeSpan: 0);
+                        }
+                }
+
+                else if (currentViewCategory == ViewCategory.WontDo)
+                {
+                    foreach (IndividualTask task in TaskFile.TaskList)
+                        if (task.taskStatus == IndividualTask.TaskStatus.WontDo) tasks.Add(task);
+                }
+
+                else
+                {
+                    var tasksInHour = 0;
+                    var now = DateTime.Now;
+                    foreach (IndividualTask task in TaskFile.TaskList)
+                        if (task.taskStatus == IndividualTask.TaskStatus.Normal)
+                        {
+                            tasks.Add(task);
+                            if (task.DueDT.HasValue && task.DueDT.Value - now < TimeSpan.FromHours(1)) tasksInHour++;
+                        }
+                    TasksInHourLabel.Content = tasksInHour;
+                }
+
+                return tasks;
+            }
+
+            void ApplyFilters(List<IndividualTask> tasks)
+            {
+                if ((int)filterPopup.PriorityCM.Tag == 1)
+                    for (int i = tasks.Count - 1; i >= 0; i--)
+                        if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
+
+                if ((int)filterPopup.NoDueDateCM.Tag == 1)
+                    for (int i = tasks.Count - 1; i >= 0; i--)
+                        if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
+            }
+
+            void ApplySearch(List<IndividualTask> tasks)
+            {
+                if (SearchTextBox.Text.Length == 0) return;
+
                 string searchTerm = SearchTextBox.Text.ToLower();
 
                 {
-                    Match match;
-                    if ((match = new Regex("\\$tb? ([^ ]+) ?").Match(searchTerm)).Success)
+                    var match = RegexSearchTime().Match(searchTerm);
+                    if (match.Success)
                     {
-                        DateTime? compareDT;
                         try
                         {
-                            compareDT = DTHelper.StringToDateTime(match.Value[3..].Trim(), "");
+                            var compareDT = DTHelper.StringToDateTime(match.Value[3..].Trim(), "");
 
                             if (match.Value[2] == 'b')
                             {
@@ -1163,27 +1166,6 @@ namespace TemporaTasks.Pages
                             SearchBorder.BorderThickness = new Thickness(2);
                         }
 
-                        /**
-                        if (DateTime.TryParse(match.Value[3..].Trim(), out DateTime compareDT))
-                        {
-                            if (match.Value[2] == 'b')
-                            {
-                                for (int i = tasks.Count - 1; i >= 0; i--)
-                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value > compareDT) tasks.Remove(tasks[i]);
-                            }
-                            else
-                            {
-                                for (int i = tasks.Count - 1; i >= 0; i--)
-                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value < compareDT) tasks.Remove(tasks[i]);
-                            }
-                        }
-                        else
-                        {
-                            SearchBorder.BorderBrush = (SolidColorBrush)mainWindow.FindResource("PastDue");
-                            SearchBorder.BorderThickness = new Thickness(2);
-                        }
-                        **/
-
                         searchTerm = searchTerm.Replace(match.Value, "").Trim();
                     }
                 }
@@ -1199,11 +1181,10 @@ namespace TemporaTasks.Pages
                             {
                                 foreach (string tag in tasks[i].TagList)
                                     foreach (Match match in matches)
-                                        if ((new Regex(match.Value[1..], RegexOptions.IgnoreCase)).Match(tag).Success) // (tag.Contains(match.Value[1..], StringComparison.CurrentCultureIgnoreCase))
+                                        if (Regex.IsMatch(match.Value[1..], tag, RegexOptions.IgnoreCase))
                                             goto NextTask;
-                                tasks.Remove(tasks[i]);
                             }
-                            else tasks.Remove(tasks[i]);
+                            tasks.Remove(tasks[i]);
                             NextTask:;
                         }
                         foreach (Match match in matches)
@@ -1216,16 +1197,26 @@ namespace TemporaTasks.Pages
                 {
                     try
                     {
-                        Regex regex = new(searchTerm);
                         for (int i = tasks.Count - 1; i >= 0; i--)
-                        {
-                            if (regex.Match(tasks[i].Name.ToLower()).Success) continue;
-                            tasks.Remove(tasks[i]);
-                        }
+                            if (!Regex.IsMatch(tasks[i].Name.ToLower(), searchTerm))
+                                tasks.Remove(tasks[i]);
                     }
                     catch { }
                 }
             }
+
+            if ((generateLock && !force) || TaskStack == null) return;
+            generateLock = true;
+
+            await Task.Delay(250);
+
+            genTSCompletionSource = new();
+            mainWindow.Cursor = Cursors.Wait;
+
+            ResetUI();
+            List<IndividualTask> tasks = GetCategoryTaskList();
+            ApplyFilters(tasks);
+            ApplySearch(tasks);
 
             Dictionary<IndividualTask, object> yesDate = [], sortedDict = [];
             List<IndividualTask> noDate = [];
@@ -1333,15 +1324,15 @@ namespace TemporaTasks.Pages
 
             DueTaskCount.Content = (dueTasks == 0) ? "" : $"{dueTasks}d.";
 
-            displayedTasks = tasks;
+            generatedTasks = tasks;
 
             if (editedTask is not null)
             {
                 int? index = null;
-                foreach (IndividualTask task in displayedTasks)
+                foreach (IndividualTask task in generatedTasks)
                     if (task.UID == editedTask.UID)
                     {
-                        index = displayedTasks.IndexOf(task);
+                        index = generatedTasks.IndexOf(task);
                         break;
                     }
                 if (index.HasValue)
@@ -1368,6 +1359,9 @@ namespace TemporaTasks.Pages
         [GeneratedRegex(@"#\S+")]
         public static partial Regex RegexTags();
 
+        [GeneratedRegex("\\$tb? ([^ ]+) ?")]
+        private static partial Regex RegexSearchTime();
+
         private void UpdateNextDueTask()
         {
             if (TaskFile.TaskList.Count == 0) return;
@@ -1378,29 +1372,29 @@ namespace TemporaTasks.Pages
             {
                 if (reverseSort)
                 {
-                    for (int i = displayedTasks.Count - 1; i >= 0; i--)
-                        if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
+                    for (int i = generatedTasks.Count - 1; i >= 0; i--)
+                        if (!generatedTasks[i].IsCompleted && generatedTasks[i].DueDT.HasValue)
                         {
-                            nextDueTask = displayedTasks[i];
+                            nextDueTask = generatedTasks[i];
                             break;
                         }
                 }
                 else
                 {
-                    for (int i = 0; i < displayedTasks.Count; i++)
-                        if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
+                    for (int i = 0; i < generatedTasks.Count; i++)
+                        if (!generatedTasks[i].IsCompleted && generatedTasks[i].DueDT.HasValue)
                         {
-                            nextDueTask = displayedTasks[i];
+                            nextDueTask = generatedTasks[i];
                             break;
                         }
                 }
             }
             else
             {
-                for (int i = displayedTasks.Count - 1; i >= 0; i--)
-                    if (!displayedTasks[i].IsCompleted && displayedTasks[i].DueDT.HasValue)
-                        if (nextDueTask == null) nextDueTask = displayedTasks[i];
-                        else if (displayedTasks[i].DueDT < nextDueTask.DueDT) nextDueTask = displayedTasks[i];
+                for (int i = generatedTasks.Count - 1; i >= 0; i--)
+                    if (!generatedTasks[i].IsCompleted && generatedTasks[i].DueDT.HasValue)
+                        if (nextDueTask == null) nextDueTask = generatedTasks[i];
+                        else if (generatedTasks[i].DueDT < nextDueTask.DueDT) nextDueTask = generatedTasks[i];
             }
 
             if (nextDueTask == null) StatusGrid.Visibility = Visibility.Collapsed;
@@ -1494,13 +1488,13 @@ namespace TemporaTasks.Pages
 
         private async void FocusCurrent(bool centerTaskOnScreen = true)
         {
-            int count = displayedTasks.Count;
+            int count = generatedTasks.Count;
             
             if (!currentFocus.HasValue || count == 0) return;
             if (currentFocus.Value < 0 || currentFocus.Value > count-1) currentFocus = 0;
 
             int limit = count;
-            while (!(displayedTasks[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
+            while (!(generatedTasks[currentFocus.Value] is IndividualTask task1 && task1.Visibility == Visibility.Visible))
             {
                 currentFocus++;
                 if (currentFocus.Value >= count-1) currentFocus = 0;
@@ -1511,7 +1505,7 @@ namespace TemporaTasks.Pages
                 }
             }
 
-            FocusTask(displayedTasks[currentFocus.Value]);
+            FocusTask(generatedTasks[currentFocus.Value]);
         }
 
         private void FocusTask(IndividualTask task, bool centerTaskOnScreen = true)
@@ -1527,10 +1521,10 @@ namespace TemporaTasks.Pages
 
         private void UnfocusTask()
         {
-            if (!currentFocus.HasValue || displayedTasks.Count == 0)
+            if (!currentFocus.HasValue || generatedTasks.Count == 0)
                 return;
             else
-                displayedTasks[currentFocus.Value].StrokeOff();
+                generatedTasks[currentFocus.Value].StrokeOff();
         }
 
         private void ToggleSelected(IndividualTask task)
@@ -1572,7 +1566,7 @@ namespace TemporaTasks.Pages
         {
             TaskFile.tempGarbleMode = tempGarbleMode;
             EyeIcon.Source = (ImageSource)mainWindow.FindResource($"TempGarble{tempGarbleMode}EyeIcon");
-            foreach (IndividualTask task in displayedTasks)
+            foreach (IndividualTask task in generatedTasks)
             {
                 if (dontPlayAnimation) task.TempGarble(tempGarbleMode, false);
                 else
@@ -1646,10 +1640,10 @@ namespace TemporaTasks.Pages
         public void WindowIsResizing(bool value)
         {
             if (value)
-                foreach (IndividualTask task in displayedTasks)
+                foreach (IndividualTask task in generatedTasks)
                     task.Visibility = Visibility.Collapsed;
             else
-                foreach (IndividualTask task in displayedTasks)
+                foreach (IndividualTask task in generatedTasks)
                     task.Visibility = Visibility.Visible;
         }
 
