@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TemporaTasks.Core;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace TemporaTasks.UserControls
 {
@@ -68,7 +70,6 @@ namespace TemporaTasks.UserControls
             if (e.Key == Key.Escape)
             {
                 PopupClose();
-
                 return;
             }
             Border_MouseDown(e.Key.ToString() switch
@@ -78,8 +79,14 @@ namespace TemporaTasks.UserControls
                 "D6" => "t6h",
                 "D9" => "t1d",
                 "D7" => "t1w",
+                "T" => "custom",
                 _ => ""
             }, null);
+            if (e.Key == Key.T)
+            {
+                BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(100)));
+                popupObject.Child = new DateTimeChangerPopup(popupObject);
+            }
         }
 
         public async void PopupClose(int delay = 200)
@@ -97,44 +104,45 @@ namespace TemporaTasks.UserControls
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (TaskFile.NotificationModeTimer.IsEnabled)
-                UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Normal);
+            //if (TaskFile.NotificationModeTimer.IsEnabled)
+            //    UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Normal);
 
-            else
+            switch ((sender is Border border) ? border.Name : sender)
             {
-                switch ((sender is Border border) ? border.Name : sender)
-                {
-                    case "t30m":
-                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromMinutes(30);
-                        break;
+                case "t30m":
+                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromMinutes(30);
+                    break;
 
-                    case "t1h":
-                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(1);
-                        break;
+                case "t1h":
+                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(1);
+                    break;
 
-                    case "t6h":
-                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(6);
-                        break;
+                case "t6h":
+                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(6);
+                    break;
 
-                    case "t1d":
-                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(1);
-                        break;
+                case "t1d":
+                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(1);
+                    break;
 
-                    case "t1w":
-                        TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(7);
-                        break;
+                case "t1w":
+                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(7);
+                    break;
 
-                    default:
-                        PopupClose();
-                        return;
-                }
+                case "custom":
+                    return;
 
-                UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Muted);
-
-                TaskFile.NotificationModeTimerStart = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
-                TaskFile.NotificationModeTimer.Start();
+                default:
+                    UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Normal);
+                    PopupClose();
+                    return;
             }
 
+            UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Muted);
+
+            TaskFile.NotificationModeTimerStart = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
+            TaskFile.NotificationModeTimer.Start();
+            
             PopupClose();
         }
 

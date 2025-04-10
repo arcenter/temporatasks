@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -19,12 +20,19 @@ namespace TemporaTasks.UserControls
             this.tasks = tasks;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        public DateTimeChangerPopup(Popup popupObject)
+        {
+            InitializeComponent();
+            this.popupObject = popupObject;
+        }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.MouseDown += PopupMouseDown;
             mainWindow.KeyDown += PopupKeyDown;
             BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
+            await Task.Delay(250);
             DateTextbox.Focus();
         }
 
@@ -66,14 +74,27 @@ namespace TemporaTasks.UserControls
                     return;
                 }
 
-                foreach (IndividualTask task in tasks)
+                if (tasks is null)
                 {
-                    task.TaskTimer.Stop();
-                    task.DueDT = newDueTime;
-                    task.NewDueDT();
+                    TaskFile.NotificationModeTimer.Interval = newDueTime.Value - DateTime.Now;
+
+                    TaskFile.notificationMode = TaskFile.NotificationMode.Muted;
+                    ((MainWindow)Application.Current.MainWindow).homePage.UpdateNotificationMode();
+
+                    TaskFile.NotificationModeTimerStart = newDueTime.Value;
+                    TaskFile.NotificationModeTimer.Start();
                 }
-                
-                TaskFile.SaveData();
+                else
+                {
+                    foreach (IndividualTask task in tasks)
+                    {
+                        task.TaskTimer.Stop();
+                        task.DueDT = newDueTime;
+                        task.NewDueDT();
+                    }
+
+                    TaskFile.SaveData();
+                }
                 PopupClose();
             }
         }
