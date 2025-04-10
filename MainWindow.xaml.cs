@@ -19,6 +19,8 @@ namespace TemporaTasks
     public partial class MainWindow : Window
     {
         public HomePage homePage;
+        
+        private bool windowHidden = false;
 
         public MainWindow()
         {
@@ -65,6 +67,12 @@ namespace TemporaTasks
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (windowHidden)
+            {
+                e.Handled = true;
+                return;
+            }
+
             if (e.Key == Key.System && e.SystemKey == Key.F4)
             {
                 WindowHide();
@@ -163,6 +171,7 @@ namespace TemporaTasks
             }
             else
             {
+                windowHidden = true;
                 IsWindowUnHidden?.Invoke();
                 Show();
                 Activate();
@@ -170,6 +179,8 @@ namespace TemporaTasks
                 Topmost = false;
                 await Task.Delay(25);
                 homePage.Focus();
+                await Task.Delay(475);
+                windowHidden = false;
             }
         }
 
