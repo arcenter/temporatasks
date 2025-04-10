@@ -74,6 +74,7 @@ namespace TemporaTasks.Pages
             UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
             UpdateTaskTimersTimer.Start();
             TaskFile.NotificationModeTimer.Tick += (s, e) => UpdateNotificationTimer(TaskFile.NotificationMode.Normal);
+            UpdateNotificationMode(); 
             muteModeRightClickMenu = new(MuteMenuPopup);
             filterPopup = new(FilterMenuPopup);
         }

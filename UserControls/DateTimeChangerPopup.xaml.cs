@@ -81,7 +81,7 @@ namespace TemporaTasks.UserControls
                     TaskFile.notificationMode = TaskFile.NotificationMode.Muted;
                     ((MainWindow)Application.Current.MainWindow).homePage.UpdateNotificationMode();
 
-                    TaskFile.NotificationModeTimerStart = newDueTime.Value;
+                    TaskFile.NotificationModeTimerEnd = newDueTime.Value;
                     TaskFile.NotificationModeTimer.Start();
                 }
                 else

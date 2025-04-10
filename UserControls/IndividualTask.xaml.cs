@@ -75,7 +75,7 @@ namespace TemporaTasks.UserControls
         {
             get
             {
-                if (DueDT.HasValue && !IsCompleted) return ((DueDT.Value - DateTime.Now) < TimeSpan.FromTicks(0));
+                if (DueDT.HasValue && !IsCompleted) return ((DueDT.Value - DateTime.Now) < TimeSpan.Zero);
                 return false;
             }
         }

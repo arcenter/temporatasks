@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -32,7 +33,7 @@ namespace TemporaTasks.Core
         public static IndividualTask.TempGarbleMode tempGarbleMode = IndividualTask.TempGarbleMode.None;
 
         public static DispatcherTimer NotificationModeTimer = new();
-        public static DateTime NotificationModeTimerStart;
+        public static DateTime NotificationModeTimerEnd;
 
         public async static void LoadData()
         {
@@ -47,15 +48,27 @@ namespace TemporaTasks.Core
                 
                 HomePage.initialFinished = false;
 
-                if (data.ContainsKey("settings"))
-                {
-                    Dictionary<string, string> settings = data["settings"];
-                    data.Remove("settings");
+                Dictionary<string, string> settings = data["settings"];
+                data.Remove("settings");
 
-                    sortType = int.Parse(settings["sortType"]);
-                    notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
-                    notifPopupMode = settings["notifPopupMode"] != "0";
+                sortType = int.Parse(settings["sortType"]);
+                notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
+                if (settings["notifModeTimer"] != "0")
+                {
+                    var timer = DateTimeOffset.FromUnixTimeSeconds(long.Parse(settings["notifModeTimer"])).LocalDateTime;
+                    var remaining = timer - DateTime.Now;
+                    if ((remaining) > TimeSpan.Zero)
+                    {
+                        notificationMode = NotificationMode.Muted;
+                        NotificationModeTimerEnd = timer;
+                        NotificationModeTimer.Interval = remaining;
+                        NotificationModeTimer.Start();
+                    } else
+                    {
+                        notificationMode = NotificationMode.Normal;
+                    }
                 }
+                notifPopupMode = settings["notifPopupMode"] == "1";
 
                 foreach (string taskUID in data.Keys)
                 {
@@ -253,7 +266,8 @@ namespace TemporaTasks.Core
             Dictionary<string, string> temp = [];
             
             temp["sortType"] = sortType.ToString();
-            temp["notifMode"] = (NotificationModeTimer.IsEnabled) ? "0" : ((int)notificationMode).ToString();
+            temp["notifMode"] = ((int)notificationMode).ToString();
+            temp["notifModeTimer"] = NotificationModeTimer.IsEnabled ? DateTimeToString(NotificationModeTimerEnd) : "0";
             temp["notifPopupMode"] = notifPopupMode ? "1" : "0";
             data["settings"] = temp;
 

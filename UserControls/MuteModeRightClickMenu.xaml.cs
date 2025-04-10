@@ -39,7 +39,7 @@ namespace TemporaTasks.UserControls
             if (TaskFile.NotificationModeTimer.IsEnabled)
             {
                 ButtonPanel.Visibility = Visibility.Collapsed;
-                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerStart - DateTime.Now);
+                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerEnd - DateTime.Now);
                 t30mLabel.Padding = new Thickness(10, 0, 10, 0);
             }
             else
@@ -140,7 +140,7 @@ namespace TemporaTasks.UserControls
 
             UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Muted);
 
-            TaskFile.NotificationModeTimerStart = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
+            TaskFile.NotificationModeTimerEnd = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
             TaskFile.NotificationModeTimer.Start();
             
             PopupClose();
