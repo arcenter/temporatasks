@@ -1381,6 +1381,8 @@ namespace TemporaTasks.Pages
 
             mainWindow.Cursor = Cursors.Arrow;
 
+            await Task.Delay(250);
+
             generateLock = false;
             try { genTSCompletionSource.SetResult(true); }
             catch { }
