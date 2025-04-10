@@ -76,20 +76,20 @@ namespace TemporaTasks.UserControls
 
                 if (tasks is null)
                 {
-                    TaskFile.NotificationModeTimer.Interval = newDueTime.Value - DateTime.Now;
+                    TaskFile.muteNotificationsTimer.Interval = newDueTime.Value - DateTime.Now;
 
                     TaskFile.notificationMode = TaskFile.NotificationMode.Muted;
                     ((MainWindow)Application.Current.MainWindow).homePage.UpdateNotificationMode();
 
-                    TaskFile.NotificationModeTimerEnd = newDueTime.Value;
-                    TaskFile.NotificationModeTimer.Start();
+                    TaskFile.muteNotificationsTimerEnd = newDueTime.Value;
+                    TaskFile.muteNotificationsTimer.Start();
                 }
                 else
                 {
                     foreach (IndividualTask task in tasks)
                     {
-                        task.TaskTimer.Stop();
-                        task.DueDT = newDueTime;
+                        task.taskTimer.Stop();
+                        task.dueDT = newDueTime;
                         task.NewDueDT();
                     }
 

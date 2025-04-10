@@ -73,7 +73,7 @@ namespace TemporaTasks.Pages
             InitializeComponent();
             UpdateTaskTimersTimer.Tick += UpdateTaskTimers;
             UpdateTaskTimersTimer.Start();
-            TaskFile.NotificationModeTimer.Tick += (s, e) => UpdateNotificationTimer(TaskFile.NotificationMode.Normal);
+            TaskFile.muteNotificationsTimer.Tick += (s, e) => UpdateNotificationTimer(TaskFile.NotificationMode.Normal);
             UpdateNotificationMode(); 
             muteModeRightClickMenu = new(MuteMenuPopup);
             filterPopup = new(FilterMenuPopup);
@@ -480,7 +480,7 @@ namespace TemporaTasks.Pages
                         if (dateClipboard.HasValue)
                             foreach (IndividualTask task in selectedTasks)
                             {
-                                task.DueDT = dateClipboard;
+                                task.dueDT = dateClipboard;
                                 task.DueDateTimeLabelUpdate();
                                 task.NewDueDT();
                                 TaskFile.SaveData();
@@ -553,7 +553,7 @@ namespace TemporaTasks.Pages
                     }
                     else if (Keyboard.IsKeyDown(Key.C))
                     {
-                        Clipboard.SetText(task.Name);
+                        Clipboard.SetText(task.name);
                         return;
                     }
                     else if (Keyboard.IsKeyDown(Key.E))
@@ -648,7 +648,7 @@ namespace TemporaTasks.Pages
                     case Key.V:
                         if (dateClipboard.HasValue)
                         {
-                            task.DueDT = dateClipboard;
+                            task.dueDT = dateClipboard;
                             task.DueDateTimeLabelUpdate();
                             task.NewDueDT();
                             TaskFile.SaveData();
@@ -661,7 +661,7 @@ namespace TemporaTasks.Pages
                         return;
 
                     case Key.C:
-                        dateClipboard = task.DueDT;
+                        dateClipboard = task.dueDT;
                         return;
                 }
             }
@@ -829,7 +829,7 @@ namespace TemporaTasks.Pages
             {
                 if (notifLine.Opacity != 0) notifLine.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                 if (notifLineHP.Opacity != 0) notifLineHP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
-                TaskFile.NotificationModeTimer.Stop();
+                TaskFile.muteNotificationsTimer.Stop();
             }
             else if (TaskFile.notificationMode == TaskFile.NotificationMode.High)
             {
@@ -872,7 +872,7 @@ namespace TemporaTasks.Pages
         {
             if (e == null || e.ChangedButton == MouseButton.Left)
             {
-                TaskFile.notifPopupMode = !TaskFile.notifPopupMode;
+                TaskFile.popupOnNotification = !TaskFile.popupOnNotification;
                 UpdateNotifPopupMode();
                 TaskFile.SaveData();
             }
@@ -880,7 +880,7 @@ namespace TemporaTasks.Pages
 
         private void UpdateNotifPopupMode()
         {
-            NotifPopupLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.notifPopupMode ? 0 : 1, TimeSpan.FromMilliseconds(250)));
+            NotifPopupLine.BeginAnimation(OpacityProperty, new DoubleAnimation(TaskFile.popupOnNotification ? 0 : 1, TimeSpan.FromMilliseconds(250)));
         }
 
         private async void EyeButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -1103,13 +1103,13 @@ namespace TemporaTasks.Pages
                 if (currentViewCategory == ViewCategory.Completed)
                 {
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (task.taskStatus == IndividualTask.TaskStatus.Completed) tasks.Add(task);
+                        if (task.status == IndividualTask.TaskStatus.Completed) tasks.Add(task);
                 }
 
                 else if (currentViewCategory == ViewCategory.Trash)
                 {
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (task.taskStatus == IndividualTask.TaskStatus.Deleted)
+                        if (task.status == IndividualTask.TaskStatus.Deleted)
                         {
                             tasks.Add(task);
                             task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
@@ -1120,7 +1120,7 @@ namespace TemporaTasks.Pages
                 else if (currentViewCategory == ViewCategory.WontDo)
                 {
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (task.taskStatus == IndividualTask.TaskStatus.WontDo) tasks.Add(task);
+                        if (task.status == IndividualTask.TaskStatus.WontDo) tasks.Add(task);
                 }
 
                 else
@@ -1128,10 +1128,10 @@ namespace TemporaTasks.Pages
                     var tasksInHour = 0;
                     var now = DateTime.Now;
                     foreach (IndividualTask task in TaskFile.TaskList)
-                        if (task.taskStatus == IndividualTask.TaskStatus.Normal)
+                        if (task.status == IndividualTask.TaskStatus.Normal)
                         {
                             tasks.Add(task);
-                            if (task.DueDT.HasValue && task.DueDT.Value - now < TimeSpan.FromHours(1)) tasksInHour++;
+                            if (task.dueDT.HasValue && task.dueDT.Value - now < TimeSpan.FromHours(1)) tasksInHour++;
                         }
                     TasksInHourLabel.Content = tasksInHour;
                 }
@@ -1143,11 +1143,11 @@ namespace TemporaTasks.Pages
             {
                 if ((int)filterPopup.PriorityCM.Tag == 1)
                     for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (tasks[i].taskPriority == TaskPriority.Normal) tasks.Remove(tasks[i]);
+                        if (tasks[i].priority == TaskPriority.Normal) tasks.Remove(tasks[i]);
 
                 if ((int)filterPopup.NoDueDateCM.Tag == 1)
                     for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (tasks[i].DueDT.HasValue) tasks.Remove(tasks[i]);
+                        if (tasks[i].dueDT.HasValue) tasks.Remove(tasks[i]);
             }
 
             void ApplySearch(List<IndividualTask> tasks)
@@ -1167,12 +1167,12 @@ namespace TemporaTasks.Pages
                             if (match.Value[2] == 'b')
                             {
                                 for (int i = tasks.Count - 1; i >= 0; i--)
-                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value > compareDT) tasks.Remove(tasks[i]);
+                                    if (tasks[i].dueDT.HasValue && tasks[i].dueDT.Value > compareDT) tasks.Remove(tasks[i]);
                             }
                             else
                             {
                                 for (int i = tasks.Count - 1; i >= 0; i--)
-                                    if (tasks[i].DueDT.HasValue && tasks[i].DueDT.Value < compareDT) tasks.Remove(tasks[i]);
+                                    if (tasks[i].dueDT.HasValue && tasks[i].dueDT.Value < compareDT) tasks.Remove(tasks[i]);
                             }
                         }
                         catch (IncorrectDateException)
@@ -1192,9 +1192,9 @@ namespace TemporaTasks.Pages
                     {
                         for (int i = tasks.Count - 1; i >= 0; i--)
                         {
-                            if (tasks[i].TagList != null)
+                            if (tasks[i].tagList != null)
                             {
-                                foreach (string tag in tasks[i].TagList)
+                                foreach (string tag in tasks[i].tagList)
                                     foreach (Match match in matches)
                                         if (Regex.IsMatch(tag, match.Value[1..], RegexOptions.IgnoreCase))
                                             goto NextTask;
@@ -1213,7 +1213,7 @@ namespace TemporaTasks.Pages
                     try
                     {
                         for (int i = tasks.Count - 1; i >= 0; i--)
-                            if (!Regex.IsMatch(tasks[i].Name.ToLower(), searchTerm))
+                            if (!Regex.IsMatch(tasks[i].name.ToLower(), searchTerm))
                                 tasks.Remove(tasks[i]);
                     }
                     catch { }
@@ -1240,9 +1240,9 @@ namespace TemporaTasks.Pages
             if (SortComboBox.SelectedIndex == 0)
             {
                 if (reverseSort)
-                    tasks = [.. tasks.OrderByDescending(pair => pair.Name)];
+                    tasks = [.. tasks.OrderByDescending(pair => pair.name)];
                 else
-                    tasks = [.. tasks.OrderBy(pair => pair.Name)];
+                    tasks = [.. tasks.OrderBy(pair => pair.name)];
 
                 TaskCount.Content = $"{tasks.Count}t";
                 foreach (IndividualTask task in tasks)
@@ -1256,18 +1256,18 @@ namespace TemporaTasks.Pages
 
             else if (SortComboBox.SelectedIndex == 1)
                 foreach (IndividualTask task in tasks)
-                    if (task.CreatedDT.HasValue)
+                    if (task.createdDT.HasValue)
                     {
-                        yesDate[task] = task.CreatedDT.Value;
+                        yesDate[task] = task.createdDT.Value;
                         if (task.IsDue) dueTasks++;
                     }
                     else noDate.Add(task);
 
             else if (SortComboBox.SelectedIndex == 2)
                 foreach (IndividualTask task in tasks)
-                    if (task.DueDT.HasValue)
+                    if (task.dueDT.HasValue)
                     {
-                        yesDate[task] = task.DueDT.Value;
+                        yesDate[task] = task.dueDT.Value;
                         if (task.IsDue) dueTasks++;
                     }
                     else noDate.Add(task);
@@ -1402,7 +1402,7 @@ namespace TemporaTasks.Pages
                 if (reverseSort)
                 {
                     for (int i = generatedTasks.Count - 1; i >= 0; i--)
-                        if (!generatedTasks[i].IsCompleted && generatedTasks[i].DueDT.HasValue)
+                        if (!generatedTasks[i].IsCompleted && generatedTasks[i].dueDT.HasValue)
                         {
                             nextDueTask = generatedTasks[i];
                             break;
@@ -1411,7 +1411,7 @@ namespace TemporaTasks.Pages
                 else
                 {
                     for (int i = 0; i < generatedTasks.Count; i++)
-                        if (!generatedTasks[i].IsCompleted && generatedTasks[i].DueDT.HasValue)
+                        if (!generatedTasks[i].IsCompleted && generatedTasks[i].dueDT.HasValue)
                         {
                             nextDueTask = generatedTasks[i];
                             break;
@@ -1421,9 +1421,9 @@ namespace TemporaTasks.Pages
             else
             {
                 for (int i = generatedTasks.Count - 1; i >= 0; i--)
-                    if (!generatedTasks[i].IsCompleted && generatedTasks[i].DueDT.HasValue)
+                    if (!generatedTasks[i].IsCompleted && generatedTasks[i].dueDT.HasValue)
                         if (nextDueTask == null) nextDueTask = generatedTasks[i];
-                        else if (generatedTasks[i].DueDT < nextDueTask.DueDT) nextDueTask = generatedTasks[i];
+                        else if (generatedTasks[i].dueDT < nextDueTask.dueDT) nextDueTask = generatedTasks[i];
             }
 
             if (nextDueTask == null) StatusGrid.Visibility = Visibility.Collapsed;
@@ -1434,8 +1434,8 @@ namespace TemporaTasks.Pages
                     NextTaskDueNameLabel.Content = "Garbled Task";
                 else
                 {
-                    NextTaskDueNameLabel.Content = nextDueTask.Name;
-                    if (nextDueTask.Name.Length > 20) NextTaskDueNameLabel.Content = $"{nextDueTask.Name[..20].Trim()}...";
+                    NextTaskDueNameLabel.Content = nextDueTask.name;
+                    if (nextDueTask.name.Length > 20) NextTaskDueNameLabel.Content = $"{nextDueTask.name[..20].Trim()}...";
                 }
                 NextTaskDueTimeLabel.Content = DTHelper.GetRelativeTaskDueTime(nextDueTask);
             }
@@ -1478,7 +1478,7 @@ namespace TemporaTasks.Pages
         {
             TaskFile.notificationMode = notificationMode;
             UpdateNotificationMode();
-            TaskFile.NotificationModeTimer.Stop();
+            TaskFile.muteNotificationsTimer.Stop();
         }
 
         private void UpdateTaskTimers(object sender, EventArgs e)
@@ -1487,9 +1487,9 @@ namespace TemporaTasks.Pages
             foreach (IndividualTask task in TaskFile.TaskList)
             {
                 if (task.IsCompleted || task.IsDue) continue;
-                if (task.DueDT.HasValue)
+                if (task.dueDT.HasValue)
                 {
-                    taskTimeRemaining = (task.DueDT.Value - DateTime.Now).TotalSeconds;
+                    taskTimeRemaining = (task.dueDT.Value - DateTime.Now).TotalSeconds;
                     if (taskTimeRemaining < TimeSpan.FromHours(1).TotalSeconds) task.NewDueDT();
                 }
             }
@@ -1618,7 +1618,7 @@ namespace TemporaTasks.Pages
         private async void TrashIcon_MouseDown(object sender)
         {
             IndividualTask task = (IndividualTask)sender;
-            task.TaskTimer.Stop();
+            task.taskTimer.Stop();
             lastTask.Add(task);
 
             task.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(500)));
@@ -1632,8 +1632,8 @@ namespace TemporaTasks.Pages
             TaskStack.Children.Remove(task);
             currentFocus -= 1;
 
-            if (task.taskStatus == IndividualTask.TaskStatus.Deleted) TaskFile.TaskList.Remove(task);
-            else task.taskStatus = IndividualTask.TaskStatus.Deleted;
+            if (task.status == IndividualTask.TaskStatus.Deleted) TaskFile.TaskList.Remove(task);
+            else task.status = IndividualTask.TaskStatus.Deleted;
 
             TaskFile.SaveData();
         }
@@ -1643,8 +1643,8 @@ namespace TemporaTasks.Pages
             if (lastTask.Count == 0) return;
 
             IndividualTask task = lastTask.Last();
-            if (task.IsCompleted) task.taskStatus = IndividualTask.TaskStatus.Completed;
-            else task.taskStatus = IndividualTask.TaskStatus.Normal;
+            if (task.IsCompleted) task.status = IndividualTask.TaskStatus.Completed;
+            else task.status = IndividualTask.TaskStatus.Normal;
             task.Visibility = Visibility.Visible;
             TaskFile.TaskList.Add(task);
             TaskFile.SaveData();
@@ -1684,17 +1684,17 @@ namespace TemporaTasks.Pages
             foreach (IndividualTask task in selectedTasks)
             {
                 _temp = [];
-                _temp["taskName"] = task.Name;
-                _temp["taskDesc"] = task.Desc;
-                _temp["createdTime"] = TaskFile.DateTimeToString(task.CreatedDT);
-                _temp["dueTime"] = TaskFile.DateTimeToString(task.DueDT);
-                _temp["completedTime"] = TaskFile.DateTimeToString(task.CompletedDT);
-                _temp["taskStatus"] = ((int)task.taskStatus).ToString();
-                _temp["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
-                _temp["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
+                _temp["taskName"] = task.name;
+                _temp["taskDesc"] = task.desc;
+                _temp["createdTime"] = TaskFile.DateTimeToString(task.createdDT);
+                _temp["dueTime"] = TaskFile.DateTimeToString(task.dueDT);
+                _temp["completedTime"] = TaskFile.DateTimeToString(task.completedDT);
+                _temp["taskStatus"] = ((int)task.status).ToString();
+                _temp["tags"] = (task.tagList == null) ? "" : string.Join(';', task.tagList.ToArray());
+                _temp["recurrance"] = task.recurranceTS.HasValue ? task.recurranceTS.Value.ToString() : "";
                 _temp["garbled"] = task.IsGarbled() ? "1" : "0";
-                _temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
-                _temp["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
+                _temp["taskPriority"] = task.priority == IndividualTask.TaskPriority.High ? "1" : "0";
+                _temp["attachments"] = (task.attachments == null) ? "" : string.Join(';', task.attachments.ToArray());
                 temp[task.UID.ToString()] = _temp;
             }
 

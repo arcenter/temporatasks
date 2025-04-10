@@ -17,14 +17,14 @@ namespace TemporaTasks.UserControls
         readonly MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public long UID { get; set; }
-        public string Name { get; set; }
-        public string Desc { get; set; }
+        public string name { get; set; }
+        public string desc { get; set; }
 
-        public ArrayList? TagList { get; set; }
+        public ArrayList? tagList { get; set; }
 
-        public ArrayList? Attachments { get; set; }
+        public ArrayList? attachments { get; set; }
 
-        private bool Garbled = false;
+        private bool garbled = false;
 
         public enum TempGarbleMode
         {
@@ -39,7 +39,7 @@ namespace TemporaTasks.UserControls
             High
         }
 
-        public TaskPriority taskPriority = TaskPriority.Normal;
+        public TaskPriority priority = TaskPriority.Normal;
 
         public enum TaskStatus
         {
@@ -49,33 +49,33 @@ namespace TemporaTasks.UserControls
             Deleted
         }
 
-        public TaskStatus taskStatus = TaskStatus.Normal;
+        public TaskStatus status = TaskStatus.Normal;
 
         public bool IsCompleted
         {
-            get { return CompletedDT.HasValue; }
+            get { return completedDT.HasValue; }
             set
             {
-                CompletedDT = value ? DateTime.Now : null;
-                taskStatus = value ? TaskStatus.Completed : TaskStatus.Normal;
+                completedDT = value ? DateTime.Now : null;
+                status = value ? TaskStatus.Completed : TaskStatus.Normal;
             }
         }
 
-        public DateTime? CreatedDT;
-        public DateTime? ModifiedDT;
-        public DateTime? DueDT;
-        public DateTime? CompletedDT;
+        public DateTime? createdDT;
+        public DateTime? modifiedDT;
+        public DateTime? dueDT;
+        public DateTime? completedDT;
 
-        public TimeSpan? RecurranceTimeSpan;
+        public TimeSpan? recurranceTS;
 
-        public DispatcherTimer TaskTimer = new();
-        readonly private DispatcherTimer TemporaryRemainingTimer = new();
+        public DispatcherTimer taskTimer = new();
+        readonly private DispatcherTimer temporaryRemainingTimer = new();
 
         public bool IsDue
         {
             get
             {
-                if (DueDT.HasValue && !IsCompleted) return ((DueDT.Value - DateTime.Now) < TimeSpan.Zero);
+                if (dueDT.HasValue && !IsCompleted) return ((dueDT.Value - DateTime.Now) < TimeSpan.Zero);
                 return false;
             }
         }
@@ -86,30 +86,30 @@ namespace TemporaTasks.UserControls
 
             UID = _TaskUID;
 
-            taskNameTextBlock.Text = Name = _TaskName;
+            taskNameTextBlock.Text = name = _TaskName;
             TaskToolTipLabel.Content = (_TaskName.Length > 100) ? ($"{_TaskName[..100]}...") : _TaskName;
 
-            if ((Desc = _TaskDesc) != "") DescriptionIcon.Visibility = Visibility.Visible;
+            if ((desc = _TaskDesc) != "") DescriptionIcon.Visibility = Visibility.Visible;
 
-            CreatedDT = _CreatedDT;
-            ModifiedDT = DateTimeOffset.UtcNow.LocalDateTime;
-            DueDT = _DueDT;
+            createdDT = _CreatedDT;
+            modifiedDT = DateTimeOffset.UtcNow.LocalDateTime;
+            dueDT = _DueDT;
             IsCompleted = _CompletedDT.HasValue;
-            CompletedDT = _CompletedDT;
+            completedDT = _CompletedDT;
 
-            taskStatus = _taskStatus;
-            if ((RecurranceTimeSpan = _RecurranceTimeSpan) is not null) RepeatIcon.Visibility = Visibility.Visible;
-            TagList = _TagList;
-            Attachments = _Attachments;
+            status = _taskStatus;
+            if ((recurranceTS = _RecurranceTimeSpan) is not null) RepeatIcon.Visibility = Visibility.Visible;
+            tagList = _TagList;
+            attachments = _Attachments;
 
-            Garbled = _garbled;
+            garbled = _garbled;
             if (_taskPriority == TaskPriority.High)
-                taskPriority = _taskPriority;
+                priority = _taskPriority;
 
             SetTimer();
 
-            TemporaryRemainingTimer.Interval = TimeSpan.FromSeconds(1);
-            TemporaryRemainingTimer.Tick += UpdateDateTimeLabelWithRemaining;
+            temporaryRemainingTimer.Interval = TimeSpan.FromSeconds(1);
+            temporaryRemainingTimer.Tick += UpdateDateTimeLabelWithRemaining;
         }
 
         private void IndividualTask_Loaded(object sender, RoutedEventArgs e)
@@ -123,7 +123,7 @@ namespace TemporaTasks.UserControls
         {
             if (!Icons.IsMouseOver)
             {
-                TemporaryRemainingTimer.Start();
+                temporaryRemainingTimer.Start();
                 UpdateDateTimeLabelWithRemaining(null, null);
             }
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, TimeSpan.FromMilliseconds(250)));
@@ -132,7 +132,7 @@ namespace TemporaTasks.UserControls
 
         public void Background_MouseLeave(object sender, MouseEventArgs e)
         {
-            TemporaryRemainingTimer.Stop();
+            temporaryRemainingTimer.Stop();
             DueDateTimeLabelUpdate();
             Background.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
             if (!Icons.IsMouseOver) Icons.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
@@ -177,20 +177,20 @@ namespace TemporaTasks.UserControls
         {
             IsCompleted = !IsCompleted;
 
-            if (IsCompleted && RecurranceTimeSpan.HasValue)
+            if (IsCompleted && recurranceTS.HasValue)
             {
                 long randomLong;
             randomGen:
                 randomLong = (long)(new Random().NextDouble() * long.MaxValue);
                 foreach (IndividualTask task in TaskFile.TaskList) if (task.UID == randomLong) { goto randomGen; }
 
-                DateTime? newDateTime = (DueDT.HasValue) ?
-                    DueDT.Value + RecurranceTimeSpan.Value :
-                    DateTimeOffset.UtcNow.LocalDateTime + RecurranceTimeSpan.Value;
+                DateTime? newDateTime = (dueDT.HasValue) ?
+                    dueDT.Value + recurranceTS.Value :
+                    DateTimeOffset.UtcNow.LocalDateTime + recurranceTS.Value;
 
-                TaskFile.TaskList.Add(new IndividualTask(randomLong, Name, Desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, TaskStatus.Normal, TagList, RecurranceTimeSpan, Garbled, taskPriority, Attachments));
+                TaskFile.TaskList.Add(new IndividualTask(randomLong, name, desc, DateTimeOffset.UtcNow.LocalDateTime, newDateTime, null, TaskStatus.Normal, tagList, recurranceTS, garbled, priority, attachments));
 
-                RecurranceTimeSpan = null;
+                recurranceTS = null;
                 RepeatIcon.Visibility = Visibility.Collapsed;
             }
 
@@ -201,24 +201,24 @@ namespace TemporaTasks.UserControls
 
         public void WontDoTask()
         {
-            if (taskStatus == TaskStatus.WontDo)
+            if (status == TaskStatus.WontDo)
             {
-                taskStatus = TaskStatus.Normal;
+                status = TaskStatus.Normal;
                 taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
                 NewDueDT();
             }
             else
             {
-                taskStatus = TaskStatus.WontDo;
+                status = TaskStatus.WontDo;
                 taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0.25, TimeSpan.FromMilliseconds(250)));
-                TaskTimer.Stop();
+                taskTimer.Stop();
             }
             TaskFile.SaveData();
         }
 
         public void UpdateTaskCheckBoxAndBackground()
         {
-            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? (taskPriority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
+            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? (priority == TaskPriority.High ? 0.75 : 1) : 0, TimeSpan.FromMilliseconds(250)));
             taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(250)));
             UpdateHP();
             UpdateStrikethrough();
@@ -227,7 +227,7 @@ namespace TemporaTasks.UserControls
 
         private void UpdateHP()
         {
-            if (taskPriority == TaskPriority.High)
+            if (priority == TaskPriority.High)
             {
                 CheckBox.BorderBrush = checkMark.Stroke = strikethroughLine.Stroke = (SolidColorBrush)mainWindow.FindResource("HighPriority");
                 CheckBox.Opacity = checkMark.Opacity = 0.75;
@@ -245,7 +245,7 @@ namespace TemporaTasks.UserControls
 
         public void ToggleHP()
         {
-            taskPriority = (taskPriority == TaskPriority.Normal) ? TaskPriority.High : TaskPriority.Normal;
+            priority = (priority == TaskPriority.Normal) ? TaskPriority.High : TaskPriority.Normal;
             TaskFile.SaveData();
             UpdateHP();
         }
@@ -294,17 +294,17 @@ namespace TemporaTasks.UserControls
 
         public void TrashIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskTimer.Stop();
+            taskTimer.Stop();
             IsTrashIconClicked?.Invoke(this);
         }
 
         public void DueDateTimeLabelUpdate()
         {
-            if (IsCompleted && CompletedDT.HasValue)
-                DueDateTimeLabel.Content = $"Done {DateDifference(CompletedDT.Value)}{CompletedDT.Value:hh:mm tt}";
+            if (IsCompleted && completedDT.HasValue)
+                DueDateTimeLabel.Content = $"Done {DateDifference(completedDT.Value)}{completedDT.Value:hh:mm tt}";
 
-            else if (DueDT.HasValue)
-                DueDateTimeLabel.Content = $"Due {DateDifference(DueDT.Value)}{DueDT.Value:hh:mm tt}";
+            else if (dueDT.HasValue)
+                DueDateTimeLabel.Content = $"Due {DateDifference(dueDT.Value)}{dueDT.Value:hh:mm tt}";
 
             else
                 DueDateTimeLabel.Content = "";
@@ -326,21 +326,21 @@ namespace TemporaTasks.UserControls
 
         private void UpdateDateTimeLabelWithRemaining(object sender, EventArgs e)
         {
-            if (!DueDT.HasValue) return;
-            TimeSpan remainingTime = DueDT.Value - DateTime.Now;
+            if (!dueDT.HasValue) return;
+            TimeSpan remainingTime = dueDT.Value - DateTime.Now;
             if (remainingTime <= TimeSpan.FromMinutes(1))
             {
                 if (remainingTime <= TimeSpan.FromTicks(0))
                 {
                     if (!IsCompleted) DueDateTimeLabel.Content = "Past due";
-                    TemporaryRemainingTimer.Stop();
+                    temporaryRemainingTimer.Stop();
                 }
                 else DueDateTimeLabel.Content = $"In {(int)remainingTime.TotalSeconds} seconds";
             }
             else
             {
                 DueDateTimeLabel.Content = $"In {DTHelper.GetRemainingDueTime(remainingTime)}";
-                TemporaryRemainingTimer.Stop();
+                temporaryRemainingTimer.Stop();
             }
         }
 
@@ -362,14 +362,14 @@ namespace TemporaTasks.UserControls
 
         private void SetTimer()
         {
-            TaskTimer.Stop();
-            if (taskStatus == TaskStatus.Normal && DueDT.HasValue && !IsCompleted)
+            taskTimer.Stop();
+            if (status == TaskStatus.Normal && dueDT.HasValue && !IsCompleted)
             {
-                double taskTimeRemaining = (DueDT.Value - DateTime.Now).TotalSeconds;
+                double taskTimeRemaining = (dueDT.Value - DateTime.Now).TotalSeconds;
                 if (taskTimeRemaining <= 120)
                 {
-                    TaskTimer.Interval = TimeSpan.FromSeconds(Math.Max(2, taskTimeRemaining));
-                    TaskTimer.Tick += (s, e) =>
+                    taskTimer.Interval = TimeSpan.FromSeconds(Math.Max(2, taskTimeRemaining));
+                    taskTimer.Tick += (s, e) =>
                     {
                         DueDateTimeLabel.Foreground = (SolidColorBrush)mainWindow.FindResource("PastDue");
                         DueDateTimeLabel.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
@@ -378,9 +378,9 @@ namespace TemporaTasks.UserControls
                         //    mainWindow.OnTaskDue(garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         //else if (TaskFile.notificationMode == TaskFile.NotificationMode.High && taskPriority == TaskPriority.High)
                         //    mainWindow.OnTaskDue(garbled ? "Garbled Task" : TaskName, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                        TaskTimer.Interval = TimeSpan.FromMinutes(5);
+                        taskTimer.Interval = TimeSpan.FromMinutes(5);
                     };
-                    TaskTimer.Start();
+                    taskTimer.Start();
                 }
             }
         }
@@ -390,14 +390,14 @@ namespace TemporaTasks.UserControls
             string? name = (sender is Border border) ? border.Name : sender.ToString();
 
             if (name == "none")
-                DueDT = null;
+                dueDT = null;
             else if (name == "now")
             {
                 DateTime currentDT = DateTime.Now;
-                DueDT = new DateTime(currentDT.Year, currentDT.Month, currentDT.Day, currentDT.Hour, DateTime.Now.Minute, 0);
+                dueDT = new DateTime(currentDT.Year, currentDT.Month, currentDT.Day, currentDT.Hour, DateTime.Now.Minute, 0);
             }
             else
-                DueDT = (DueDT ?? DateTime.Now) + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
+                dueDT = (dueDT ?? DateTime.Now) + ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) || (e != null && e.ChangedButton == MouseButton.Right)) ? -1 : 1) * (name) switch
                 {
                     "plus1m" => TimeSpan.FromMinutes(1),
                     "plus5m" => TimeSpan.FromMinutes(5),
@@ -446,12 +446,12 @@ namespace TemporaTasks.UserControls
 
         public bool IsLinkAvailable()
         {
-            return LinkRegex().Match(Name).Success;
+            return LinkRegex().Match(name).Success;
         }
 
         public void LinkOpen()
         {
-            Match match = LinkRegex().Match(Name);
+            Match match = LinkRegex().Match(name);
             if (match.Success)
             {
                 Process.Start(new ProcessStartInfo("cmd", "/C start" + " " + match.Value));
@@ -463,15 +463,15 @@ namespace TemporaTasks.UserControls
 
         public bool IsGarbled()
         {
-            return Garbled;
+            return garbled;
         }
 
         public async void Garble(bool? _garble = null, bool playAnimation = false)
         {
             bool garble = _garble ?? !IsGarbled();
 
-            if (garble == Garbled) return;
-            Garbled = garble;
+            if (garble == garbled) return;
+            garbled = garble;
 
             if (IsVisible && playAnimation)
             {
@@ -528,7 +528,7 @@ namespace TemporaTasks.UserControls
 
         public async void TempGarble(TempGarbleMode garbleMode, bool playAnimation = false)
         {
-            if ((garbleMode == TempGarbleMode.On || (garbleMode == TempGarbleMode.None && Garbled)) && TextSP.Opacity != 1)
+            if ((garbleMode == TempGarbleMode.On || (garbleMode == TempGarbleMode.None && garbled)) && TextSP.Opacity != 1)
             {
                 if (playAnimation)
                 {
@@ -590,7 +590,7 @@ namespace TemporaTasks.UserControls
                     }
                 }
             }
-            else if ((garbleMode == TempGarbleMode.Off || (garbleMode == TempGarbleMode.None && !Garbled)) && TextSP.Opacity != 0)
+            else if ((garbleMode == TempGarbleMode.Off || (garbleMode == TempGarbleMode.None && !garbled)) && TextSP.Opacity != 0)
             {
                 if (playAnimation)
                 {

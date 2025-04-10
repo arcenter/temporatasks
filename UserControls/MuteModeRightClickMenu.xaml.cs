@@ -36,10 +36,10 @@ namespace TemporaTasks.UserControls
             mainWindow.MouseDown += PopupMouseDown;
             mainWindow.KeyDown += PopupKeyDown;
 
-            if (TaskFile.NotificationModeTimer.IsEnabled)
+            if (TaskFile.muteNotificationsTimer.IsEnabled)
             {
                 ButtonPanel.Visibility = Visibility.Collapsed;
-                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.NotificationModeTimerEnd - DateTime.Now);
+                t30mLabel.Content = DTHelper.GetRemainingDueTime(TaskFile.muteNotificationsTimerEnd - DateTime.Now);
                 t30mLabel.Padding = new Thickness(10, 0, 10, 0);
             }
             else
@@ -110,23 +110,23 @@ namespace TemporaTasks.UserControls
             switch ((sender is Border border) ? border.Name : sender)
             {
                 case "t30m":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromMinutes(30);
+                    TaskFile.muteNotificationsTimer.Interval = TimeSpan.FromMinutes(30);
                     break;
 
                 case "t1h":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(1);
+                    TaskFile.muteNotificationsTimer.Interval = TimeSpan.FromHours(1);
                     break;
 
                 case "t6h":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromHours(6);
+                    TaskFile.muteNotificationsTimer.Interval = TimeSpan.FromHours(6);
                     break;
 
                 case "t1d":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(1);
+                    TaskFile.muteNotificationsTimer.Interval = TimeSpan.FromDays(1);
                     break;
 
                 case "t1w":
-                    TaskFile.NotificationModeTimer.Interval = TimeSpan.FromDays(7);
+                    TaskFile.muteNotificationsTimer.Interval = TimeSpan.FromDays(7);
                     break;
 
                 case "custom":
@@ -140,8 +140,8 @@ namespace TemporaTasks.UserControls
 
             UpdateNotificationMode.Invoke(TaskFile.NotificationMode.Muted);
 
-            TaskFile.NotificationModeTimerEnd = DateTime.Now + TaskFile.NotificationModeTimer.Interval;
-            TaskFile.NotificationModeTimer.Start();
+            TaskFile.muteNotificationsTimerEnd = DateTime.Now + TaskFile.muteNotificationsTimer.Interval;
+            TaskFile.muteNotificationsTimer.Start();
             
             PopupClose();
         }

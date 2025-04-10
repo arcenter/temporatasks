@@ -131,7 +131,7 @@ namespace TemporaTasks.Windows
 
                 if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && Keyboard.IsKeyDown(Key.C))
                 {
-                    Clipboard.SetText(task.Name);
+                    Clipboard.SetText(task.name);
                     return;
                 }
 
@@ -212,13 +212,13 @@ namespace TemporaTasks.Windows
                     //    return;
 
                     case Key.C:
-                        dateClipboard = task.DueDT;
+                        dateClipboard = task.dueDT;
                         return;
 
                     case Key.V:
                         if (dateClipboard.HasValue)
                         {
-                            task.DueDT = dateClipboard;
+                            task.dueDT = dateClipboard;
                             TaskFile.SaveData();
                             task.DueDateTimeLabelUpdate();
                             task.NewDueDT();

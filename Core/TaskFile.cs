@@ -29,11 +29,11 @@ namespace TemporaTasks.Core
         }
 
         public static NotificationMode notificationMode = NotificationMode.Normal;
-        public static bool notifPopupMode = false;
+        public static bool popupOnNotification = true;
         public static IndividualTask.TempGarbleMode tempGarbleMode = IndividualTask.TempGarbleMode.None;
 
-        public static DispatcherTimer NotificationModeTimer = new();
-        public static DateTime NotificationModeTimerEnd;
+        public static DispatcherTimer muteNotificationsTimer = new();
+        public static DateTime muteNotificationsTimerEnd;
 
         public async static void LoadData()
         {
@@ -52,42 +52,42 @@ namespace TemporaTasks.Core
                 data.Remove("settings");
 
                 sortType = int.Parse(settings["sortType"]);
-                notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notifMode"]);
-                if (settings["notifModeTimer"] != "0")
+                notificationMode = (NotificationMode)Enum.Parse(typeof(NotificationMode), settings["notificationMode"]);
+                if (settings["muteTimerEnd"] != "0")
                 {
-                    var timer = DateTimeOffset.FromUnixTimeSeconds(long.Parse(settings["notifModeTimer"])).LocalDateTime;
+                    var timer = DateTimeOffset.FromUnixTimeSeconds(long.Parse(settings["muteTimerEnd"])).LocalDateTime;
                     var remaining = timer - DateTime.Now;
                     if ((remaining) > TimeSpan.Zero)
                     {
                         notificationMode = NotificationMode.Muted;
-                        NotificationModeTimerEnd = timer;
-                        NotificationModeTimer.Interval = remaining;
-                        NotificationModeTimer.Start();
+                        muteNotificationsTimerEnd = timer;
+                        muteNotificationsTimer.Interval = remaining;
+                        muteNotificationsTimer.Start();
                     } else
                     {
                         notificationMode = NotificationMode.Normal;
                     }
                 }
-                notifPopupMode = settings["notifPopupMode"] == "1";
+                popupOnNotification = settings["popupOnNotification"] == "1";
 
                 foreach (string taskUID in data.Keys)
                 {
                     try
                     {
-                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), data[taskUID]["taskStatus"]);
+                        IndividualTask.TaskStatus taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), data[taskUID]["status"]);
 
                         {
                             DateTime? createdTime = null;
-                            createdTime = StringToDateTime(data, taskUID, "createdTime");
+                            createdTime = StringToDateTime(data, taskUID, "created");
 
                             DateTime? modifiedTime = createdTime;
-                            if (data[taskUID].ContainsKey("modifiedTime")) modifiedTime = StringToDateTime(data, taskUID, "modifiedTime");
+                            if (data[taskUID].ContainsKey("modified")) modifiedTime = StringToDateTime(data, taskUID, "modified");
 
                             DateTime? dueTime = null;
-                            dueTime = StringToDateTime(data, taskUID, "dueTime");
+                            dueTime = StringToDateTime(data, taskUID, "due");
 
                             DateTime? completedTime = null;
-                            completedTime = StringToDateTime(data, taskUID, "completedTime");
+                            completedTime = StringToDateTime(data, taskUID, "completed");
 
                             TimeSpan? recurrance = null;
                             if (data[taskUID].TryGetValue("recurrance", out string? recurranceString) && recurranceString != "") recurrance = TimeSpan.Parse(recurranceString);
@@ -101,9 +101,9 @@ namespace TemporaTasks.Core
                             bool garbled = false;
                             if (data[taskUID]["garbled"] != "0") garbled = true;
 
-                            IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["taskPriority"]);
+                            IndividualTask.TaskPriority taskPriority = (IndividualTask.TaskPriority)Enum.Parse(typeof(IndividualTask.TaskPriority), data[taskUID]["priority"]);
 
-                            IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["taskName"], data[taskUID]["taskDesc"], createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, attachments) { ModifiedDT = modifiedTime };
+                            IndividualTask taskObj = new(long.Parse(taskUID), data[taskUID]["name"], data[taskUID]["desc"], createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, attachments) { modifiedDT = modifiedTime };
                             TaskList.Add(taskObj);
                         }
                     }
@@ -189,25 +189,25 @@ namespace TemporaTasks.Core
                                 break;
                             }
 
-                        if (!(data[taskUID].TryGetValue("taskName", out string? taskName))) continue;
+                        if (!(data[taskUID].TryGetValue("name", out string? taskName))) continue;
 
-                        data[taskUID].TryGetValue("taskDesc", out string? taskDesc);
+                        data[taskUID].TryGetValue("desc", out string? taskDesc);
                         if (taskDesc is null) taskDesc = "";
 
                         DateTime? createdTime = null;
-                        if (data[taskUID].ContainsKey("createdTime")) createdTime = StringToDateTime(data, taskUID, "createdTime");
+                        if (data[taskUID].ContainsKey("created")) createdTime = StringToDateTime(data, taskUID, "created");
 
                         DateTime? modifiedTime = null;
-                        if (data[taskUID].ContainsKey("modifiedTime")) modifiedTime = StringToDateTime(data, taskUID, "modifiedTime");
+                        if (data[taskUID].ContainsKey("modified")) modifiedTime = StringToDateTime(data, taskUID, "modified");
 
                         DateTime? dueTime = null;
-                        if (data[taskUID].ContainsKey("dueTime")) dueTime = StringToDateTime(data, taskUID, "dueTime");
+                        if (data[taskUID].ContainsKey("due")) dueTime = StringToDateTime(data, taskUID, "due");
 
                         DateTime? completedTime = null;
-                        if (data[taskUID].ContainsKey("completedTime")) completedTime = StringToDateTime(data, taskUID, "completedTime");
+                        if (data[taskUID].ContainsKey("completed")) completedTime = StringToDateTime(data, taskUID, "completed");
 
                         IndividualTask.TaskStatus taskStatus = IndividualTask.TaskStatus.Normal;
-                        if (data[taskUID].TryGetValue("taskStatus", out string? taskStatusString)) taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), taskStatusString);
+                        if (data[taskUID].TryGetValue("status", out string? taskStatusString)) taskStatus = (IndividualTask.TaskStatus)Enum.Parse(typeof(IndividualTask.TaskStatus), taskStatusString);
 
                         ArrayList? tagList = null;
                         if (data[taskUID].TryGetValue("tags", out string? tagString) && tagString != "") tagList = new ArrayList(tagString.Split(';'));
@@ -219,10 +219,10 @@ namespace TemporaTasks.Core
                         if (data[taskUID].TryGetValue("garbled", out string? garbledString) && garbledString != "0") garbled = true;
 
                         TaskPriority taskPriority = TaskPriority.Normal;
-                        if (data[taskUID].TryGetValue("taskPriority", out string? priorityText)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), priorityText);
+                        if (data[taskUID].TryGetValue("priority", out string? priorityText)) taskPriority = (TaskPriority)Enum.Parse(typeof(TaskPriority), priorityText);
 
                         IndividualTask taskObj = new(newTaskUID, taskName, taskDesc, createdTime, dueTime, completedTime, taskStatus, tagList, recurrance, garbled, taskPriority, null);
-                        taskObj.ModifiedDT = modifiedTime;
+                        taskObj.modifiedDT = modifiedTime;
 
                         TaskList.Add(taskObj);
                     }
@@ -266,26 +266,26 @@ namespace TemporaTasks.Core
             Dictionary<string, string> temp = [];
             
             temp["sortType"] = sortType.ToString();
-            temp["notifMode"] = ((int)notificationMode).ToString();
-            temp["notifModeTimer"] = NotificationModeTimer.IsEnabled ? DateTimeToString(NotificationModeTimerEnd) : "0";
-            temp["notifPopupMode"] = notifPopupMode ? "1" : "0";
+            temp["notificationMode"] = ((int)notificationMode).ToString();
+            temp["muteTimerEnd"] = muteNotificationsTimer.IsEnabled ? DateTimeToString(muteNotificationsTimerEnd) : "0";
+            temp["popupOnNotification"] = popupOnNotification ? "1" : "0";
             data["settings"] = temp;
 
             foreach (IndividualTask task in TaskList)
             {
                 temp = [];
-                temp["taskName"] = task.Name;
-                temp["taskDesc"] = task.Desc;
-                temp["createdTime"] = DateTimeToString(task.CreatedDT);
-                temp["modifiedTime"] = DateTimeToString(task.ModifiedDT);
-                temp["dueTime"] = DateTimeToString(task.DueDT);
-                temp["completedTime"] = DateTimeToString(task.CompletedDT);
-                temp["taskStatus"] = ((int)task.taskStatus).ToString();
-                temp["tags"] = (task.TagList == null) ? "" : string.Join(';', task.TagList.ToArray());
-                temp["recurrance"] = task.RecurranceTimeSpan.HasValue ? task.RecurranceTimeSpan.Value.ToString() : "";
+                temp["name"] = task.name;
+                temp["desc"] = task.desc;
+                temp["created"] = DateTimeToString(task.createdDT);
+                temp["modified"] = DateTimeToString(task.modifiedDT);
+                temp["due"] = DateTimeToString(task.dueDT);
+                temp["completed"] = DateTimeToString(task.completedDT);
+                temp["status"] = ((int)task.status).ToString();
+                temp["tags"] = (task.tagList == null) ? "" : string.Join(';', task.tagList.ToArray());
+                temp["recurrance"] = task.recurranceTS.HasValue ? task.recurranceTS.Value.ToString() : "";
                 temp["garbled"] = task.IsGarbled() ? "1" : "0";
-                temp["taskPriority"] = task.taskPriority == IndividualTask.TaskPriority.High ? "1" : "0";
-                temp["attachments"] = (task.Attachments == null) ? "" : string.Join(';', task.Attachments.ToArray());
+                temp["priority"] = task.priority == TaskPriority.High ? "1" : "0";
+                temp["attachments"] = (task.attachments == null) ? "" : string.Join(';', task.attachments.ToArray());
                 data[task.UID.ToString()] = temp;
             }
 

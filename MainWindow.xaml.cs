@@ -178,19 +178,19 @@ namespace TemporaTasks
         {
             if (balloonCalledRecently) return;
             balloonCalledRecently = true;
-            bool _ = TaskFile.notificationMode != TaskFile.NotificationMode.Muted && (TaskFile.notificationMode == TaskFile.NotificationMode.Normal || (TaskFile.notificationMode == TaskFile.NotificationMode.High && task.taskPriority == IndividualTask.TaskPriority.High));
+            bool _ = TaskFile.notificationMode != TaskFile.NotificationMode.Muted && (TaskFile.notificationMode == TaskFile.NotificationMode.Normal || (TaskFile.notificationMode == TaskFile.NotificationMode.High && task.priority == IndividualTask.TaskPriority.High));
             if (_)
-                TrayIcon.ShowBalloonTip($"{((task.taskPriority == IndividualTask.TaskPriority.High) ? "⚠" : "")}Task Due!", task.IsGarbled() ? "Garbled Task" : task.Name, BalloonIcon.Info);
+                TrayIcon.ShowBalloonTip($"{((task.priority == IndividualTask.TaskPriority.High) ? "⚠" : "")}Task Due!", task.IsGarbled() ? "Garbled Task" : task.name, BalloonIcon.Info);
             else
             {
                 int count = 0;
                 foreach (IndividualTask _task in TaskFile.TaskList)
-                    if (_task.IsDue && _task.taskStatus == IndividualTask.TaskStatus.Normal) count++;
+                    if (_task.IsDue && _task.status == IndividualTask.TaskStatus.Normal) count++;
                 if (count >= 10)
                     TrayIcon.ShowBalloonTip("Warning", $"{count} tasks are due!", BalloonIcon.Warning);
             }
             await Task.Delay(5000);
-            if (_ && TaskFile.notifPopupMode && !IsActive) WindowHide(false);
+            if (_ && TaskFile.popupOnNotification && !IsActive) WindowHide(false);
             balloonCalledRecently = false;
         }
 

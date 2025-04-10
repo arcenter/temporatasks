@@ -23,26 +23,26 @@ namespace TemporaTasks.Pages
             InitializeComponent();
 
             this.task = task;
-            TaskNameTextbox.Text = task.Name;
-            TaskDescTextbox.Text = task.Desc;
+            TaskNameTextbox.Text = task.name;
+            TaskDescTextbox.Text = task.desc;
 
-            CreatedLabel.Content = $"Created {task.CreatedDT.Value:dddd, dd MMMM, yyyy} at {task.CreatedDT.Value:hh:mm:ss tt}";
-            ModifiedLabel.Content = $"Modified {task.ModifiedDT.Value:dddd, dd MMMM, yyyy} at {task.ModifiedDT.Value:hh:mm:ss tt}";
+            CreatedLabel.Content = $"Created {task.createdDT.Value:dddd, dd MMMM, yyyy} at {task.createdDT.Value:hh:mm:ss tt}";
+            ModifiedLabel.Content = $"Modified {task.modifiedDT.Value:dddd, dd MMMM, yyyy} at {task.modifiedDT.Value:hh:mm:ss tt}";
             
-            if (task.DueDT.HasValue)
+            if (task.dueDT.HasValue)
             {
-                dateTextBox.Text = DTHelper.DateToString(task.DueDT.Value);
-                timeTextBox.Text = DTHelper.TimeToString(task.DueDT.Value);
+                dateTextBox.Text = DTHelper.DateToString(task.dueDT.Value);
+                timeTextBox.Text = DTHelper.TimeToString(task.dueDT.Value);
             }
 
-            if (task.RecurranceTimeSpan.HasValue)
-                RecurranceTextBox.Text = task.RecurranceTimeSpan.Value.ToString();
+            if (task.recurranceTS.HasValue)
+                RecurranceTextBox.Text = task.recurranceTS.Value.ToString();
 
-            if (task.TagList != null)
-                foreach (string tag in task.TagList)
+            if (task.tagList != null)
+                foreach (string tag in task.tagList)
                     TagsStackAdd(tag);
 
-            if (task.taskPriority == IndividualTask.TaskPriority.High) L5checkMark.Opacity = 1;
+            if (task.priority == IndividualTask.TaskPriority.High) L5checkMark.Opacity = 1;
 
             if (task.IsGarbled()) L6checkMark.Opacity = 1;
 
@@ -235,8 +235,8 @@ namespace TemporaTasks.Pages
 
             IndividualTask.TaskPriority taskPriority = (L5checkMark.Opacity == 1) ? IndividualTask.TaskPriority.High : IndividualTask.TaskPriority.Normal;
 
-            task.TaskTimer.Stop();
-            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.UID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.CreatedDT, newDueDate, null, task.taskStatus, tagList, recurranceTimeSpan, garbled, taskPriority);
+            task.taskTimer.Stop();
+            TaskFile.TaskList[TaskFile.TaskList.IndexOf(task)] = new IndividualTask(task.UID, TaskNameTextbox.Text, TaskDescTextbox.Text, task.createdDT, newDueDate, null, task.status, tagList, recurranceTimeSpan, garbled, taskPriority);
             TaskFile.SaveData();
             mainWindow.FrameView.GoBack();
         }

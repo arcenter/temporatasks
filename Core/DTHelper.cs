@@ -407,9 +407,9 @@ namespace TemporaTasks.Core
 
         public static string GetRelativeTaskDueTime(IndividualTask task)
         {
-            if (!task.DueDT.HasValue) return "";
+            if (!task.dueDT.HasValue) return "";
 
-            TimeSpan remainingTime = task.DueDT.Value - DateTime.Now;
+            TimeSpan remainingTime = task.dueDT.Value - DateTime.Now;
 
             if (remainingTime <= TimeSpan.FromTicks(0) && !task.IsCompleted) return "is past due";
             return "is due in " + GetRemainingDueTime(remainingTime);
