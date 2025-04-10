@@ -822,7 +822,7 @@ namespace TemporaTasks.Pages
             muteModeRightClickMenu.UpdateNotificationMode += UpdateNotificationTimer;
         }
 
-        private void UpdateNotificationMode()
+        public void UpdateNotificationMode()
         {
             if (TaskFile.notificationMode == TaskFile.NotificationMode.Normal)
             {
@@ -1700,7 +1700,7 @@ namespace TemporaTasks.Pages
             Clipboard.SetText(JsonSerializer.Serialize(temp));
         }
 
-        private bool IsAnyPopupOpen()
+        public bool IsAnyPopupOpen()
         {
             return MuteMenuPopup.IsOpen || QuickTimeChangeMenuPopup.IsOpen || FilterMenuPopup.IsOpen;
         }
