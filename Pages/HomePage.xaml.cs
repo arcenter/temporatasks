@@ -144,6 +144,7 @@ namespace TemporaTasks.Pages
             RunSearchTextBoxCloseAnimation();
 
             homePage.Focus();
+            currentPage = 0;
             GenerateTaskStack();
         }
 
