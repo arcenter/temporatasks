@@ -20,7 +20,7 @@ namespace TemporaTasks
     {
         public HomePage homePage;
         
-        private bool windowHidden = false;
+        private bool windowHiddenTypeLock = false;
 
         public MainWindow()
         {
@@ -67,7 +67,7 @@ namespace TemporaTasks
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (windowHidden)
+            if (windowHiddenTypeLock)
             {
                 e.Handled = true;
                 return;
@@ -171,7 +171,7 @@ namespace TemporaTasks
             }
             else
             {
-                windowHidden = true;
+                windowHiddenTypeLock = true;
                 IsWindowUnHidden?.Invoke();
                 Show();
                 Activate();
@@ -180,7 +180,7 @@ namespace TemporaTasks
                 await Task.Delay(25);
                 homePage.Focus();
                 await Task.Delay(475);
-                windowHidden = false;
+                windowHiddenTypeLock = false;
             }
         }
 
