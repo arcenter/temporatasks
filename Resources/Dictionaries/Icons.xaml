@@ -423,4 +423,19 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <!--https://www.svgrepo.com/svg/435230/triangle-up-->
+
+    <DrawingImage x:Key="triangleButton">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V422.7 H746.7 V0 H0 Z">
+                <DrawingGroup.Transform>
+                    <TranslateTransform X="0.0043209991417825222" Y="0" />
+                </DrawingGroup.Transform>
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="{StaticResource Icons}" Geometry="F0 M746.7,422.7z M0,0z M324.3,20.5C351.6,-6.8,395.9,-6.8,423.3,20.5L726.5,323.7C753.9,351,766,422.7,679.4,422.7L68.2,422.7C-21.3,422.7,-6.2,351.1,21.1,323.7L324.3,20.5 324.3,20.5z" />
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
 </ResourceDictionary>

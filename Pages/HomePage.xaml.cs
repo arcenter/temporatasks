@@ -41,7 +41,19 @@ namespace TemporaTasks.Pages
             }
         }
 
-        int currentPage = 0;
+        int _currentPage = 0;
+        int currentPage
+        {
+            get
+            {
+                return _currentPage;
+            }
+            set
+            {
+                _currentPage = value;
+                currentFocus = 0;
+            }
+        }
 
         bool reverseSort = false;
         Dictionary<string, ArrayList> days = [];
@@ -178,6 +190,24 @@ namespace TemporaTasks.Pages
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
             if (IsAnyPopupOpen()) return;
+
+            if (PageTextbox.IsFocused)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    homePage.Focus();
+                    try
+                    {
+                        currentPage = int.Parse(PageTextbox.Text) - 1;
+                        GenerateTaskStack();
+                    }
+                    catch
+                    {
+                        PageTextbox.Text = (currentPage+1).ToString();
+                    }
+                }
+                return;
+            }
 
             if (SearchTextBox.IsFocused)
             {
@@ -1224,8 +1254,6 @@ namespace TemporaTasks.Pages
             if ((generateLock && !force) || TaskStack == null) return;
             generateLock = true;
 
-            await Task.Delay(250);
-
             genTSCompletionSource = new();
             mainWindow.Cursor = Cursors.Wait;
 
@@ -1291,6 +1319,7 @@ namespace TemporaTasks.Pages
                 var MAX_TASK_COUNT = 30;
                 if (currentPage < 0) currentPage = 0;
                 else if (currentPage > tasks.Count / MAX_TASK_COUNT) currentPage = tasks.Count / MAX_TASK_COUNT;
+                PageTextbox.Text = $"{currentPage + 1}";
                 var start = currentPage * MAX_TASK_COUNT;
                 try { tasks = tasks.GetRange(start, MAX_TASK_COUNT); }
                 catch { tasks = tasks.GetRange(start, tasks.Count - start); }
@@ -1319,6 +1348,8 @@ namespace TemporaTasks.Pages
 
                 TaskStack.Children.Add(task);
                 days[dateString].Add(task);
+
+                //await Task.Delay(25);
             }
 
             if (noDate.Count > 0)
@@ -1707,6 +1738,26 @@ namespace TemporaTasks.Pages
         public bool IsAnyPopupOpen()
         {
             return MuteMenuPopup.IsOpen || QuickTimeChangeMenuPopup.IsOpen || FilterMenuPopup.IsOpen;
+        }
+
+        private void PageButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            switch (((Border)sender).Name)
+            {
+                case "PageUpButton":
+                    currentPage--;
+                    break;
+
+                case "PageDownButton":
+                    currentPage++;
+                    break;
+            }
+            GenerateTaskStack();
+        }
+
+        private void PageButton_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation((bool)e.NewValue ? 1 : 0.5, TimeSpan.FromMilliseconds(250)));
         }
     }
 }

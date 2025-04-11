@@ -45,7 +45,7 @@ namespace TemporaTasks.Core
             if (File.Exists(saveFilePath))
             {
                 Dictionary<string, Dictionary<string, string>> data = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(saveFilePath));
-                
+
                 HomePage.initialFinished = false;
 
                 Dictionary<string, string> settings = data["settings"];
@@ -63,7 +63,8 @@ namespace TemporaTasks.Core
                         muteNotificationsTimerEnd = timer;
                         muteNotificationsTimer.Interval = remaining;
                         muteNotificationsTimer.Start();
-                    } else
+                    }
+                    else
                     {
                         notificationMode = NotificationMode.Normal;
                     }
@@ -111,7 +112,7 @@ namespace TemporaTasks.Core
                     //await Task.Delay(1);
                     // mainWindow.LoadBar.RenderTransform = new ScaleTransform(scale += increment, 1);
                 }
-
+                
                 mainWindow.WindowTitle.Content = $" | {Path.GetFileName(saveFilePath)}";
             }
 
