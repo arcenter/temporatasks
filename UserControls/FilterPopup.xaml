@@ -53,6 +53,26 @@
                     <Path Data="M1,4 L4,6 L7,1" x:Name="NoDueDateCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
                 </Border>
             </Grid>
+            
+            <Grid Height="30" Margin="0 7.5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Garbled" CornerRadius="7" Grid.ColumnSpan="2" MouseMove="Border_MouseMove" Cursor="Hand" MouseDown="Button_MouseDown" Background="Transparent">
+                    <Border.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Content>
+                                <local:ButtonToolTip T1="Due Date" B1="p"/>
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Border.ToolTip>
+                </Border>
+                <Label Content="Garbled Tasks" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="7.5 0 0 0" IsHitTestVisible="False"/>
+                <Border x:Name="GarbledCB" BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False" Grid.Column="1">
+                    <Path Data="M1,4 L4,6 L7,1" x:Name="GarbledCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
+                </Border>
+            </Grid>
 
         </StackPanel>
         

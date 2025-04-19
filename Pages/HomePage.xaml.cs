@@ -1176,6 +1176,10 @@ namespace TemporaTasks.Pages
                 if ((int)filterPopup.NoDueDateCM.Tag == 1)
                     for (int i = tasks.Count - 1; i >= 0; i--)
                         if (tasks[i].dueDT.HasValue) tasks.Remove(tasks[i]);
+
+                if ((int)filterPopup.GarbledCM.Tag == 1)
+                    for (int i = tasks.Count - 1; i >= 0; i--)
+                        if (!tasks[i].IsGarbled()) tasks.Remove(tasks[i]);
             }
 
             void ApplySearch(List<IndividualTask> tasks)

@@ -19,6 +19,7 @@ namespace TemporaTasks.UserControls
 
             PriorityCM.Tag = 0;
             NoDueDateCM.Tag = 0;
+            GarbledCM.Tag = 0;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -58,6 +59,10 @@ namespace TemporaTasks.UserControls
 
                 case "NoDueDate":
                     ToggleCheckMark(NoDueDateCM);
+                    return;
+
+                case "Garbled":
+                    ToggleCheckMark(GarbledCM);
                     return;
 
                 default:
