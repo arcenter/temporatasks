@@ -30,7 +30,13 @@
                 </Border>
                 <Label Content="Priority" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="7.5 0 0 0" IsHitTestVisible="False"/>
                 <Border x:Name="PriorityCB" BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False" Grid.Column="1">
-                    <Path Data="M1,4 L4,6 L7,1" x:Name="PriorityCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
+                    <Grid IsHitTestVisible="False">
+                        <Path Data="M1,4 L4,6 L7,1" x:Name="PriorityCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" Opacity="0"/>
+                        <Grid x:Name="PriorityXM" Opacity="0">
+                            <Path Data="M1,1 L7,7" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2"/>
+                            <Path Data="M1,7 L7,1" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2"/>
+                        </Grid>
+                    </Grid>
                 </Border>
             </Grid>
 
@@ -39,7 +45,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
-                <Border x:Name="NoDueDate" CornerRadius="7" Grid.ColumnSpan="2" MouseMove="Border_MouseMove" Cursor="Hand" MouseDown="Button_MouseDown" Background="Transparent">
+                <Border x:Name="DueDate" CornerRadius="7" Grid.ColumnSpan="2" MouseMove="Border_MouseMove" Cursor="Hand" MouseDown="Button_MouseDown" Background="Transparent">
                     <Border.ToolTip>
                         <ToolTip>
                             <ToolTip.Content>
@@ -48,9 +54,15 @@
                         </ToolTip>
                     </Border.ToolTip>
                 </Border>
-                <Label Content="No Due Date" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="7.5 0 0 0" IsHitTestVisible="False"/>
-                <Border x:Name="NoDueDateCB" BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False" Grid.Column="1">
-                    <Path Data="M1,4 L4,6 L7,1" x:Name="NoDueDateCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
+                <Label Content="Due Date" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="7.5 0 0 0" IsHitTestVisible="False"/>
+                <Border x:Name="DueDateCB" BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False" Grid.Column="1">
+                    <Grid>
+                        <Path Data="M1,4 L4,6 L7,1" x:Name="DueDateCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
+                        <Grid x:Name="DueDateXM" Opacity="0">
+                            <Path Data="M1,1 L7,7" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2"/>
+                            <Path Data="M1,7 L7,1" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2"/>
+                        </Grid>
+                    </Grid>
                 </Border>
             </Grid>
             
@@ -70,7 +82,13 @@
                 </Border>
                 <Label Content="Garbled Tasks" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" VerticalContentAlignment="Center" Padding="7.5 0 0 0" IsHitTestVisible="False"/>
                 <Border x:Name="GarbledCB" BorderBrush="{StaticResource CheckBox}" BorderThickness="2" CornerRadius="2" HorizontalAlignment="Center" Width="14" Height="14" IsHitTestVisible="False" Grid.Column="1">
-                    <Path Data="M1,4 L4,6 L7,1" x:Name="GarbledCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
+                    <Grid>
+                        <Path Data="M1,4 L4,6 L7,1" x:Name="GarbledCM" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2" IsHitTestVisible="False" Opacity="0"/>
+                        <Grid x:Name="GarbledXM" Opacity="0">
+                            <Path Data="M1,1 L7,7" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2"/>
+                            <Path Data="M1,7 L7,1" Stroke="{StaticResource Blue}" Width="8" Height="8" Margin="0 1 0 0" StrokeThickness="2"/>
+                        </Grid>
+                    </Grid>
                 </Border>
             </Grid>
 

@@ -1169,17 +1169,44 @@ namespace TemporaTasks.Pages
 
             void ApplyFilters(List<IndividualTask> tasks)
             {
-                if ((int)filterPopup.PriorityCM.Tag == 1)
-                    for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (tasks[i].priority == TaskPriority.Normal) tasks.Remove(tasks[i]);
+                switch ((int)filterPopup.PriorityCM.Tag)
+                {
+                    case 1:
+                        for (int i = tasks.Count - 1; i >= 0; i--)
+                            if (tasks[i].priority == TaskPriority.Normal) tasks.Remove(tasks[i]);
+                        break;
 
-                if ((int)filterPopup.NoDueDateCM.Tag == 1)
-                    for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (tasks[i].dueDT.HasValue) tasks.Remove(tasks[i]);
+                    case 2:
+                        for (int i = tasks.Count - 1; i >= 0; i--)
+                            if (tasks[i].priority == TaskPriority.High) tasks.Remove(tasks[i]);
+                        break;
+                }
 
-                if ((int)filterPopup.GarbledCM.Tag == 1)
-                    for (int i = tasks.Count - 1; i >= 0; i--)
-                        if (!tasks[i].IsGarbled()) tasks.Remove(tasks[i]);
+                switch ((int)filterPopup.DueDateCM.Tag)
+                {
+                    case 1:
+                        for (int i = tasks.Count - 1; i >= 0; i--)
+                            if (!tasks[i].dueDT.HasValue) tasks.Remove(tasks[i]);
+                        break;
+
+                    case 2:
+                        for (int i = tasks.Count - 1; i >= 0; i--)
+                            if (tasks[i].dueDT.HasValue) tasks.Remove(tasks[i]);
+                        break;
+                }
+
+                switch ((int)filterPopup.GarbledCM.Tag)
+                {
+                    case 1:
+                        for (int i = tasks.Count - 1; i >= 0; i--)
+                            if (!tasks[i].IsGarbled()) tasks.Remove(tasks[i]);
+                        break;
+    
+                    case 2:
+                        for (int i = tasks.Count - 1; i >= 0; i--)
+                            if (tasks[i].IsGarbled()) tasks.Remove(tasks[i]);
+                        break;
+                }
             }
 
             void ApplySearch(List<IndividualTask> tasks)

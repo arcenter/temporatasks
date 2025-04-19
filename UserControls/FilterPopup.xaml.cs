@@ -18,7 +18,7 @@ namespace TemporaTasks.UserControls
             popupObject = filterPopup;
 
             PriorityCM.Tag = 0;
-            NoDueDateCM.Tag = 0;
+            DueDateCM.Tag = 0;
             GarbledCM.Tag = 0;
         }
 
@@ -54,15 +54,15 @@ namespace TemporaTasks.UserControls
             switch (((Border)sender).Name)
             {
                 case "Priority":
-                    ToggleCheckMark(PriorityCM);
+                    ToggleCheckMark(PriorityCM, PriorityXM);
                     return;
 
-                case "NoDueDate":
-                    ToggleCheckMark(NoDueDateCM);
+                case "DueDate":
+                    ToggleCheckMark(DueDateCM, DueDateXM);
                     return;
 
                 case "Garbled":
-                    ToggleCheckMark(GarbledCM);
+                    ToggleCheckMark(GarbledCM, GarbledXM);
                     return;
 
                 default:
@@ -70,10 +70,29 @@ namespace TemporaTasks.UserControls
             }
         }
 
-        private void ToggleCheckMark(Path checkMark)
+        private void ToggleCheckMark(Path checkMark, Grid crossMark)
         {
-            checkMark.Tag = 1 - (int)checkMark.Tag;
-            checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation((int)checkMark.Tag, TimeSpan.FromMilliseconds(250)));
+            checkMark.Tag = ((int)checkMark.Tag + 1) % 3;
+
+            switch ((int)checkMark.Tag)
+            {
+                case 0:
+                    crossMark.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    break;
+
+                case 1:
+                    checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                    break;
+
+                case 2:
+                    checkMark.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    crossMark.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+                    break;
+
+                default:
+                    break;
+            }
+
             mainWindow.homePage.GenerateTaskStack(false, true);
         }
 
