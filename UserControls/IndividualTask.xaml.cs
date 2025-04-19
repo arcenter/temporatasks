@@ -49,7 +49,16 @@ namespace TemporaTasks.UserControls
             Deleted
         }
 
-        public TaskStatus status = TaskStatus.Normal;
+        private TaskStatus _status = TaskStatus.Normal;
+        public TaskStatus status
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                modifiedDT = DateTimeOffset.UtcNow.LocalDateTime;
+            }
+        }
 
         public bool IsCompleted
         {
@@ -63,7 +72,18 @@ namespace TemporaTasks.UserControls
 
         public DateTime? createdDT;
         public DateTime? modifiedDT;
-        public DateTime? dueDT;
+        
+        private DateTime? _dueDT;
+        public DateTime? dueDT
+        {
+            get { return _dueDT; }
+            set
+            {
+                _dueDT = value;
+                modifiedDT = DateTimeOffset.UtcNow.LocalDateTime;
+            }
+        }
+        
         public DateTime? completedDT;
 
         public TimeSpan? recurranceTS;
