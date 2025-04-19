@@ -7,10 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="80">
 
-    <Border x:Name="TagBackground" Background="{StaticResource DarkerBlue}" CornerRadius="2" BorderThickness="0" Margin="10 0 0 0" Height="20">
+    <Grid x:Name="TagButton" Margin="10 0 0 0" Height="20">
 
+        <Border x:Name="TagBackground" Background="{StaticResource DarkerBlue}" CornerRadius="2" BorderThickness="0" Opacity="1"/>
         <Label Content="{Binding TagText, RelativeSource={RelativeSource AncestorType=UserControl}}" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="5 2 5 2" IsHitTestVisible="False"/>
 
-    </Border>
+    </Grid>
 
 </UserControl>

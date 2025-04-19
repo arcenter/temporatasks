@@ -122,7 +122,16 @@ namespace TemporaTasks.UserControls
 
             status = _taskStatus;
             if ((recurranceTS = _RecurranceTimeSpan) is not null) RepeatIcon.Visibility = Visibility.Visible;
+            
             tagList = _TagList;
+            if (tagList != null)
+                foreach (string tagName in tagList)
+                {
+                    var tag = new Tags(tagName);
+                    tag.TagBackground.Opacity = 0.5;
+                    TagsStack.Children.Add(tag);
+                }
+            
             attachments = _Attachments;
 
             garbled = _garbled;
@@ -504,9 +513,9 @@ namespace TemporaTasks.UserControls
                     TextSP.Children.Clear();
                     TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                     await Task.Delay(400);
-                    taskNameTextBlock.Visibility = Visibility.Hidden;
+                    taskNameAndTag.Visibility = Visibility.Hidden;
 
                     Random random = new();
                     int limit = 3 + random.Next() % 2;
@@ -536,9 +545,9 @@ namespace TemporaTasks.UserControls
                     await Task.Delay(400);
                     TextSP.Children.Clear();
 
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
-                    taskNameTextBlock.Visibility = Visibility.Visible;
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                    taskNameAndTag.Visibility = Visibility.Visible;
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
 
                     strikethroughLine.Visibility = Visibility.Visible;
                 }
@@ -559,9 +568,9 @@ namespace TemporaTasks.UserControls
                     TextSP.Children.Clear();
                     TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(250)));
                     await Task.Delay(400);
-                    taskNameTextBlock.Visibility = Visibility.Hidden;
+                    taskNameAndTag.Visibility = Visibility.Hidden;
 
                     Random random = new();
                     int limit = 3 + random.Next() % 2;
@@ -589,8 +598,8 @@ namespace TemporaTasks.UserControls
                 else
                 {
                     strikethroughLine.Visibility = Visibility.Hidden;
-                    taskNameTextBlock.Visibility = Visibility.Hidden;
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                    taskNameAndTag.Visibility = Visibility.Hidden;
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
 
                     TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromTicks(0)));
 
@@ -621,9 +630,9 @@ namespace TemporaTasks.UserControls
                     await Task.Delay(400);
                     TextSP.Children.Clear();
 
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
-                    taskNameTextBlock.Visibility = Visibility.Visible;
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
+                    taskNameAndTag.Visibility = Visibility.Visible;
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromMilliseconds(300)));
 
                     strikethroughLine.Visibility = Visibility.Visible;
                 }
@@ -633,8 +642,8 @@ namespace TemporaTasks.UserControls
                     TextSP.Children.Clear();
 
                     strikethroughLine.Visibility = Visibility.Visible;
-                    taskNameTextBlock.Visibility = Visibility.Visible;
-                    taskNameTextBlock.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromTicks(0)));
+                    taskNameAndTag.Visibility = Visibility.Visible;
+                    taskNameAndTag.BeginAnimation(OpacityProperty, new DoubleAnimation(0, IsCompleted ? 0.25 : 1, TimeSpan.FromTicks(0)));
 
                     TextSP.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromTicks(0)));
                 }
