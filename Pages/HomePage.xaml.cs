@@ -51,7 +51,7 @@ namespace TemporaTasks.Pages
             set
             {
                 _currentPage = value;
-                currentFocus = 0;
+                currentFocus = null;
             }
         }
 
