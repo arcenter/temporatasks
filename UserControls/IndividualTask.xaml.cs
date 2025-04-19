@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -80,6 +81,8 @@ namespace TemporaTasks.UserControls
             set
             {
                 _dueDT = value;
+                DueDateTimeLabelUpdate();
+                NewDueDT();
                 modifiedDT = DateTimeOffset.UtcNow.LocalDateTime;
             }
         }

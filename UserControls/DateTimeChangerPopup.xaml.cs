@@ -90,7 +90,6 @@ namespace TemporaTasks.UserControls
                     {
                         task.taskTimer.Stop();
                         task.dueDT = newDueTime;
-                        task.NewDueDT();
                     }
 
                     TaskFile.SaveData();

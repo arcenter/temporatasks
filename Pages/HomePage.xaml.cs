@@ -513,8 +513,6 @@ namespace TemporaTasks.Pages
                             foreach (IndividualTask task in selectedTasks)
                             {
                                 task.dueDT = dateClipboard;
-                                task.DueDateTimeLabelUpdate();
-                                task.NewDueDT();
                                 TaskFile.SaveData();
                             }
                         return;
@@ -681,8 +679,6 @@ namespace TemporaTasks.Pages
                         if (dateClipboard.HasValue)
                         {
                             task.dueDT = dateClipboard;
-                            task.DueDateTimeLabelUpdate();
-                            task.NewDueDT();
                             TaskFile.SaveData();
                         }
                         return;
