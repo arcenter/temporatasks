@@ -59,7 +59,7 @@ namespace TemporaTasks.Pages
         Dictionary<string, ArrayList> days = [];
 
         DateTime? dateClipboard = null;
-        List<IndividualTask> lastTask = [];
+        List<List<IndividualTask>> deletedTasksList = [];
 
         IndividualTask? hoveredTask = null;
         IndividualTask? editedTask = null;
@@ -107,7 +107,7 @@ namespace TemporaTasks.Pages
                 NewTaskArrow.Visibility = Visibility.Collapsed;
                 foreach (IndividualTask task in TaskFile.TaskList)
                 {
-                    task.IsTrashIconClicked += TrashIcon_MouseDown;
+                    task.IsTrashIconClicked += TrashTask;
                     task.IsEditIconClicked += EditIcon_MouseDown;
                     task.MouseEnter += TaskMouseEnter;
                     task.MouseDown += TaskMouseDown;
@@ -413,7 +413,7 @@ namespace TemporaTasks.Pages
                     return;
 
                 case Key.Z:
-                    UndeleteTask();
+                    UntrashTask();
                     return;
 
                 case Key.Escape:
@@ -497,9 +497,10 @@ namespace TemporaTasks.Pages
 
                     case Key.D:
                     case Key.Delete:
-                        List<IndividualTask> _selectedTasks = [.. selectedTasks];
-                        foreach (IndividualTask task in _selectedTasks)
-                            TrashIcon_MouseDown(task);
+                        UnfocusTask();
+                        currentFocus = null;
+                        TrashTask([.. selectedTasks]);
+                        DeselectAll();
                         return;
 
                     case Key.W:
@@ -669,7 +670,7 @@ namespace TemporaTasks.Pages
 
                     case Key.D:
                     case Key.Delete:
-                        TrashIcon_MouseDown(task);
+                        TrashTask(task);
                         return;
 
                     case Key.W:
@@ -1649,11 +1650,9 @@ namespace TemporaTasks.Pages
             mainWindow.FrameView.Navigate(new EditTaskPage((IndividualTask)sender));
         }
 
-        private async void TrashIcon_MouseDown(object sender)
+        private async void DeleteTask(IndividualTask task)
         {
-            IndividualTask task = (IndividualTask)sender;
             task.taskTimer.Stop();
-            lastTask.Add(task);
 
             task.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(500)));
             await Task.Delay(501);
@@ -1661,38 +1660,58 @@ namespace TemporaTasks.Pages
             task.Disappear();
             await Task.Delay(251);
 
-            NextTaskFocus();
-
             TaskStack.Children.Remove(task);
-            currentFocus -= 1;
 
             if (task.status == IndividualTask.TaskStatus.Deleted) TaskFile.TaskList.Remove(task);
             else task.status = IndividualTask.TaskStatus.Deleted;
+        }
 
+        private void TrashTask(IndividualTask task)
+        {
+            deletedTasksList.Add([task]);
+            DeleteTask(task);
+            FocusCurrent();
             TaskFile.SaveData();
         }
 
-        private async void UndeleteTask()
+        private void TrashTask(List<IndividualTask> tasks)
         {
-            if (lastTask.Count == 0) return;
-
-            IndividualTask task = lastTask.Last();
-            if (task.IsCompleted) task.status = IndividualTask.TaskStatus.Completed;
-            else task.status = IndividualTask.TaskStatus.Normal;
-            task.Visibility = Visibility.Visible;
-            TaskFile.TaskList.Add(task);
+            deletedTasksList.Add(tasks);
+            foreach (IndividualTask task in tasks)
+                DeleteTask(task);
             TaskFile.SaveData();
+        }
 
-            lastTask.Remove(task);
-            editedTask = task;
-
-            GenerateTaskStack(false);
-            if (genTSCompletionSource != null) await genTSCompletionSource.Task;
-
+        private async void UndeleteTask(IndividualTask task)
+        {
             await Task.Delay(500);
             task.Appear();
             await Task.Delay(251);
             task.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(500)));
+        }
+
+        private async void UntrashTask()
+        {
+            if (deletedTasksList.Count == 0) return;
+
+            foreach (IndividualTask task in deletedTasksList.Last())
+            {
+                if (task.IsCompleted) task.status = IndividualTask.TaskStatus.Completed;
+                else task.status = IndividualTask.TaskStatus.Normal;
+                task.Visibility = Visibility.Visible;
+                TaskFile.TaskList.Add(task);
+                TaskFile.SaveData();
+
+                editedTask = task;
+            }
+
+            GenerateTaskStack(false);
+            if (genTSCompletionSource != null) await genTSCompletionSource.Task;
+
+            foreach (IndividualTask task in deletedTasksList.Last())
+                UndeleteTask(task);
+
+            deletedTasksList.Remove(deletedTasksList.Last());
         }
 
         private void TaskMouseEnter(object sender, MouseEventArgs e)

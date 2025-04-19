@@ -289,7 +289,7 @@ namespace TemporaTasks.UserControls
             IsEditIconClicked?.Invoke(this);
         }
 
-        public delegate void TrashIconClicked(object sender);
+        public delegate void TrashIconClicked(IndividualTask task);
         public event TrashIconClicked IsTrashIconClicked;
 
         public void TrashIcon_MouseDown(object sender, MouseButtonEventArgs e)
