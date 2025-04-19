@@ -181,6 +181,7 @@
                                 <ComboBox x:Name="SortComboBox" Width="100" VerticalContentAlignment="Center" SelectionChanged="SortComboBox_SelectionChanged" Focusable="False" Padding="15 0 0 0" Margin="0" Cursor="Hand" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular">
                                     <ComboBoxItem Content="Name"/>
                                     <ComboBoxItem Content="Created"/>
+                                    <ComboBoxItem Content="Modified"/>
                                     <ComboBoxItem Content="Due"/>
                                 </ComboBox>
                                 <userControl:IconButton x:Name="SortButton" SVGSource="{StaticResource burgerIcon}" Width="40" Height="40" MouseDown="ReverseButton_MouseDown" RenderTransformOrigin="0.5,0.5">

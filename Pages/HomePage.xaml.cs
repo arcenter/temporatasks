@@ -1295,6 +1295,15 @@ namespace TemporaTasks.Pages
 
             else if (SortComboBox.SelectedIndex == 2)
                 foreach (IndividualTask task in tasks)
+                    if (task.modifiedDT.HasValue)
+                    {
+                        yesDate[task] = task.modifiedDT.Value;
+                        if (task.IsDue) dueTasks++;
+                    }
+                    else noDate.Add(task);
+            
+            else if (SortComboBox.SelectedIndex == 3)
+                foreach (IndividualTask task in tasks)
                     if (task.dueDT.HasValue)
                     {
                         yesDate[task] = task.dueDT.Value;
