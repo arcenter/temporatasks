@@ -16,20 +16,6 @@
             <StackPanel>
 
                 <Grid>
-                    <Label Content="Date" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
-                    <Line x:Name="L1" Stroke="{StaticResource Text}" X2="7" Margin="28.5 14 0 0" Visibility="Collapsed"/>
-                </Grid>
-
-                <Grid Height="35" Width="200" Margin="0 5 0 0">
-                    <TextBox x:Name="DateTextbox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TextBox_TextChanged"/>
-                    <Border x:Name="DateBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
-                </Grid>
-
-            </StackPanel>
-
-            <StackPanel Margin="10 0 0 0">
-
-                <Grid>
                     <Label Content="Time" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
                     <Line x:Name="L2" Stroke="{StaticResource Text}" X2="7" Margin="28.5 14 0 0" Visibility="Collapsed"/>
                 </Grid>
@@ -37,6 +23,20 @@
                 <Grid Height="35" Width="200" Margin="0 5 0 0">
                     <TextBox x:Name="TimeTextbox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TextBox_TextChanged"/>
                     <Border x:Name="TimeBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
+                </Grid>                
+
+            </StackPanel>
+
+            <StackPanel Margin="10 0 0 0">
+
+                <Grid>
+                    <Label Content="Date" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="12" Padding="0"/>
+                    <Line x:Name="L1" Stroke="{StaticResource Text}" X2="7" Margin="28.5 14 0 0" Visibility="Collapsed"/>
+                </Grid>
+
+                <Grid Height="35" Width="200" Margin="0 5 0 0">
+                    <TextBox x:Name="DateTextbox" Style="{StaticResource RoundedTextBox}" GotKeyboardFocus="Textbox_GotKeyboardFocus" TextChanged="TextBox_TextChanged"/>
+                    <Border x:Name="DateBorder" BorderBrush="{StaticResource PastDue}" BorderThickness="0" CornerRadius="10"/>
                 </Grid>
 
             </StackPanel>

@@ -33,7 +33,7 @@ namespace TemporaTasks.UserControls
             mainWindow.KeyDown += PopupKeyDown;
             BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
             await Task.Delay(250);
-            DateTextbox.Focus();
+            TimeTextbox.Focus();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
