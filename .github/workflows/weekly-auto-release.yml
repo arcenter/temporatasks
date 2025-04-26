@@ -1,0 +1,83 @@
+name: Weekly Auto-Release
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup GitHub CLI
+        uses: cli/cli-action@v2
+
+      - name: Check for new commits since last release
+        id: check_commits
+        run: |
+          latest_release=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+          if [ -z "$latest_release" ]; then
+            echo "No previous release found. Proceeding with build."
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            commits=$(git log $latest_release..HEAD --oneline)
+            if [ -z "$commits" ]; then
+              echo "No new commits since last release. Skipping release."
+              echo "should_release=false" >> $GITHUB_OUTPUT
+            else
+              echo "Found new commits. Proceeding with release."
+              echo "should_release=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+
+      - name: Setup .NET
+        if: steps.check_commits.outputs.should_release == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish self-contained build
+        if: steps.check_commits.outputs.should_release == 'true'
+        run: dotnet publish TemporaTasks.csproj --configuration Release --self-contained true --runtime win-x64 --output ./publish
+
+      - name: Zip published output
+        if: steps.check_commits.outputs.should_release == 'true'
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./TemporaTasks-win-x64.zip
+
+      - name: Get current date
+        if: steps.check_commits.outputs.should_release == 'true'
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Create GitHub Release
+        if: steps.check_commits.outputs.should_release == 'true'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "${{ steps.date.outputs.date }}"
+          release_name: "Release ${{ steps.date.outputs.date }}"
+          body: "Automated weekly release for ${{ steps.date.outputs.date }}"
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        if: steps.check_commits.outputs.should_release == 'true'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./TemporaTasks-win-x64.zip
+          asset_name: TemporaTasks-win-x64.zip
+          asset_content_type: application/zip
