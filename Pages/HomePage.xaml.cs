@@ -994,7 +994,7 @@ namespace TemporaTasks.Pages
             GenerateTaskStack(force: !SearchTextBox.Text.Contains("$t"));
         }
 
-        private async void RunSearchTextBoxCloseAnimation(bool open = false)
+        public async void RunSearchTextBoxCloseAnimation(bool open = false)
         {
             {
                 DoubleAnimation ani = new(open ? 190 : 0, TimeSpan.FromMilliseconds(500))

@@ -130,6 +130,7 @@ namespace TemporaTasks.UserControls
                     var tag = new Tags(tagName);
                     tag.TagBackground.Opacity = 0.5;
                     TagsStack.Children.Add(tag);
+                    tag.MouseDown += Tag_MouseDown;
                 }
             
             attachments = _Attachments;
@@ -203,6 +204,19 @@ namespace TemporaTasks.UserControls
         private void Button_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ((Border)sender).BeginAnimation(OpacityProperty, new DoubleAnimation(((bool)e.NewValue) ? 0.5 : 0, TimeSpan.FromMilliseconds(250)));
+        }
+
+        private void Tag_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var tag = (Tags)sender;
+            var textbox = mainWindow.homePage.SearchTextBox;
+
+            if (textbox.Text.Length == 0)
+                textbox.Text = $"#{tag.TagText}";
+            else if (!$"{textbox.Text} ".Contains($"#{tag.TagText} "))
+                textbox.Text += $" #{tag.TagText}";
+
+            mainWindow.homePage.RunSearchTextBoxCloseAnimation(true);
         }
 
         public void ToggleCompletionStatus()

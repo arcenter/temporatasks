@@ -83,7 +83,7 @@
                 <Grid Grid.Column="1">
                     <DockPanel x:Name="taskNameAndTag" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}">
                         <TextBlock x:Name="taskNameTextBlock" FontFamily="/TemporaTasks;component/Resources/Fonts/Manrope.ttf#Manrope Regular" Foreground="{StaticResource Text}" FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" DockPanel.Dock="Left"/>
-                        <StackPanel x:Name="TagsStack" Orientation="Horizontal" DockPanel.Dock="Right" IsHitTestVisible="False"/>
+                        <StackPanel x:Name="TagsStack" Orientation="Horizontal" DockPanel.Dock="Right"/>
                     </DockPanel>
                     <StackPanel x:Name="TextSP" Orientation="Horizontal" VerticalAlignment="Center" Opacity="0"/>
                     <Rectangle x:Name="strikethroughLine" Stroke="{StaticResource DarkBlue}" VerticalAlignment="Bottom" Margin="0 0 0 15" IsHitTestVisible="False" Height="2" MaxWidth="{Binding ActualWidth, ElementName=taskNameTextBlock}" HorizontalAlignment="Left" />
