@@ -12,6 +12,7 @@
 
 # arcenter custom
 Resources/Ignore/
+.vscode
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

@@ -180,6 +180,8 @@ namespace TemporaTasks
                 await Task.Delay(25);
                 homePage.Focus();
                 await Task.Delay(475);
+                homePage.SearchTextBox.Text = "";
+                homePage.RunSearchTextBoxCloseAnimation();
                 windowHiddenTypeLock = false;
             }
         }
